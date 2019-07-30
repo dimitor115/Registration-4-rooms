@@ -1,5 +1,7 @@
 <template>
+<div>
   <h1>Apka pokoje </h1>
+</div>
 </template>
 
 <script lang="ts">

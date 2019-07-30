@@ -1,11 +1,13 @@
 <template>
-  <h1>Apka pokoje </h1>
+  <div>
+      Hejo object Managment
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'home',
+  name: 'object-managment',
 });
 </script>

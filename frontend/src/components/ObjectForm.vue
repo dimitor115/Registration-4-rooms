@@ -25,7 +25,7 @@ export default Vue.extend({
   }),
   methods: {
       handleSubmit(){
-
+        this.$emit('onSubmit', {...this.entry})
       }
   }
 });

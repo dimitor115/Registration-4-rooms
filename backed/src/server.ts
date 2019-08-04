@@ -10,6 +10,7 @@ import 'reflect-metadata'
 import { logger } from './logging'
 import { config } from './config'
 import { unprotectedRouter } from './unprotectedRoutes'
+import { ObjectsApi } from './api'
 
 const app = new Koa()
 
@@ -27,6 +28,7 @@ app.use(bodyParser())
 
 // these routes are NOT protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
 app.use(unprotectedRouter.routes()).use(unprotectedRouter.allowedMethods())
+app.use(ObjectsApi.routes()).use(ObjectsApi.allowedMethods())
 
 // -- temporary protected routes are disabled
 

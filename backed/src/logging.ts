@@ -1,6 +1,6 @@
-import Koa from 'koa';
-import { config } from './config';
-import winston from 'winston';
+import Koa from 'koa'
+import { config } from './config'
+import winston from 'winston'
 
 export function logger(winstonInstance) {
     winstonInstance.configure({
@@ -16,27 +16,27 @@ export function logger(winstonInstance) {
                 winston.format.simple()
               ) })
         ]
-    });
+    })
 
     return async(ctx: Koa.Context, next: () => Promise<any>) => {
 
-        const start = new Date().getMilliseconds();
+        const start = new Date().getMilliseconds()
 
-        await next();
+        await next()
 
-        const ms = new Date().getMilliseconds() - start;
+        const ms = new Date().getMilliseconds() - start
 
-        let logLevel: string;
+        let logLevel: string
         if (ctx.status >= 500) {
-            logLevel = 'error';
+            logLevel = 'error'
         } else if (ctx.status >= 400) {
-            logLevel = 'warn';
+            logLevel = 'warn'
         } else if (ctx.status >= 100) {
-            logLevel = 'info';
+            logLevel = 'info'
         }
 
-        const msg: string = `${ctx.method} ${ctx.originalUrl} ${ctx.status} ${ms}ms`;
+        const msg: string = `${ctx.method} ${ctx.originalUrl} ${ctx.status} ${ms}ms`
 
-        winstonInstance.log(logLevel, msg);
-    };
+        winstonInstance.log(logLevel, msg)
+    }
 }

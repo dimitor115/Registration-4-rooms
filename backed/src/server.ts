@@ -1,32 +1,32 @@
-import Koa from 'koa';
-import jwt from 'koa-jwt';
-import bodyParser from 'koa-bodyparser';
-import helmet from 'koa-helmet';
-import cors from '@koa/cors';
-import winston from 'winston';
-import 'reflect-metadata';
+import Koa from 'koa'
+import jwt from 'koa-jwt'
+import bodyParser from 'koa-bodyparser'
+import helmet from 'koa-helmet'
+import cors from '@koa/cors'
+import winston from 'winston'
+import 'reflect-metadata'
 
 
-import { logger } from './logging';
-import { config } from './config';
-import { unprotectedRouter } from './unprotectedRoutes';
+import { logger } from './logging'
+import { config } from './config'
+import { unprotectedRouter } from './unprotectedRoutes'
 
-const app = new Koa();
+const app = new Koa()
 
 // Provides important security headers to make your app more secure
-app.use(helmet());
+app.use(helmet())
 
 // Enable cors with default options
-app.use(cors());
+app.use(cors())
 
 // Logger middleware -> use winston as logger (logging.ts with config)
-app.use(logger(winston));
+app.use(logger(winston))
 
 // Enable bodyParser with default options
-app.use(bodyParser());
+app.use(bodyParser())
 
 // these routes are NOT protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
-app.use(unprotectedRouter.routes()).use(unprotectedRouter.allowedMethods());
+app.use(unprotectedRouter.routes()).use(unprotectedRouter.allowedMethods())
 
 // -- temporary protected routes are disabled
 
@@ -37,6 +37,6 @@ app.use(unprotectedRouter.routes()).use(unprotectedRouter.allowedMethods());
 // // these routes are protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
 // app.use(protectedRouter.routes()).use(protectedRouter.allowedMethods());
 
-app.listen(config.port);
+app.listen(config.port)
 
-console.log(`Server running on port ${config.port}`);
+console.log(`Server running on port ${config.port}`)

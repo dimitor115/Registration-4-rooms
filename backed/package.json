@@ -7,7 +7,7 @@
     "watch-server": "nodemon --watch src -e ts,tsx --exec ts-node src/server.ts",
     "build-ts": "tsc",
     "copy-static-assets": "ts-node copyStaticAssets.ts",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "tslint": "tslint -c tslint.json --fix -p tsconfig.json",
     "serve": "node dist/server.js",
     "build": "npm run tslint && npm run build-ts && npm run copy-static-assets",
     "start": "npm run serve",

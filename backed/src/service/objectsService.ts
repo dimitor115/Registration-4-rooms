@@ -1,13 +1,13 @@
 import { BaseContext } from 'koa'
-import {plainToClass} from "class-transformer"
-
-import ObjectInbound from '../../../types/ObjectInbound'
+import {Room, IRoom} from '../models/room.model'
 
 export default class ObjectsService {
 
     public static async create(ctx: BaseContext) {
-        ctx.body = 'Tu będzie dodawanie pokoju'
-        const room = plainToClass(ObjectInbound, ctx.request.body)
+        console.log('nanan')
+        const room : IRoom = new Room(ctx.request.body)
+        console.log('chuj')
+        ctx.body = "nananana"
     }
 
 }

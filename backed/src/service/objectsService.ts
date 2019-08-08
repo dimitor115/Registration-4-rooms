@@ -7,7 +7,8 @@ import { Response, Message, MessageType } from '../common/Response'
 export default class ObjectsService {
 
     public static async create(ctx: Context) {
-        const room: IRoom = new Room(ctx.request.body)
+        const bareRoom = { freeSpace: 0, ...ctx.request.body }
+        const room: IRoom = new Room(bareRoom)
         logger.info(`Creating new room with name: ${room.name}`)
         const result = await room.save()
         ctx.body = Response.withStringMsg(result, 'test msg')
@@ -26,7 +27,7 @@ export default class ObjectsService {
             ctx.status = 404
             ctx.body = Response.fromMessage(
                 new Message(`There is no room with given id: ${id}`, MessageType.ERROR)
-                )
+            )
         }
     }
 

@@ -1,5 +1,5 @@
 export interface IResponse {
-    data: any,
+    body: any,
     messages: IMessage[]
 }
 
@@ -17,6 +17,6 @@ export enum MessageType {
 export type ResponseOrAny = IResponse | any;
 
 export function isResponse(toBeDetermined: ResponseOrAny): toBeDetermined is IResponse {
-    return (toBeDetermined as IResponse).data !== undefined 
+    return (toBeDetermined as IResponse).body !== undefined 
     && (toBeDetermined as IResponse).messages !== undefined
 }

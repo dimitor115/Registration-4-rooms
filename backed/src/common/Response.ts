@@ -1,14 +1,14 @@
 export class Response {
-    readonly data: any | null
+    readonly body: any | null
     readonly messages: Message[]
 
-    constructor(data: any, messages: Message[] = []) {
-        this.data = data
+    constructor(body: any, messages: Message[] = []) {
+        this.body = body
         this.messages = messages
     }
 
-    static withStringMsg(data:any, message:string) {
-        return new this(data, [new Message(message)])
+    static withStringMsg(body:any, message:string) {
+        return new this(body, [new Message(message)])
     }
 
     static fromStringMsg(message:string) {

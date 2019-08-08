@@ -12,6 +12,7 @@ instance.interceptors.response.use(
         const body: ResponseOrAny = response.data
         if (isResponse(body)) {
             body.messages.forEach(_parseMessageToNotification)
+            return {...response, data: response.data.body}
         }
         return response
     },

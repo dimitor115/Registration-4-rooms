@@ -3,7 +3,9 @@
     <el-card>
       <room-form @onSubmit="createNewRoom"></room-form>
     </el-card>
-    <room-simple-card @click="removeRoom('chuj')" />
+    <template v-for="(room, idx) in rooms">
+     <room-simple-card :room="room" :key="idx" @onDeleteClick="removeRoom"/>
+    </template>
   </div>
 </template>
 
@@ -21,11 +23,13 @@ export default Vue.extend({
       rooms: [],
   }),
   methods: {
-    createNewRoom(room: IRoomForm){
-      api.ROOMS.CREATE(room)
+    async createNewRoom(room: IRoomForm){
+      const {data: roomEntity} = await api.ROOMS.CREATE(room)
+      this.rooms.push(roomEntity)
     },
-    removeRoom(id:string) {
-      api.ROOMS.DELETE(id)
+    async removeRoom(id:string) {
+      await api.ROOMS.DELETE(id)
+      this.rooms = this.rooms.filter(x => x._id !== id)
     }
   },
 })

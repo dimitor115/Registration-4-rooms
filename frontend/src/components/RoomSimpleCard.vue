@@ -1,18 +1,32 @@
 <template>
   <el-card class="object-card">
     <template slot="header">
-      <span>Pokój 5A</span>
-      <span>x</span>
+      <span>{{room.name}}</span>
+      <span>
+        <i class="el-icon-circle-close" @click.prevent="onDelete"></i>
+       </span>
     </template>
-    Miejsca: 0 / 14
+    Miejsca: {{room.freeSpace}} / {{room.size}}
   </el-card>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { PropType } from 'vue'
+import {IRoom} from '../models/IRoom'
 
 export default Vue.extend({
-  name: 'object-simple-card',
+  name: 'room-simple-card',
+  props: {
+    room: {
+      type: Object as PropType<IRoom>,
+      required: true
+    }
+  },
+  methods: {
+    onDelete(){
+      this.$emit('onDeleteClick', this.room._id)
+    }
+  }
 })
 </script>
 <style lang="scss">

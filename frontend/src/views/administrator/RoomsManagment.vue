@@ -10,22 +10,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import ObjectForm from "../../components/ObjectForm.vue";
-import ObjectSimpleCard from "../../components/ObjectSimpleCard.vue";
+import Vue from 'vue'
+import ObjectForm from '@/components/ObjectForm.vue'
+import ObjectSimpleCard from '@/components/ObjectSimpleCard.vue'
 
 export default Vue.extend({
-  name: "object-managment",
+  name: 'object-managment',
   components: { ObjectForm, ObjectSimpleCard },
   data: () => ({
-      objects: []
+      objects: [],
   }),
   methods: {
     createNewEntry(entry: any) {
-        
-    }
-  }
-});
+
+    },
+  },
+})
 </script>
 <style>
 .wrapper {

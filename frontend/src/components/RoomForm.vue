@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'vue'
 
 export default Vue.extend({
   name: 'object-form',
@@ -24,11 +24,11 @@ export default Vue.extend({
     },
   }),
   methods: {
-      handleSubmit(){
+      handleSubmit() {
         this.$emit('onSubmit', {...this.entry})
-      }
-  }
-});
+      },
+  },
+})
 </script>
 <style lang="scss">
     .object-form > div {

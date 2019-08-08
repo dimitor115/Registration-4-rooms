@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue'
 
 export default Vue.extend({
-  name: "object-simple-card"
-});
+  name: 'object-simple-card',
+})
 </script>
 <style lang="scss">
 .object-card {

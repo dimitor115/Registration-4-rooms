@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import ObjectManagment from './views/administrator/ObjectManagment.vue'
+import RoomsManagment from './views/administrator/RoomsManagment.vue'
 
 Vue.use(Router)
 
@@ -17,7 +17,7 @@ export default new Router({
     {
       path: '/managment',
       name: 'managment',
-      component: ObjectManagment,
+      component: RoomsManagment,
     },
     // {
     //   path: '/about',

@@ -3,7 +3,7 @@
     <template slot="header">
       <span>{{room.name}}</span>
       <span>
-        <i class="el-icon-circle-close" @click.prevent="onDelete"></i>
+        <i class="el-icon-error remove-icon" @click.prevent="onDelete"></i>
        </span>
     </template>
     Miejsca: {{room.freeSpace}} / {{room.size}}
@@ -38,6 +38,12 @@ export default Vue.extend({
     display: flex;
     justify-content: space-between;
     padding:12px 20px;
+  }
+  .remove-icon {
+    cursor: pointer;
+    &:hover {
+      color: rgb(177, 9, 9);
+    }
   }
 }
 </style>

@@ -4,3 +4,8 @@ export interface IRoom {
     size: number,
     freeSpace: number
 }
+
+export interface IRoomForm {
+    name: string,
+    size: number
+}

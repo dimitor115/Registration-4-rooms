@@ -12,4 +12,4 @@ const RoomSchema = new Schema({
     freeSpace: { type: Number, required: true },
 })
 
-export const Room = mongoose.model<IRoom>('Room', RoomSchema) 
+export const Room = mongoose.model<IRoom>('Room', RoomSchema)

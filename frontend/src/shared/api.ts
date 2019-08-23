@@ -22,7 +22,11 @@ instance.interceptors.response.use(
             body.messages.forEach(_parseMessageToNotification)
 
         } else {
-            Message.error(error.message)
+            Message({
+                message: error.message,
+                type: 'error',
+                showClose: true
+            })
         }
         Promise.reject(error)
     }

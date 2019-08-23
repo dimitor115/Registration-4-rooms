@@ -6,6 +6,7 @@
     <template v-for="(room, idx) in rooms">
      <room-simple-card :room="room" :key="idx" @onDeleteClick="removeRoom"/>
     </template>
+    <confirmation-dialog title="Potwierdź" content="Czy na pewno?" ref="removeConfirmation"></confirmation-dialog>
   </div>
 </template>
 
@@ -14,13 +15,14 @@ import Vue from 'vue'
 import {api} from '../../shared/api'
 import RoomForm from '@/components/RoomForm.vue'
 import RoomSimpleCard from '@/components/RoomSimpleCard.vue'
-import IRoomForm from '../../models/RoomFrom'
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
+import {IRoom, IRoomForm} from '../../models/IRoom'
 
 export default Vue.extend({
   name: 'object-managment',
-  components: { RoomForm, RoomSimpleCard },
+  components: { RoomForm, RoomSimpleCard, ConfirmationDialog },
   data: () => ({
-      rooms: [],
+      rooms: [] as IRoom[],
   }),
   methods: {
     async createNewRoom(room: IRoomForm){

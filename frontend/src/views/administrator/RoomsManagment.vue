@@ -1,15 +1,11 @@
 <template>
   <div class="wrapper">
     <el-card>
-      <room-form @onSubmit="createNewRoom" :is-request-processing="isRequestProcessing.create"></room-form>
+      <room-form @onSubmit="createNewRoom"></room-form>
     </el-card>
-    <spinner :is-loading="isRequestProcessing.fetchAll">
+    <spinner action="FEATCH_ALL_ROOMS">
       <template v-for="(room, idx) in rooms">
-        <room-simple-card
-          :room="room"
-          :key="idx"
-          @onDeleteClick="removeRoom"
-        />
+        <room-simple-card :room="room" :key="idx" @onDeleteClick="removeRoom" />
       </template>
     </spinner>
   </div>
@@ -23,36 +19,26 @@ import RoomSimpleCard from "@/components/RoomSimpleCard.vue";
 import ConfirmationDialog from "@/components/ConfirmationDialog.vue";
 import Spinner from "@/components/Spinner.vue";
 import { IRoom, IRoomForm } from "../../models/IRoom";
+import { mapState } from "vuex";
+import { Actions } from "../../shared/Actions";
 
 export default Vue.extend({
   name: "rooms-managment",
   components: { RoomForm, RoomSimpleCard, ConfirmationDialog, Spinner },
-  data: () => ({
-    rooms: [] as IRoom[],
-    isRequestProcessing: {
-      create: false,
-      fetchAll: false
-    }
-  }),
+  computed: {
+    ...mapState({
+      rooms: "rooms"
+    })
+  },
   mounted() {
-    this.fetchAllRooms();
+    this.$store.dispatch(Actions.FEACH_ALL_ROOMS);
   },
   methods: {
-    async fetchAllRooms() {
-      this.isRequestProcessing.fetchAll = true
-      const response = await api.rooms.findAll();
-      this.rooms = response.data;
-      this.isRequestProcessing.fetchAll = false
-    },
     async createNewRoom(room: IRoomForm) {
-      this.isRequestProcessing.create = true;
-      const response = await api.rooms.create(room);
-      this.rooms.push(response.data);
-      this.isRequestProcessing.create = false;
+      this.$store.dispatch(Actions.CREATE_ROOM, room);
     },
     async removeRoom(id: string) {
-      await api.rooms.delete(id);
-      this.rooms = this.rooms.filter(x => x._id !== id);
+      this.$store.dispatch(Actions.CREATE_ROOM, id);
     }
   }
 });

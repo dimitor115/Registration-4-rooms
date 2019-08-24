@@ -1,21 +1,26 @@
 <template>
   <section>
-    <div v-show="isLoading" class="spinner-container">
+    <div v-show="isProcessing" class="spinner-container">
       <i class="spinner" :style="spinnerStyle"></i>
     </div>
-    <slot v-show="!isLoading"></slot>
+    <slot v-show="!isProcessing"></slot>
   </section>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
+import { Actions } from "../shared/Actions";
 
 export default Vue.extend({
   name: "spinner",
   props: {
+    action: {
+      type: String as PropType<Actions>,
+      default: undefined
+    },
     isLoading: {
       type: Boolean,
-      required: true
+      default: false
     },
     size: {
       type: Number,
@@ -23,6 +28,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing[Actions.FEACH_ALL_ROOMS]
+    },
     spinnerStyle() {
       return {
         width: `${this.size}em`,

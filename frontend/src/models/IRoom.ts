@@ -1,8 +1,10 @@
+import { IStudent } from './IStudent';
+
 export interface IRoom {
     _id: string,
     name: string,
     size: number,
-    freeSpace: number
+    students: IStudent[]
 }
 
 export interface IRoomForm {

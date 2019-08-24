@@ -6,7 +6,7 @@
         <i class="el-icon-error remove-icon" @click.prevent="onDelete"></i>
        </span>
     </template>
-    Miejsca: {{room.freeSpace}} / {{room.size}}
+    Miejsca: {{roomFreeSpace(room)}} / {{room.size}}
   </el-card>
 </template>
 
@@ -23,6 +23,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    roomFreeSpace(room: IRoom) {
+      return room.size - room.students.length
+    },
     onDelete() {
       this.$emit('onDeleteClick', this.room._id)
     },

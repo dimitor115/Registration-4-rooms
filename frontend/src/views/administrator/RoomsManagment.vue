@@ -29,7 +29,6 @@ export default Vue.extend({
   methods: {
     async fetchAllRooms() {
       const response = await api.rooms.findAll()
-      console.log(response)
       this.rooms = response.data
     },
     async createNewRoom(room: IRoomForm) {

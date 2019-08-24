@@ -7,7 +7,7 @@
       <el-input-number v-model="entry.size" :min="1" :max="10"></el-input-number>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="handleSubmit">Dodaj</el-button>
+      <el-button type="primary" @click="handleSubmit" :loading="isRequestProcessing">Dodaj</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -16,7 +16,13 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'object-form',
+  name: 'room-form',
+  props: {
+    isRequestProcessing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => ({
     entry: {
       name: null,

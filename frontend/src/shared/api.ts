@@ -1,7 +1,6 @@
 import IRoomForm from '../models/RoomFrom'
 import { IRoom } from '@/models/IRoom'
 import createAxios from './config/configureAxios'
-import { IResponse } from './IResponse'
 
 const axios = createAxios({
     baseURL: 'http://localhost:3000/api/v1',

@@ -24,7 +24,7 @@ export default class RoomService {
         const room: IRoom = new Room(bareRoom)
         logger.info(`Creating new room with name: ${room.name}`)
         const result = await room.save()
-        ctx.body = Response.withStringMsg(result, 'test msg')
+        ctx.body = new Response(result)
         ctx.status = 201
     }
 

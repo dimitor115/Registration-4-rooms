@@ -19,14 +19,14 @@ export default Vue.extend({
   props: {
     room: {
       type: Object as PropType<IRoom>,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    onDelete(){
+    onDelete() {
       this.$emit('onDeleteClick', this.room._id)
-    }
-  }
+    },
+  },
 })
 </script>
 <style lang="scss">

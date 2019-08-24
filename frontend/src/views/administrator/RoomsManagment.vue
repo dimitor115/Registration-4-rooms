@@ -6,7 +6,6 @@
     <template v-for="(room, idx) in rooms">
      <room-simple-card :room="room" :key="idx" @onDeleteClick="removeRoom"/>
     </template>
-    <confirmation-dialog title="Potwierdź" content="Czy na pewno?" ref="removeConfirmation"></confirmation-dialog>
   </div>
 </template>
 
@@ -24,15 +23,23 @@ export default Vue.extend({
   data: () => ({
       rooms: [] as IRoom[],
   }),
+  mounted() {
+    this.fetchAllRooms()
+  },
   methods: {
-    async createNewRoom(room: IRoomForm){
-      const {data: roomEntity} = await api.ROOMS.CREATE(room)
-      this.rooms.push(roomEntity)
+    async fetchAllRooms() {
+      const response = await api.rooms.findAll()
+      console.log(response)
+      this.rooms = response.data
     },
-    async removeRoom(id:string) {
-      await api.ROOMS.DELETE(id)
-      this.rooms = this.rooms.filter(x => x._id !== id)
-    }
+    async createNewRoom(room: IRoomForm) {
+      const response = await api.rooms.create(room)
+      this.rooms.push(response.data)
+    },
+    async removeRoom(id: string) {
+      await api.rooms.delete(id)
+      this.rooms = this.rooms.filter((x) => x._id !== id)
+    },
   },
 })
 </script>

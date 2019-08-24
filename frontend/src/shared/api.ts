@@ -1,49 +1,16 @@
-import axios, { AxiosResponse } from 'axios'
-import { Message } from 'element-ui'
-import { IMessage, ResponseOrAny, isResponse } from '../shared/IResponse'
 import IRoomForm from '../models/RoomFrom'
+import { IRoom } from '@/models/IRoom'
+import createAxios from './config/configureAxios'
+import { IResponse } from './IResponse'
 
-const instance = axios.create({
-    baseURL: 'http://localhost:3000'
+const axios = createAxios({
+    baseURL: 'http://localhost:3000/api/v1',
 })
 
-instance.interceptors.response.use(
-    (response: AxiosResponse) => {
-        const body: ResponseOrAny = response.data
-        if (isResponse(body)) {
-            body.messages.forEach(_parseMessageToNotification)
-            return {...response, data: response.data.body}
-        }
-        return response
-    },
-    (error: any) => {
-        const body: ResponseOrAny = error.response.data
-        if (isResponse(body)) {
-            body.messages.forEach(_parseMessageToNotification)
-
-        } else {
-            Message({
-                message: error.message,
-                type: 'error',
-                showClose: true
-            })
-        }
-        Promise.reject(error)
-    }
-)
-
-function _parseMessageToNotification({ message, type }: IMessage) {
-    Message({
-        message,
-        type,
-        showClose: true
-    })
-}
-
-
 export const api = {
-    ROOMS: {
-        CREATE: (payload: IRoomForm) => instance.post(`/room`, payload),
-        DELETE: (id: string) => instance.delete(`/room/${id}`)
-    }
+    rooms: {
+        create: (payload: IRoomForm) => axios.post<IRoom>(`/rooms`, payload),
+        delete: (id: string) => axios.delete<IRoom>(`/rooms/${id}`),
+        findAll: () => axios.get<IRoom[]>('/rooms'),
+    },
 }

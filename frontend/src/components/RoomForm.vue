@@ -13,28 +13,28 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Actions } from "../shared/Actions";
+import Vue from 'vue'
+import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
-  name: "room-form",
+  name: 'room-form',
   data: () => ({
     entry: {
       name: null,
-      size: 0
-    }
+      size: 0,
+    },
   }),
   computed: {
-    isProcessing() {
-      return this.$store.state.isProcessing[Actions.CREATE_ROOM];
-    }
+    isProcessing(): boolean {
+      return this.$store.state.isProcessing[Actions.CREATE_ROOM]
+    },
   },
   methods: {
     handleSubmit() {
-      this.$emit("onSubmit", { ...this.entry });
-    }
-  }
-});
+      this.$emit('onSubmit', { ...this.entry })
+    },
+  },
+})
 </script>
 <style lang="scss">
 .object-form > div {

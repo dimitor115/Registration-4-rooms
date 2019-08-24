@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import {IRoom} from '../models/IRoom'
+import {IRoom} from '@/models/IRoom'
 
 export default Vue.extend({
   name: 'room-simple-card',
@@ -34,7 +34,6 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 .object-card {
-  width: 300px;
   margin: 20px 0;
   background-color: rgb(221, 218, 218);
   .el-card__header {

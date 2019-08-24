@@ -1,4 +1,4 @@
-import IRoomForm from '../models/RoomFrom'
+import IRoomForm from '@/models/RoomFrom'
 import { IRoom } from '@/models/IRoom'
 import createAxios from './config/configureAxios'
 

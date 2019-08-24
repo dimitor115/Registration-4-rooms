@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { IRoom, IRoomForm } from './models/IRoom';
+import { IRoom, IRoomForm } from './models/IRoom'
 import { api } from '@/shared/api'
-import { Actions } from './shared/Actions';
+import { Actions } from './shared/Actions'
 
 Vue.use(Vuex)
 
@@ -12,8 +12,8 @@ export default new Vuex.Store({
     isProcessing: {
       [Actions.FEACH_ALL_ROOMS]: false as boolean,
       [Actions.CREATE_ROOM]: false as boolean,
-      [Actions.DELETE_ROOM]: false as boolean
-    }
+      [Actions.DELETE_ROOM]: false as boolean,
+    },
   },
   mutations: {
     setRooms(state, rooms: IRoom[]) {
@@ -23,11 +23,11 @@ export default new Vuex.Store({
       state.rooms.push(room)
     },
     removeRoom(state, room: IRoom) {
-      state.rooms.splice(state.rooms.indexOf(room), 1)
+      state.rooms = state.rooms.filter((it: IRoom) => it._id !== room._id)
     },
     updateProcessing(state, { type, isProcessing }: { type: Actions, isProcessing: boolean }) {
       state.isProcessing[type] = isProcessing
-    }
+    },
   },
   actions: {
     async [Actions.FEACH_ALL_ROOMS]({ commit }) {
@@ -59,6 +59,6 @@ export default new Vuex.Store({
       } catch {
         commit('updateProcessing', { type: Actions.DELETE_ROOM, isProcessing: false })
       }
-    }
+    },
   },
 })

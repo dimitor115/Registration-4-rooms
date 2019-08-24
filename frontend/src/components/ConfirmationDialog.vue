@@ -33,5 +33,5 @@ export default {
       this.isDialogVisible = false
     }
   }
-};
+}
 </script>

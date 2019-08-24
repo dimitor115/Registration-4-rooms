@@ -8,38 +8,38 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { Actions } from "../shared/Actions";
+import Vue, { PropType } from 'vue'
+import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
-  name: "spinner",
+  name: 'spinner',
   props: {
     action: {
       type: String as PropType<Actions>,
-      default: undefined
+      default: undefined,
     },
     isLoading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     size: {
       type: Number,
-      default: 1.7
-    }
+      default: 1.7,
+    },
   },
   computed: {
-    isProcessing() {
+    isProcessing(): boolean {
       return this.$store.state.isProcessing[Actions.FEACH_ALL_ROOMS]
     },
-    spinnerStyle() {
+    spinnerStyle(): any {
       return {
-        width: `${this.size}em`,
-        height: `${this.size}em`,
-        'border-width': `${(this.size as number)/4}em`
+        'width': `${this.size}em`,
+        'height': `${this.size}em`,
+        'border-width': `${(this.size as number) / 4}em`,
       }
-    }
-  }
-});
+    },
+  },
+})
 </script>
 <style lang="scss">
 .spinner-container {

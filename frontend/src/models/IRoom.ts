@@ -1,4 +1,4 @@
-import { IStudent } from './IStudent';
+import { IStudent } from './IStudent'
 
 export interface IRoom {
     _id: string,

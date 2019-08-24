@@ -1,1 +1,1 @@
-export {default as ObjectsService} from './objectsService'
+export {default as RoomsService} from './roomService'

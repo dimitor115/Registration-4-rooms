@@ -4,7 +4,20 @@ import { logger } from '../common/logger'
 import { Room, IRoom } from '../models/room.model'
 import { Response, Message, MessageType } from '../common/Response'
 
-export default class ObjectsService {
+export default class RoomService {
+
+    public static async findAll(ctx: Context) {
+        logger.info(`Finding all rooms`)
+        const result = await Room.find()
+        if(result) {
+            ctx.body = new Response(result)
+        } else {
+            ctx.state = 404
+            ctx.body = Response.fromMessage(
+                new Message(`There is problem with fetching all available rooms`)
+            )
+        }
+    }
 
     public static async create(ctx: Context) {
         const bareRoom = { freeSpace: 0, ...ctx.request.body }

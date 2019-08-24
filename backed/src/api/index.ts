@@ -1,1 +1,1 @@
-export { default as ObjectsApi} from './objectsApi'
+export { default as RoomsApi} from './roomsApi'

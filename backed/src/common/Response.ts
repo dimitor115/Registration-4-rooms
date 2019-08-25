@@ -1,28 +1,34 @@
-export class Response {
-    readonly body: any | null
+import { ErrorCodes } from "./errorCodes";
+
+export class Response<T> {
+    readonly body: T | null
     readonly messages: Message[]
 
-    constructor(body: any, messages: Message[] = []) {
+    constructor(body: T, messages: Message[] = []) {
         this.body = body
         this.messages = messages
     }
 
-    static withStringMsg(body:any, message:string) {
+    static withStringMsg<T>(body: T, message: string) {
         return new this(body, [new Message(message)])
     }
 
-    static fromStringMsg(message:string) {
+    static fromStringMsg(message: string) {
         return new this(null, [new Message(message)])
     }
 
-    static fromMessage(message:Message) {
+    static fromMessage(message: Message) {
         return new this(null, [message])
+    }
+
+    static fromErrorCode(errorCode: ErrorCodes, type: MessageType) {
+        return new this(null, [new Message(errorCode, type)])
     }
 }
 
-export class Message{
+export class Message {
     constructor(
-        readonly message:string,
+        readonly message: string,
         readonly type: MessageType = MessageType.INFO
     ){}
 }

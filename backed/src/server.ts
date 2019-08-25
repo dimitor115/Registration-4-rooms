@@ -1,4 +1,6 @@
 import Koa from 'koa'
+import http from 'http'
+import socketIO from 'socket.io'
 import jwt from 'koa-jwt'
 import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
@@ -11,8 +13,12 @@ import { connectToMongo } from './common/config.mongoose'
 import errorHandler from './common/errorHandler'
 import { config } from './common/config'
 import { RoomsApi } from './api'
+import configureRoomsSocketApi from './api/roomsSocketApi';
 
 const app = new Koa()
+const server = http.createServer(app.callback())
+const io = socketIO(server)
+
 
 app.use(helmet())
 app.use(cors())
@@ -21,9 +27,10 @@ app.use(bodyParser())
 app.use(errorHandler)
 
 app.use(RoomsApi.prefix('/api/v1').routes()).use(RoomsApi.allowedMethods())
+configureRoomsSocketApi(io)
 
 connectToMongo(config.databaseUrl).then(() => {
-    app.listen(config.port)
+    server.listen(config.port)
     logger.info(`Server running on port : ${config.port}`)
 })
 

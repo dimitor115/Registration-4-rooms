@@ -1,10 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose'
-import { StudentSchema } from './student.model';
+import { StudentSchema, IStudent } from './student.model';
 
 export interface IRoom extends Document {
     name: string,
     size: number,
-    freeSpace: number
+    students: IStudent[]
 }
 
 const RoomSchema = new Schema({

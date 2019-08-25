@@ -1,4 +1,5 @@
 export interface IStudent {
     name: string,
-    index: string
+    index: string,
+    addedBy: string
 }

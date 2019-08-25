@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import RoomsManagment from './views/administrator/RoomsManagment.vue'
+import StudentRegistration from './views/StudentRegistration.vue'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/managment',
       name: 'managment',
       component: RoomsManagment,
+    },
+    {
+      path: '/registration',
+      name: 'registration',
+      component: StudentRegistration,
     },
     // {
     //   path: '/about',

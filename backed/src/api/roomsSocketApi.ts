@@ -6,7 +6,7 @@ export default function configureRoomsSocketApi(io: SocketIO.Server) {
     io.on('connection', async client => {
         io.emit('rooms', await StudentsRoomService.findAll())
 
-        client.on('add_student', async (roomId: string, student: IStudent) => {
+        client.on('register_student', async (roomId: string, student: IStudent) => {
             io.emit('room_update', await StudentsRoomService.addStudent(roomId, student))
         })
 

@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import { logger } from '../common/logger'
 import { Room, IRoom } from '../models/room.model'
-import { IStudent } from '../models/student.model'
+import { IStudent, Student } from '../models/student.model'
 import { Response, Message, MessageType } from '../common/Response'
 import { ErrorCodes } from '../common/errorCodes'
 
@@ -14,9 +14,10 @@ export default class StudentsRoomService {
 
     public static async addStudent(roomId: string, student: IStudent): Promise<Response<IRoom>> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
+        const studentModel = new Student(student)
         const result = await Room.findOneAndUpdate(
             { _id: roomId },
-            { $push: { students: student } },
+            { $push: { students: studentModel } },
             { new: true }
         )
         return new Response(result)

@@ -1,5 +1,5 @@
-import mongoose, { Schema, Document } from 'mongoose'
-import { StudentSchema, IStudent } from './student.model';
+import { Schema, Document, model } from 'mongoose'
+import { StudentSchema, IStudent } from './student.model'
 
 export interface IRoom extends Document {
     name: string,
@@ -10,7 +10,7 @@ export interface IRoom extends Document {
 const RoomSchema = new Schema({
     name: { type: String, required: true, unique: true },
     size: { type: Number, required: true },
-    students: [StudentSchema],
+    students: {type: [StudentSchema], default: []},
 })
 
-export const Room = mongoose.model<IRoom>('Room', RoomSchema)
+export const Room = model<IRoom>('Room', RoomSchema)

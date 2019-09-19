@@ -9,3 +9,10 @@
     display: flex;
     justify-content: center;
 }
+
+.student-in-room-from {
+    margin: 4px 0;
+    .el-form-item {
+        margin-bottom: 0;
+    }
+}

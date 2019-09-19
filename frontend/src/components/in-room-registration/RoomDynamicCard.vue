@@ -9,11 +9,12 @@
     <transition name="fade">
       <div v-if="showDetails">
         <template v-for="(student, idx) in room.students">
-          <student-in-room-form :student="student" :key="'r' + idx" @onRemove="removeStudent"></student-in-room-form>
+          <student-filled-form :student="student" :key="'r' + idx" @onRemove="removeStudent"></student-filled-form>
         </template>
         <template v-for="(place, idx) in restPlaces">
-          <student-in-room-form :key="'f' + idx" @onRegister="registerStudent"></student-in-room-form>
+          <student-filled-form :key="'e' + idx"></student-filled-form>
         </template>
+        <student-in-room-form @onRegister="registerStudent"></student-in-room-form>
       </div>
     </transition>
 
@@ -33,12 +34,13 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import { IRoom } from "@/models/IRoom";
+import { IStudent } from "@/models/IStudent";
+import { Actions } from "@/shared/Actions";
 import StudentInRoomForm from "./StudentInRoomForm.vue";
-import { IStudent } from "../models/IStudent";
-import { Actions } from "../shared/Actions";
+import StudentFilledForm from "./StudentFilledForm.vue";
 export default Vue.extend({
   name: "room-dynamic-card",
-  components: { StudentInRoomForm },
+  components: { StudentInRoomForm, StudentFilledForm },
   props: {
     room: {
       type: Object as PropType<IRoom>,

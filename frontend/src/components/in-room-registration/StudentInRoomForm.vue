@@ -1,16 +1,16 @@
 <template>
-  <el-form :inline="true" class="object-form">
+  <el-form :inline="true" class="room-form">
     <el-form-item>
       <el-input v-model="student.name" placeholder="Imię"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-input v-model="student.index" placeholder="index"></el-input>
+      <el-input v-model="student.index" placeholder="indeks"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click.prevent="handleAdd">Dodaj</el-button>
     </el-form-item>
     <el-form-item>
-      <el-button type="danger" icon="el-icon-delete" circle @click.prevent="handleRemove"></el-button>
+      <el-button type="danger" icon="el-icon-close" circle @click.prevent="clearForm"></el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -37,9 +37,16 @@ export default Vue.extend({
       this.student.name = ''
       this.student.index = ''
     },
-    handleRemove(): void {
-      this.$emit('onRemove', this.student)
+    clearForm(): void {
+      this.student.name = ''
+      this.student.index = ''
     },
   },
 })
 </script>
+<style lang="scss">
+.room-form {
+  margin: 15px 0;
+  margin-left: 90px;
+}
+</style>

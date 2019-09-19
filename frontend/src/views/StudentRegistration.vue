@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import DynamicRoomsList from '@/components/DynamicRoomsList.vue'
+import DynamicRoomsList from '@/components/in-room-registration/DynamicRoomsList.vue'
 
 export default Vue.extend({
   name: 'home',

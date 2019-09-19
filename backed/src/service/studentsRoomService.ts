@@ -14,6 +14,7 @@ export default class StudentsRoomService {
 
     public static async addStudent(roomId: string, student: IStudent): Promise<Response<IRoom>> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
+
         const studentModel = new Student(student)
         const result = await Room.findOneAndUpdate(
             { _id: roomId },
@@ -24,10 +25,10 @@ export default class StudentsRoomService {
     }
 
     public static async removeStudent(roomId: string, student: IStudent, removedBy: string): Promise<Response<IRoom>> {
-        logger.info(`Removeing student (${student.index}) from room :${roomId} by ${removedBy}`)
+        logger.info(`Removing student (${student.index}) from room :${roomId} by ${removedBy}`)
         const room: IRoom = await Room.findOne({ _id: roomId })
 
-        if (!room.students.includes(student)) {
+        if (!room.students.find(it => it.index === student.index && it.name == student.name)) {
             return Response.fromErrorCode(ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
         }
         if (student.addedBy !== removedBy) {

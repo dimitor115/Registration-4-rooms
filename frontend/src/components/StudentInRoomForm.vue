@@ -4,7 +4,7 @@
       <el-input v-model="student.name" placeholder="Imię"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-input v-model="student.index" placeholder="Indeks"></el-input>
+      <el-input v-model="student.index" placeholder="index"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click.prevent="handleAdd">Dodaj</el-button>
@@ -16,28 +16,30 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { IStudent } from "@/models/IStudent";
+import Vue, { PropType } from 'vue'
+import { IStudent } from '@/models/IStudent'
 
 export default Vue.extend({
-  name: "home",
+  name: 'home',
   props: {
     student: {
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
-        name: "",
-        index: "",
-        addedBy: ""
-      })
-    }
+        name: '',
+        index: '',
+        addedBy: 'me',
+      }),
+    },
   },
   methods: {
     handleAdd(): void {
-      this.$emit("onRegister", this.student);
+      this.$emit('onRegister', this.student)
+      this.student.name = ''
+      this.student.index = ''
     },
     handleRemove(): void {
-      this.$emit("onRemove", this.student);
-    }
-  }
-});
+      this.$emit('onRemove', this.student)
+    },
+  },
+})
 </script>

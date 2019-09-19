@@ -6,9 +6,11 @@
     <div @click="expandRoom">Miejsca: {{room.students.length}} / {{room.size}}</div>
     <transition name="fade">
       <div v-if="showDetails">
-        <template v-for="(student) in room.students">{{student}}</template>
+        <template v-for="(student, idx) in room.students">
+          <student-in-room-form :student="student" :key="'r' + idx" @onRemove="removeStudent"></student-in-room-form>
+        </template>
         <template v-for="(place, idx) in restPlaces">
-          <student-in-room-form :key="idx" @onRegister="registerStudent" @onRemove="removeStudent"></student-in-room-form>
+          <student-in-room-form :key="'f' + idx" @onRegister="registerStudent"></student-in-room-form>
         </template>
       </div>
     </transition>
@@ -16,43 +18,41 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { IRoom } from "@/models/IRoom";
-import StudentInRoomForm from "./StudentInRoomForm.vue";
-import { IStudent } from "../models/IStudent";
-import { Actions } from '../shared/Actions';
+import Vue, { PropType } from 'vue'
+import { IRoom } from '@/models/IRoom'
+import StudentInRoomForm from './StudentInRoomForm.vue'
+import { IStudent } from '../models/IStudent'
+import { Actions } from '../shared/Actions'
 export default Vue.extend({
-  name: "room-dynamic-card",
+  name: 'room-dynamic-card',
   components: { StudentInRoomForm },
   props: {
     room: {
       type: Object as PropType<IRoom>,
-      required: true
-    }
+      required: true,
+    },
   },
   data: () => ({
-    showDetails: false,
-    student: {
-      name: null,
-      index: null,
-      addedBy: "chuj"
-    }
+    showDetails: false
   }),
   computed: {
     restPlaces(): number {
-      return this.room.size - this.room.students.length;
-    }
+      return this.room.size - this.room.students.length
+    },
   },
   methods: {
     registerStudent(student: IStudent) {
+      console.log({...student})
       this.$store.dispatch(Actions.REGISTER_STUDENT, {roomId: this.room._id, student})
     },
-    removeStudent(student: IStudent) {},
+    removeStudent(student: IStudent) {
+      this.$store.dispatch(Actions.REMOVE_STUDENT, {roomId: this.room._id, student, removedBy:"me"})
+    },
     expandRoom() {
-      this.showDetails = this.showDetails ? false : true;
-    }
-  }
-});
+      this.showDetails = this.showDetails ? false : true
+    },
+  },
+})
 </script>
 <style lang="scss">
 .object-card {

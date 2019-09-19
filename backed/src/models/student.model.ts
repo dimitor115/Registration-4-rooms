@@ -8,7 +8,7 @@ export interface IStudent extends Document {
 
 export const StudentSchema = new Schema({
     name: { type: String, required: true },
-    index: { type: Number, required: true },
+    index: { type: String, required: true },
     addedBy: { type: String, required: true }
 })
 

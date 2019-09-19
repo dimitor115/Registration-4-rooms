@@ -10,7 +10,7 @@ import DynamicRoomsList from '@/components/DynamicRoomsList.vue'
 
 export default Vue.extend({
   name: 'home',
-  components: { DynamicRoomsList }
+  components: { DynamicRoomsList },
 })
 </script>
 <style scoped>

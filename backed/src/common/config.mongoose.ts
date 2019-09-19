@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 // mongoose.plugin(slug)
 
 export const connectToMongo = (url: string) => {
+    console.log(url)
     mongoose.connection
         .on('connected', () => logger.info('Connected to the database'))
         .on('error', () => logger.error('Error with database connection'))

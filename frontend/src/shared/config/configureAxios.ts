@@ -9,7 +9,7 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
         (response: AxiosResponse) => {
             const body: ResponseOrAny = response.data
             if (isResponse(body)) {
-                body.messages.forEach(_parseMessageToNotification)
+                body.messages.forEach(parseMessageToNotification)
                 return {...response, data: response.data.body}
             }
             return response
@@ -17,7 +17,7 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
         (error: any) => {
             const body: ResponseOrAny = error.response.data
             if (isResponse(body)) {
-                body.messages.forEach(_parseMessageToNotification)
+                body.messages.forEach(parseMessageToNotification)
 
             } else {
                 Message({
@@ -34,7 +34,7 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
 }
 
 
-function _parseMessageToNotification({ message, type }: IMessage) {
+export function parseMessageToNotification({ message, type }: IMessage) {
     Message({
         message,
         type,

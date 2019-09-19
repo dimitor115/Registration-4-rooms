@@ -1,4 +1,10 @@
-
-.el-card__header {
-    border-bottom-width: 2px;
-}
+.el-card{
+    margin: 20px 0;
+    &:hover{
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,.2);
+    }
+    .el-card__header {
+      padding: 16px 20px 12px 20px;
+      border-bottom-width: 2px;
+    }
+  }

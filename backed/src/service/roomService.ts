@@ -19,8 +19,7 @@ export default class RoomService {
     }
 
     public static async create(ctx: Context) {
-        const bareRoom = { freeSpace: 0, ...ctx.request.body }
-        const room: IRoom = new Room(bareRoom)
+        const room: IRoom = new Room(ctx.request.body)
         logger.info(`Creating new room with name: ${room.name}`)
         const result = await room.save()
         ctx.body = new Response(result)

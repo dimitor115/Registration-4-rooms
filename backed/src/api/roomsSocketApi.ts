@@ -1,4 +1,4 @@
-import { StudentsRoomService } from '../service'
+import { StudentsRoomService, RoomReservationsService } from '../service'
 import { IStudent } from 'src/models/student.model'
 
 export default function configureRoomsSocketApi(io: SocketIO.Server) {
@@ -8,13 +8,20 @@ export default function configureRoomsSocketApi(io: SocketIO.Server) {
 
         console.log('user connected')
         client.on('register_student', async (roomId: string, student: IStudent) => {
-            io.emit('room_update', await StudentsRoomService.addStudent(roomId, student))
+            const updatedRoom = await StudentsRoomService.addStudent(roomId, student)
+            io.emit('room_update', updatedRoom)
         })
 
         client.on('remove_student', async (roomId: string, student: IStudent, removedBy: string) => {
-            io.emit('room_update', await StudentsRoomService.removeStudent(roomId, student, removedBy))
+            const updatedRoom = await StudentsRoomService.removeStudent(roomId, student, removedBy)
+            io.emit('room_update', updatedRoom)
         })
 
-        client.on('disconnect', () => {console.log('user disconnected')})
+        client.on('reserve_room', async (roomId: string, userUUID: string) => {
+            const updatedRoom = await RoomReservationsService.reserve(roomId, userUUID)
+            io.emit('room_update', updatedRoom)
+        })
+
+        client.on('disconnect', () => { console.log('user disconnected') })
     })
 }

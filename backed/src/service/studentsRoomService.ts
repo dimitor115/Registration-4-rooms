@@ -7,11 +7,6 @@ import { ErrorCodes } from '../common/errorCodes'
 
 export default class StudentsRoomService {
 
-    public static async findAll(): Promise<Response<IRoom[]>> {
-        logger.info(`Finding all rooms`)
-        return new Response(await Room.find())
-    }
-
     public static async addStudent(roomId: string, student: IStudent): Promise<Response<IRoom>> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
 

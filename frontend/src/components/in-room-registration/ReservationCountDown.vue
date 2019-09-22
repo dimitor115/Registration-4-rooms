@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-progress text-inside :stroke-width="20" :percentage="untilPercentage" :format="progressFormat"></el-progress>
+    <el-progress
+      text-inside
+      :stroke-width="20"
+      :percentage="untilPercentage"
+      :format="progressFormat"
+    ></el-progress>
   </div>
 </template>
 <script>
@@ -16,26 +21,20 @@ export default {
   },
   data: () => ({
     startSeconds: null,
-    secondsUntil: null
+    secondsUntil: null,
+    timer: null
   }),
+  watch: {
+    until: function(newVal, oldVal) {
+      this.setupCountDown()
+    }
+  },
   mounted() {
-    const dateUntil = moment(this.until);
-    const dateDiff = dateUntil.diff(moment());
-    const seconds = moment
-      .duration(dateDiff)
-      .asSeconds()
-      .toFixed();
-
-    this.startSeconds = seconds;
-    this.secondsUntil = seconds;
-
-    const timer = new Timer();
-    timer.setup(seconds);
-    timer.start(this.updateSeconds, this.onTimeEnd);
+    this.setupCountDown()
   },
   computed: {
     untilPercentage() {
-      return (this.secondsUntil / this.startSeconds) * 100 || 0
+      return (this.secondsUntil / this.startSeconds) * 100 || 0;
     }
   },
   methods: {
@@ -43,10 +42,27 @@ export default {
       this.secondsUntil = secondsUntil;
     },
     onTimeEnd() {
-      console.log("time end");
+      console.log("time end")
     },
     progressFormat() {
       return this.secondsUntil + " s";
+    },
+    setupCountDown() {
+      if(this.timer) this.timer.stop()
+
+      const dateUntil = moment(this.until)
+      const dateDiff = dateUntil.diff(moment())
+      const seconds = moment
+        .duration(dateDiff)
+        .asSeconds()
+        .toFixed()
+
+      this.startSeconds = 20
+      this.secondsUntil = seconds
+
+      this.timer = new Timer()
+      this.timer.setup(seconds)
+      this.timer.start(this.updateSeconds, this.onTimeEnd)
     }
   }
 };

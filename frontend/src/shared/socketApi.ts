@@ -11,8 +11,15 @@ const socket = io('http://localhost:3000')
 socket.on('room_update', socketResponseParser<IRoom>(
   (room: IRoom) => {
     if (room) {
-      store.commit('updateRoomReservation', room)
       store.commit('updateRoomStudents', room)
+    }
+  },
+))
+
+socket.on('reservation_update', socketResponseParser<IRoom>(
+  (room: IRoom) => {
+    if (room) {
+      store.commit('updateRoomReservation', room)
     }
   },
 ))

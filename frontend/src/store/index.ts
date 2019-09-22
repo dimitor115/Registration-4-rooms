@@ -1,14 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import io from 'socket.io-client'
 import finger from 'fingerprintjs2'
 
 import { IRoom, IRoomForm } from '@/models/IRoom'
 import { api } from '@/shared/api'
+import socketApi from '@/shared/socketApi'
 import { Actions, RoomActions } from '@/shared/Actions'
-import { socketResponseParser } from '@/shared/config/socetResponseParser'
-
-const socket = io('http://localhost:3000')
 
 Vue.use(Vuex)
 
@@ -49,18 +46,11 @@ export default new Vuex.Store({
   },
   actions: {
     async [Actions.REMOVE_STUDENT]({ commit }, { roomId, student, removedBy }) {
-      socket.emit('remove_student', roomId, student, removedBy)
-      socket.on('room_update', socketResponseParser<IRoom>((room: IRoom) => {
-        if (room) { commit('updateRoomStudents', room) }
-        }),
-      )
+        socketApi.remove_student(roomId, student, removedBy)
+
     },
     async [Actions.REGISTER_STUDENT]({ commit }, { roomId, student }) {
-      socket.emit('register_student', roomId, student)
-      socket.on('room_update', socketResponseParser<IRoom>((room: IRoom) => {
-        if (room) { commit('updateRoomStudents', room) }
-        }),
-      )
+      socketApi.register_student(roomId, student)
     },
     async [RoomActions.FEACH_ALL_ROOMS]({ commit }) {
       commit('updateProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: true })

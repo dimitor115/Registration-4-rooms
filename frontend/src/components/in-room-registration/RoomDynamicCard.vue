@@ -57,18 +57,18 @@ export default Vue.extend({
   },
   methods: {
     registerStudent(student: IStudent) {
-      console.log({ ...student });
       this.$store.dispatch(Actions.REGISTER_STUDENT, {
         roomId: this.room._id,
         student
       });
     },
-    removeStudent(student: IStudent) {
-      this.$store.dispatch(Actions.REMOVE_STUDENT, {
+    removeStudent(student: IStudent, removedBy: string) {
+      this.$store.dispatch(
+        Actions.REMOVE_STUDENT, {
         roomId: this.room._id,
         student,
-        removedBy: "me"
-      });
+        removedBy
+      })
     },
     expandRoom() {
       this.showDetails = this.showDetails ? false : true;

@@ -1,10 +1,10 @@
 <template>
   <el-form :inline="true" class="room-form">
     <el-form-item>
-      <el-input v-model="student.name" placeholder="Imię"></el-input>
+      <el-input v-model="name" placeholder="Imię"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-input v-model="student.index" placeholder="indeks"></el-input>
+      <el-input v-model="index" placeholder="indeks"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click.prevent="handleAdd">Dodaj</el-button>
@@ -21,25 +21,27 @@ import { IStudent } from '@/models/IStudent'
 
 export default Vue.extend({
   name: 'home',
-  props: {
-    student: {
-      type: Object as PropType<IStudent>,
-      default: (): IStudent => ({
-        name: '',
-        index: '',
-        addedBy: 'me',
-      }),
-    },
+  data: () => ({
+    name: null,
+    index: null
+  }),
+  computed: {
+     userUUID():string {
+      return this.$store.state.user.uuid
+    }
   },
   methods: {
     handleAdd(): void {
-      this.$emit('onRegister', this.student)
-      this.student.name = ''
-      this.student.index = ''
+      const student = {
+        name: this.name,
+        index: this.index,
+        addedBy: this.userUUID
+      }
+      this.$emit('onRegister', student)
     },
     clearForm(): void {
-      this.student.name = ''
-      this.student.index = ''
+      this.name = null
+      this.index = null
     },
   },
 })

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import io from 'socket.io-client'
+import finger from 'fingerprintjs2'
 import { IRoom, IRoomForm } from './models/IRoom'
 import { api } from '@/shared/api'
 import { Actions } from './shared/Actions'
@@ -21,8 +22,14 @@ export default new Vuex.Store({
       [Actions.REGISTER_STUDENT]: false as boolean,
       [Actions.REMOVE_STUDENT]: false as boolean,
     },
+    user: {
+      uuid: '' as string,
+    },
   },
   mutations: {
+    setUserUUID(state, uuid) {
+      state.user.uuid = uuid
+    },
     setRooms(state, rooms: IRoom[]) {
       state.rooms = rooms
     },
@@ -87,5 +94,14 @@ export default new Vuex.Store({
         commit('updateProcessing', { type: Actions.DELETE_ROOM, isProcessing: false })
       }
     },
+    countUserFingerPrint({commit}) {
+      setTimeout(() => {
+        finger.get(components=>{
+          const extractedValues = components.map(it => it.value)
+          const hash = finger.x64hash128(extractedValues.join(''), 31)
+          commit('setUserUUID', hash)
+        })
+      }, 500)
+    }
   },
 })

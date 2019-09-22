@@ -20,41 +20,41 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { IStudent } from "@/models/IStudent";
+import Vue, { PropType } from 'vue'
+import { IStudent } from '@/models/IStudent'
 
 export default Vue.extend({
-  name: "StudentFilledForm",
+  name: 'StudentFilledForm',
   props: {
     student: {
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
-        name: "",
-        index: "",
-        addedBy: "me"
-      })
-    }
+        name: '',
+        index: '',
+        addedBy: 'me',
+      }),
+    },
   },
   computed: {
     canEntryByRemove(): boolean {
-      return this.student.addedBy === this.userUUID 
+      return this.student.addedBy === this.userUUID
     },
-    userUUID():string {
+    userUUID(): string {
       return this.$store.state.user.uuid
     },
     isEmpty(): boolean {
-      return !(this.student.name && this.student.index);
+      return !(this.student.name && this.student.index)
     },
     inputMockClass(): string {
-      return this.isEmpty ? "empty-input" : "fielled-input"
-    }
+      return this.isEmpty ? 'empty-input' : 'fielled-input'
+    },
   },
   methods: {
     handleRemove(): void {
-      this.$emit("onRemove", this.student, this.userUUID);
-    }
-  }
-});
+      this.$emit('onRemove', this.student, this.userUUID)
+    },
+  },
+})
 </script>
 <style lang="scss">
 .input-mock {

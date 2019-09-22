@@ -32,49 +32,49 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { IRoom } from "@/models/IRoom";
-import { IStudent } from "@/models/IStudent";
-import { Actions } from "@/shared/Actions";
-import StudentInRoomForm from "./StudentInRoomForm.vue";
-import StudentFilledForm from "./StudentFilledForm.vue";
+import Vue, { PropType } from 'vue'
+import { IRoom } from '@/models/IRoom'
+import { IStudent } from '@/models/IStudent'
+import { Actions } from '@/shared/Actions'
+import StudentInRoomForm from './StudentInRoomForm.vue'
+import StudentFilledForm from './StudentFilledForm.vue'
 export default Vue.extend({
-  name: "room-dynamic-card",
+  name: 'room-dynamic-card',
   components: { StudentInRoomForm, StudentFilledForm },
   props: {
     room: {
       type: Object as PropType<IRoom>,
-      required: true
-    }
+      required: true,
+    },
   },
   data: () => ({
-    showDetails: false
+    showDetails: false,
   }),
   computed: {
     restPlaces(): number {
-      return this.room.size - this.room.students.length;
-    }
+      return this.room.size - this.room.students.length
+    },
   },
   methods: {
     registerStudent(student: IStudent) {
       this.$store.dispatch(Actions.REGISTER_STUDENT, {
         roomId: this.room._id,
-        student
-      });
+        student,
+      })
     },
     removeStudent(student: IStudent, removedBy: string) {
       this.$store.dispatch(
         Actions.REMOVE_STUDENT, {
         roomId: this.room._id,
         student,
-        removedBy
+        removedBy,
       })
     },
     expandRoom() {
-      this.showDetails = this.showDetails ? false : true;
-    }
-  }
-});
+      this.showDetails = this.showDetails ? false : true
+    },
+  },
+})
 </script>
 <style lang="scss">
 .dynamic-card-footer {

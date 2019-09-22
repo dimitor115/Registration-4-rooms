@@ -9,13 +9,13 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import { Actions } from '@/shared/Actions'
+import { Actions, RoomActions } from '@/shared/Actions'
 
 export default Vue.extend({
   name: 'spinner',
   props: {
     action: {
-      type: String as PropType<Actions>,
+      type: String as PropType<RoomActions>,
       default: undefined,
     },
     isLoading: {
@@ -29,7 +29,7 @@ export default Vue.extend({
   },
   computed: {
     isProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.FEACH_ALL_ROOMS]
+      return this.$store.state.isProcessing[this.action]
     },
     spinnerStyle(): any {
       return {

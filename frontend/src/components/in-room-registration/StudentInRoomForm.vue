@@ -23,19 +23,19 @@ export default Vue.extend({
   name: 'home',
   data: () => ({
     name: null,
-    index: null
+    index: null,
   }),
   computed: {
-     userUUID():string {
+     userUUID(): string {
       return this.$store.state.user.uuid
-    }
+    },
   },
   methods: {
     handleAdd(): void {
       const student = {
         name: this.name,
         index: this.index,
-        addedBy: this.userUUID
+        addedBy: this.userUUID,
       }
       this.$emit('onRegister', student)
     },

@@ -13,7 +13,7 @@ import { IRoom } from '@/models/IRoom'
 import RoomDynamicCard from './RoomDynamicCard.vue'
 import { IResponse } from '@/shared/IResponse'
 import { mapState } from 'vuex'
-import { Actions } from '@/shared/Actions'
+import { RoomActions } from '@/shared/Actions'
 
 
 export default Vue.extend({
@@ -25,7 +25,7 @@ export default Vue.extend({
     }),
   },
   mounted() {
-    this.$store.dispatch(Actions.FEACH_ALL_ROOMS)
+    this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS)
   },
 })
 </script>

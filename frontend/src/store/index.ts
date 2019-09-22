@@ -1,0 +1,102 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+import io from 'socket.io-client'
+import finger from 'fingerprintjs2'
+
+import { IRoom, IRoomForm } from '@/models/IRoom'
+import { api } from '@/shared/api'
+import { Actions, RoomActions } from '@/shared/Actions'
+import { socketResponseParser } from '@/shared/config/socetResponseParser'
+
+const socket = io('http://localhost:3000')
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state: {
+    rooms: [] as IRoom[],
+    isProcessing: {
+      [RoomActions.FEACH_ALL_ROOMS]: false as boolean,
+      [RoomActions.CREATE_ROOM]: false as boolean,
+      [RoomActions.DELETE_ROOM]: false as boolean,
+    },
+    user: {
+      uuid: '' as string,
+    },
+  },
+  mutations: {
+    setUserUUID(state, uuid) {
+      state.user.uuid = uuid
+    },
+    setRooms(state, rooms: IRoom[]) {
+      state.rooms = rooms
+    },
+    pushRoom(state, room: IRoom) {
+      state.rooms.push(room)
+    },
+    removeRoom(state, room: IRoom) {
+      state.rooms = state.rooms.filter((it: IRoom) => it._id !== room._id)
+    },
+    updateRoomStudents(state, updatedRoom: IRoom) {
+        const room = state.rooms.find((it) => it._id === updatedRoom._id)
+        if (room) {
+            room.students = updatedRoom.students
+        }
+    },
+    updateRoomProcessing(state, { type, isProcessing }: { type: RoomActions, isProcessing: boolean }) {
+        state.isProcessing[type] = isProcessing
+    },
+  },
+  actions: {
+    async [Actions.REMOVE_STUDENT]({ commit }, { roomId, student, removedBy }) {
+      socket.emit('remove_student', roomId, student, removedBy)
+      socket.on('room_update', socketResponseParser<IRoom>((room: IRoom) => {
+        if (room) { commit('updateRoomStudents', room) }
+        }),
+      )
+    },
+    async [Actions.REGISTER_STUDENT]({ commit }, { roomId, student }) {
+      socket.emit('register_student', roomId, student)
+      socket.on('room_update', socketResponseParser<IRoom>((room: IRoom) => {
+        if (room) { commit('updateRoomStudents', room) }
+        }),
+      )
+    },
+    async [RoomActions.FEACH_ALL_ROOMS]({ commit }) {
+      commit('updateProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: true })
+      try {
+        const response = await api.rooms.findAll()
+        commit('setRooms', response.data)
+      } finally {
+        commit('updateProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: false })
+      }
+    },
+    async [RoomActions.CREATE_ROOM]({ commit }, room: IRoomForm) {
+      commit('updateProcessing', { type: RoomActions.CREATE_ROOM, isProcessing: true })
+      try {
+        const response = await api.rooms.create(room)
+        commit('pushRoom', response.data)
+      } finally {
+        commit('updateProcessing', { type: RoomActions.CREATE_ROOM, isProcessing: false })
+      }
+    },
+    async [RoomActions.DELETE_ROOM]({ commit }, id: string) {
+      commit('updateProcessing', { type: RoomActions.DELETE_ROOM, isProcessing: true })
+      try {
+        const response = await api.rooms.delete(id)
+        commit('removeRoom', response.data)
+      } finally {
+        commit('updateProcessing', { type: RoomActions.DELETE_ROOM, isProcessing: false })
+      }
+    },
+    countUserFingerPrint({commit}) {
+      setTimeout(() => {
+        finger.get((components) => {
+          const extractedValues = components.map((it) => it.value)
+          const hash = finger.x64hash128(extractedValues.join(''), 31)
+          commit('setUserUUID', hash)
+        })
+      }, 500)
+    },
+  },
+})

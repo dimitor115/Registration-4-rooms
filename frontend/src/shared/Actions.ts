@@ -1,6 +1,7 @@
 export enum Actions {
     REGISTER_STUDENT = 'REGISTER_STUDENT',
     REMOVE_STUDENT = 'REMOVE_STUDENT',
+    RESERVE_ROOM = 'RESERVE_ROOM',
 }
 
 export enum RoomActions {

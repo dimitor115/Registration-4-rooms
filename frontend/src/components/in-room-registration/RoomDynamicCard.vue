@@ -3,8 +3,9 @@
     <template slot="header">
       <span @click="expandRoom">{{room.name}}</span>
     </template>
-
+    <reservation-count-down v-if="room.reservedBy" :until="room.reservedUntil"></reservation-count-down>
     <div class="places-container">Miejsca: {{room.students.length}} / {{room.size}}</div>
+        <h1 v-if="room.reservedBy">ZAREZERWOWANE</h1>
 
     <transition name="fade">
       <div v-if="showDetails">
@@ -15,6 +16,7 @@
           <student-filled-form :key="'e' + idx"></student-filled-form>
         </template>
         <student-in-room-form @onRegister="registerStudent"></student-in-room-form>
+        <el-button @click="reserveRoom"></el-button>
       </div>
     </transition>
 
@@ -38,9 +40,11 @@ import { IStudent } from '@/models/IStudent'
 import { Actions } from '@/shared/Actions'
 import StudentInRoomForm from './StudentInRoomForm.vue'
 import StudentFilledForm from './StudentFilledForm.vue'
+import ReservationCountDown from './ReservationCountDown.vue'
+
 export default Vue.extend({
   name: 'room-dynamic-card',
-  components: { StudentInRoomForm, StudentFilledForm },
+  components: { StudentInRoomForm, StudentFilledForm, ReservationCountDown },
   props: {
     room: {
       type: Object as PropType<IRoom>,
@@ -72,6 +76,14 @@ export default Vue.extend({
     },
     expandRoom() {
       this.showDetails = this.showDetails ? false : true
+    },
+    reserveRoom() {
+      this.$store.dispatch(
+        Actions.RESERVE_ROOM, {
+          roomId: this.room._id,
+          userUUID: this.$store.state.user.uuid,
+        },
+      )
     },
   },
 })

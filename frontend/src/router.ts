@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import RoomsManagment from './views/administrator/RoomsManagment.vue'
 import StudentRegistration from './views/StudentRegistration.vue'
+import Playground from './Playground.vue'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/registration',
       name: 'registration',
       component: StudentRegistration,
+    },
+    {
+      path: '/playground',
+      name: 'playground',
+      component: Playground,
     },
     // {
     //   path: '/about',

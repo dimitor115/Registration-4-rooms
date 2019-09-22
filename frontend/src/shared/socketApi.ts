@@ -9,26 +9,30 @@ import { IRoom } from '@/models/IRoom'
 const socket = io('http://localhost:3000')
 
 socket.on('room_update', socketResponseParser<IRoom>(
-    (room: IRoom) => {
-        if (room) {
-            store.commit('updateRoomStudents', room)
-        }
-    },
+  (room: IRoom) => {
+    if (room) {
+      store.commit('updateRoomReservation', room)
+      store.commit('updateRoomStudents', room)
+    }
+  },
 ))
 
 export default {
-    remove_student: (roomId: string, student: IStudent, removedBy: string) =>
-        socket.emit('remove_student', roomId, student, removedBy),
+  remove_student: (roomId: string, student: IStudent, removedBy: string) =>
+    socket.emit('remove_student', roomId, student, removedBy),
 
-    register_student: (roomId: string, student: IStudent) =>
-        socket.emit('register_student', roomId, student),
+  register_student: (roomId: string, student: IStudent) =>
+    socket.emit('register_student', roomId, student),
+
+  reserve_room: (roomId: string, userUUID: string) =>
+    socket.emit('reserve_room', roomId, userUUID),
 }
 
 function socketResponseParser<T>(func: (x: T) => any): any {
-    return (response: IResponse<T>) => {
-        if (isResponse(response)) {
-            response.messages.forEach(parseMessageToNotification)
-            func(response.body)
-        }
+  return (response: IResponse<T>) => {
+    if (isResponse(response)) {
+      response.messages.forEach(parseMessageToNotification)
+      func(response.body)
     }
+  }
 }

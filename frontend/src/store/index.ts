@@ -22,9 +22,6 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    setUserUUID(state, uuid) {
-      state.user.uuid = uuid
-    },
     setRooms(state, rooms: IRoom[]) {
       state.rooms = rooms
     },
@@ -35,51 +32,63 @@ export default new Vuex.Store({
       state.rooms = state.rooms.filter((it: IRoom) => it._id !== room._id)
     },
     updateRoomStudents(state, updatedRoom: IRoom) {
-        const room = state.rooms.find((it) => it._id === updatedRoom._id)
-        if (room) {
-            room.students = updatedRoom.students
-        }
+      const room = state.rooms.find((it) => it._id === updatedRoom._id)
+      if (room) {
+        room.students = updatedRoom.students
+      }
+    },
+    updateRoomReservation(state, updatedRoom: IRoom) {
+      const room = state.rooms.find((it) => it._id === updatedRoom._id)
+      if (room) {
+        room.reservedBy = updatedRoom.reservedBy
+        room.reservedUntil = updatedRoom.reservedUntil
+      }
     },
     updateRoomProcessing(state, { type, isProcessing }: { type: RoomActions, isProcessing: boolean }) {
-        state.isProcessing[type] = isProcessing
+      state.isProcessing[type] = isProcessing
+    },
+    setUserUUID(state, uuid) {
+      state.user.uuid = uuid
     },
   },
   actions: {
+    async [Actions.RESERVE_ROOM]({commit}, {roomId, userUUID}) {
+      socketApi.reserve_room(roomId, userUUID)
+    },
     async [Actions.REMOVE_STUDENT]({ commit }, { roomId, student, removedBy }) {
-        socketApi.remove_student(roomId, student, removedBy)
-
+      socketApi.remove_student(roomId, student, removedBy)
     },
     async [Actions.REGISTER_STUDENT]({ commit }, { roomId, student }) {
       socketApi.register_student(roomId, student)
     },
     async [RoomActions.FEACH_ALL_ROOMS]({ commit }) {
-      commit('updateProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: true })
+      commit('updateRoomProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: true })
       try {
         const response = await api.rooms.findAll()
         commit('setRooms', response.data)
       } finally {
-        commit('updateProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: false })
+        commit('updateRoomProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: false })
       }
     },
     async [RoomActions.CREATE_ROOM]({ commit }, room: IRoomForm) {
-      commit('updateProcessing', { type: RoomActions.CREATE_ROOM, isProcessing: true })
+      commit('updateRoomProcessing', { type: RoomActions.CREATE_ROOM, isProcessing: true })
       try {
         const response = await api.rooms.create(room)
         commit('pushRoom', response.data)
       } finally {
-        commit('updateProcessing', { type: RoomActions.CREATE_ROOM, isProcessing: false })
+        commit('updateRoomProcessing', { type: RoomActions.CREATE_ROOM, isProcessing: false })
       }
     },
     async [RoomActions.DELETE_ROOM]({ commit }, id: string) {
-      commit('updateProcessing', { type: RoomActions.DELETE_ROOM, isProcessing: true })
+      commit('updateRoomProcessing', { type: RoomActions.DELETE_ROOM, isProcessing: true })
       try {
         const response = await api.rooms.delete(id)
         commit('removeRoom', response.data)
       } finally {
-        commit('updateProcessing', { type: RoomActions.DELETE_ROOM, isProcessing: false })
+        commit('updateRoomProcessing', { type: RoomActions.DELETE_ROOM, isProcessing: false })
       }
     },
-    countUserFingerPrint({commit}) {
+    countUserFingerPrint({ commit }) {
       setTimeout(() => {
         finger.get((components) => {
           const extractedValues = components.map((it) => it.value)

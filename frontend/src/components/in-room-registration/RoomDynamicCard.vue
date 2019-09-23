@@ -5,18 +5,21 @@
     </template>
     <reservation-count-down v-if="room.reservedBy" :until="room.reservedUntil"></reservation-count-down>
     <div class="places-container">Miejsca: {{room.students.length}} / {{room.size}}</div>
-        <h1 v-if="room.reservedBy">ZAREZERWOWANE</h1>
 
     <transition name="fade">
       <div v-if="showDetails">
+
         <template v-for="(student, idx) in room.students">
           <student-filled-form :student="student" :key="'r' + idx" @onRemove="removeStudent"></student-filled-form>
         </template>
         <template v-for="(place, idx) in restPlaces">
           <student-filled-form :key="'e' + idx"></student-filled-form>
         </template>
-        <student-in-room-form @onRegister="registerStudent"></student-in-room-form>
-        <el-button @click="reserveRoom"></el-button>
+        
+
+        <student-in-room-form v-if="canRegisterStudents" @onRegister="registerStudent"></student-in-room-form>
+        <el-button v-else-if="room.reservedBy" class="reserve-button" disabled @click="reserveRoom" type="primary">Ktoś inny zapisuje teraz do tego pokoju...</el-button>
+        <el-button v-else class="reserve-button" @click="reserveRoom" type="primary">Rozpocznij wpisywanie</el-button>
       </div>
     </transition>
 
@@ -55,6 +58,9 @@ export default Vue.extend({
     showDetails: false,
   }),
   computed: {
+    canRegisterStudents(): boolean {
+      return this.room.reservedBy === this.$store.state.user.uuid
+    },
     restPlaces(): number {
       return this.room.size - this.room.students.length
     },
@@ -89,6 +95,12 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss">
+button.reserve-button {
+  width: 485px;
+  margin-top: 20px;
+  margin-right: 58px;
+}
+
 .dynamic-card-footer {
   margin: 15px -20px -20px -20px;
   padding: 16px 0 12px 0;

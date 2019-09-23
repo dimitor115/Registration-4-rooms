@@ -1,20 +1,31 @@
 <template>
   <div class="wrapper">
-    <dynamic-rooms-list></dynamic-rooms-list>
+      <template v-for="(room, idx) in rooms">
+          <room-dynamic-card :room="room" :key="idx">
+          </room-dynamic-card>
+      </template>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import DynamicRoomsList from '@/components/in-room-registration/DynamicRoomsList.vue'
+import { mapState } from 'vuex'
+import { IResponse } from '@/shared/IResponse'
+import { RoomActions } from '@/shared/Actions'
+import { IRoom } from '@/models/IRoom'
+import RoomDynamicCard from '@/components/in-room-registration/RoomDynamicCard.vue'
+
 
 export default Vue.extend({
-  name: 'home',
-  components: { DynamicRoomsList },
+  name: 'student-registration',
+  components: {RoomDynamicCard},
+  computed: {
+    ...mapState({
+      rooms: 'rooms',
+    }),
+  },
+  mounted() {
+    this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS)
+  },
 })
 </script>
-<style scoped>
-.wrapper {
-  width: 800px;
-}
-</style>

@@ -7,7 +7,7 @@
       <el-input v-model="index" placeholder="indeks"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click.prevent="handleAdd">Dodaj</el-button>
+      <el-button type="success" @click.prevent="handleAdd">Dodaj</el-button>
     </el-form-item>
     <el-form-item>
       <el-button type="danger" icon="el-icon-close" circle @click.prevent="clearForm"></el-button>

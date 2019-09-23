@@ -6,12 +6,25 @@ import { IRoom } from 'src/models/room.model'
 export default function configureRoomsSocketApi(io: SocketIO.Server) {
 
     io.on('connection', async client => {
-        // io.emit('rooms', await StudentsRoomService.findAll())
 
-        console.log('user connected')
+        const roomReservationsService = new RoomReservationsService(
+            async (updatedResponse: Promise<Response<IRoom>>) => {
+                io.emit('reservation_update', await updatedResponse)
+            }
+        )
+
+        const reserveRoom = async (roomId: string, userUUID: string) => {
+            const updatedRoom = await roomReservationsService.reserve(roomId, userUUID)
+            io.emit('reservation_update', updatedRoom)
+        }
+
         client.on('register_student', async (roomId: string, student: IStudent) => {
-            const updatedRoom = await StudentsRoomService.addStudent(roomId, student)
-            io.emit('room_update', updatedRoom)
+            const response = await StudentsRoomService.addStudent(roomId, student)
+
+            if (response.body)
+                reserveRoom(roomId, student.addedBy)
+
+            io.emit('room_update', response)
         })
 
         client.on('remove_student', async (roomId: string, student: IStudent, removedBy: string) => {
@@ -19,13 +32,7 @@ export default function configureRoomsSocketApi(io: SocketIO.Server) {
             io.emit('room_update', updatedRoom)
         })
 
-        client.on('reserve_room', async (roomId: string, userUUID: string) => {
-            const onReservationChange = async (updatedResponse: Promise<Response<IRoom>>) => {
-                io.emit('reservation_update', await updatedResponse)
-            }
-            const updatedRoom = await RoomReservationsService.reserve(roomId, userUUID, onReservationChange)
-            io.emit('reservation_update', updatedRoom)
-        })
+        client.on('reserve_room', reserveRoom)
 
         client.on('disconnect', () => { console.log('user disconnected') })
     })

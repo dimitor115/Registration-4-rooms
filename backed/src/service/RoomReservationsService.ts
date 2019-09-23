@@ -9,12 +9,16 @@ const RESERVATION_DURATION = 20 // seconds
 
 export default class RoomReservationsService {
 
-    private static timeouts: Array<ReservationTimeout> = []
+    private timeouts: Map<string, NodeJS.Timeout> = new Map()
+    private emitReservationUpdate: (updatedResponse: Promise<Response<IRoom>>) => void
 
-    public static async reserve(
+    constructor(emitReservationUpdate: (updatedResponse: Promise<Response<IRoom>>) => void) {
+        this.emitReservationUpdate = emitReservationUpdate
+    }
+
+    public async reserve(
         roomId: string,
-        userUUID: string,
-        onReservationFinish: (updatedResponse: Promise<Response<IRoom>>) => void
+        userUUID: string
     ) {
         logger.info(`Making room : ${roomId} reservation for user: ${userUUID}`)
 
@@ -24,7 +28,7 @@ export default class RoomReservationsService {
             return Response.fromErrorCode(ErrorCodes.CANNOT_RESERVE_THIS_ROOM)
 
         // don't want to block creating reservation by this call
-        this.closeOtherUserReservations(roomId, userUUID, onReservationFinish)
+        this.closeOtherUserReservations(roomId, userUUID)
 
         const reservedUntil = moment().add(RESERVATION_DURATION, 'seconds')
 
@@ -35,21 +39,22 @@ export default class RoomReservationsService {
         )
 
         if (result) {
-            this.createReservationTimeout(roomId, onReservationFinish)
+            this.createReservationTimeout(roomId)
         }
 
         return new Response(result)
     }
 
-    private static async closeOtherUserReservations(roomId: string, userUUID: string, onReservationFinish: (updatedResponse: Promise<Response<IRoom>>) => void) {
+    private async closeOtherUserReservations(roomId: string, userUUID: string) {
         const reservedRooms = await Room.find({ reservedBy: userUUID, _id: { $ne: roomId } })
+
         reservedRooms.forEach(async room => {
-            this.findAndClearTimeout(room._id)
-            onReservationFinish(this.closeReservation(room._id))
+            this.findAndClearRoomTimeout(room._id.toString())
+            this.emitReservationUpdate(this.closeReservation(room._id))
         })
     }
 
-    private static async closeReservation(roomId: string) {
+    private async closeReservation(roomId: string) {
         logger.info(`Closing reservation for room: ${roomId}`)
 
         const result = await Room.findOneAndUpdate(
@@ -60,49 +65,24 @@ export default class RoomReservationsService {
         return new Response(result)
     }
 
-    private static findAndClearTimeout(roomId: string): ReservationTimeout | null {
-        const previousRecord = this.timeouts.find(it => it.roomId === roomId)
-        if (previousRecord) {
-            clearTimeout(previousRecord.timeoutRef)
-            previousRecord.timeoutRef = null
-            return previousRecord
+    private findAndClearRoomTimeout(roomId: string) {
+        const previousTimeout = this.timeouts.get(roomId)
+        if (previousTimeout) {
+            clearTimeout(previousTimeout)
+            this.timeouts.delete(roomId)
         }
-        return null
     }
 
-    private static createReservationTimeout(
-        roomId: string,
-        onReservationFinish: (updatedResponse: Promise<Response<IRoom>>) => void
-    ) {
+    private createReservationTimeout(roomId: string) {
         const reservationTimeout = setTimeout(
-            () => { 
-                console.log('closing from timeout')
-                onReservationFinish(this.closeReservation(roomId))
+            () => {
+                this.findAndClearRoomTimeout(roomId)
+                this.emitReservationUpdate(this.closeReservation(roomId))
              },
             RESERVATION_DURATION * 1000
         )
 
-        const previousRecord = this.findAndClearTimeout(roomId)
-
-        if (previousRecord) {
-            previousRecord.timeoutRef = reservationTimeout
-        } else {
-            this.timeouts.push(
-                new ReservationTimeout(roomId, reservationTimeout)
-            )
-        }
-    }
-}
-
-class ReservationTimeout {
-    readonly roomId: string
-    timeoutRef: NodeJS.Timeout
-
-    constructor(
-        roomId: string,
-        timeoutRef: NodeJS.Timeout
-    ) {
-        this.roomId = roomId
-        this.timeoutRef = timeoutRef
+        this.findAndClearRoomTimeout(roomId)
+        this.timeouts.set(roomId, reservationTimeout)
     }
 }

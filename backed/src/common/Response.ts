@@ -21,7 +21,7 @@ export class Response<T> {
         return new this(null, [message])
     }
 
-    static fromErrorCode(errorCode: ErrorCodes, type: MessageType) {
+    static fromErrorCode(errorCode: ErrorCodes, type: MessageType = MessageType.ERROR) {
         return new this(null, [new Message(errorCode, type)])
     }
 }

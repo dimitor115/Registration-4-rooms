@@ -26,7 +26,10 @@ app.use(requestLogger)
 app.use(bodyParser())
 app.use(errorHandler)
 
-app.use(RoomsApi.prefix('/api/v1').routes()).use(RoomsApi.allowedMethods())
+app.use(
+    RoomsApi.prefix('/api/v1').routes()
+).use(RoomsApi.allowedMethods())
+
 configureRoomsSocketApi(io)
 
 connectToMongo(config.databaseUrl).then(() => {

@@ -2,8 +2,11 @@ import { StudentsRoomService, RoomReservationsService } from '../service'
 import { IStudent } from 'src/models/student.model'
 import { Response } from 'src/common/Response'
 import { IRoom } from 'src/models/room.model'
+import errorHandler from '../common/socketErrorHandler'
 
 export default function configureRoomsSocketApi(io: SocketIO.Server) {
+
+    const handle = err => errorHandler(io, err)
 
     io.on('connection', async client => {
 
@@ -14,17 +17,22 @@ export default function configureRoomsSocketApi(io: SocketIO.Server) {
         )
 
         const reserveRoom = async (roomId: string, userUUID: string) => {
-            const updatedRoom = await roomReservationsService.reserve(roomId, userUUID)
-            io.emit('reservation_update', updatedRoom)
+            roomReservationsService
+                .reserve(roomId, userUUID)
+                .catch(handle)
+                .then(updatedRoom => {
+                    io.emit('reservation_update', updatedRoom)
+                })
         }
 
         client.on('register_student', async (roomId: string, student: IStudent) => {
-            const response = await StudentsRoomService.addStudent(roomId, student)
-
-            if (response.body)
-                reserveRoom(roomId, student.addedBy)
-
-            io.emit('room_update', response)
+            StudentsRoomService
+                .addStudent(roomId, student)
+                .catch(handle)
+                .then(response => {
+                    reserveRoom(roomId, student.addedBy)
+                    io.emit('room_update', response)
+                })
         })
 
         client.on('remove_student', async (roomId: string, student: IStudent, removedBy: string) => {

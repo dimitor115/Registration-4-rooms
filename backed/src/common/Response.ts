@@ -29,8 +29,8 @@ export class Response<T> {
 export class Message {
     constructor(
         readonly message: string,
-        readonly type: MessageType = MessageType.INFO
-    ){}
+        readonly type: MessageType = MessageType.ERROR
+    ) {}
 }
 
 export enum MessageType {

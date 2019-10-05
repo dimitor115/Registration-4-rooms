@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 
 import store from '@/store'
-import { IResponse, isResponse } from '@/shared/IResponse'
+import { IResponse, isResponse, IMessage } from '@/shared/IResponse'
 import { parseMessageToNotification } from '@/shared/config/configureAxios'
 import { IStudent } from '@/models/IStudent'
 import { IRoom } from '@/models/IRoom'
@@ -23,6 +23,10 @@ socket.on('reservation_update', socketResponseParser<IRoom>(
     }
   },
 ))
+
+socket.on('error_occurred', (message: IMessage) => {
+  parseMessageToNotification(message)
+})
 
 export default {
   remove_student: (roomId: string, student: IStudent, removedBy: string) =>

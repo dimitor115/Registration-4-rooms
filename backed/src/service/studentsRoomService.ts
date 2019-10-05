@@ -4,19 +4,29 @@ import { Room, IRoom } from '../models/room.model'
 import { IStudent, Student } from '../models/student.model'
 import { Response, Message, MessageType } from '../common/Response'
 import { ErrorCodes } from '../common/errorCodes'
+import moment = require('moment')
 
 export default class StudentsRoomService {
 
     public static async addStudent(roomId: string, student: IStudent): Promise<Response<IRoom>> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
 
-        const studentModel = new Student(student)
+        const studentModel = this.createAndValidateStudent(student)
+
         const result = await Room.findOneAndUpdate(
             { _id: roomId },
             { $push: { students: studentModel } },
             { new: true }
         )
         return new Response(result)
+    }
+
+    private static createAndValidateStudent(student: IStudent) {
+        const model = new Student(student)
+        const err = model.validateSync()
+        if (err) throw err
+
+        return model
     }
 
     public static async removeStudent(roomId: string, student: IStudent, removedBy: string): Promise<Response<IRoom>> {

@@ -10,9 +10,9 @@ const RESERVATION_DURATION = 20 // seconds
 export default class RoomReservationsService {
 
     private timeouts: Map<string, NodeJS.Timeout> = new Map()
-    private emitReservationUpdate: (updatedResponse: Promise<Response<IRoom>>) => void
+    private emitReservationUpdate: (updatedResponse: Promise<IRoom>) => void
 
-    constructor(emitReservationUpdate: (updatedResponse: Promise<Response<IRoom>>) => void) {
+    constructor(emitReservationUpdate: (updatedResponse: Promise<IRoom>) => void) {
         this.emitReservationUpdate = emitReservationUpdate
     }
 
@@ -62,7 +62,7 @@ export default class RoomReservationsService {
             { reservedBy: null, reservedUntil: null },
             { new: true }
         )
-        return new Response(result)
+        return result
     }
 
     private findAndClearRoomTimeout(roomId: string) {

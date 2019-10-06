@@ -9,7 +9,7 @@ export default function configureSocketApi(io: SocketIO.Server) {
     io.on('connection', async client => {
 
         const roomReservationsService = new RoomReservationsService(
-            async (updatedResponse: Promise<Response<IRoom>>) => {
+            async (updatedResponse: Promise<IRoom>) => {
                 io.emit('reservation_update', await updatedResponse)
             }
         )
@@ -33,9 +33,13 @@ export default function configureSocketApi(io: SocketIO.Server) {
                 })
         })
 
-        client.on('remove_student', async (roomId: string, student: IStudent, removedBy: string) => {
-            const updatedRoom = await StudentRegistrationService.removeStudent(roomId, student, removedBy)
-            io.emit('room_update', updatedRoom)
+        client.on('remove_student', async (roomId: string, student: IStudent, removedBy: string, errorCallback: (msg: Message) => void) => {
+            StudentRegistrationService
+                .removeStudent(roomId, student, removedBy)
+                .catch(socketErrorHandler(errorCallback))
+                .then(response => {
+                    io.emit('room_update', response)
+                })
         })
 
         client.on('reserve_room', reserveRoom)

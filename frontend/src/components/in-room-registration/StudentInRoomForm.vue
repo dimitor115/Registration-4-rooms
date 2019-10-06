@@ -24,7 +24,7 @@ export default Vue.extend({
   data: () => ({
     form: {
       name: null,
-      index: null
+      index: null,
     },
   }),
   computed: {
@@ -40,9 +40,9 @@ export default Vue.extend({
         index: [
           {required: true, message: 'Indeks jest obowiązkowy!', trigger: 'blur'},
           {pattern: /[1-9]{6}/, message: 'To nie jest poprawny indeks!', trigger: 'change'},
-        ]
+        ],
       }
-    }
+    },
   },
   methods: {
     handleAdd(): void {

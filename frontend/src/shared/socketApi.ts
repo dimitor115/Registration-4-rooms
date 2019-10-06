@@ -8,17 +8,29 @@ import { IRoom } from '@/models/IRoom'
 
 const socket = io('http://localhost:3000')
 
-socket.on('room_update', (room: IRoom) => {
-  if(room) {
-    store.commit('updateRoomStudents', room)
-  }
-})
+export function openRoomUpdatesSocket() {
+  socket.on('room_update', (room: IRoom) => {
+    if (room) {
+      store.commit('updateRoomStudents', room)
+    }
+  })
+}
 
-socket.on('reservation_update', (room: IRoom) => {
-  if(room) {
-    store.commit('updateRoomReservation', room)
-  }
-})
+export function removeRoomUpdateSocket() {
+  socket.removeListener('room_update')
+}
+
+export function openRoomReservationUpdatesSocket() {
+  socket.on('reservation_update', (room: IRoom) => {
+    if (room) {
+      store.commit('updateRoomReservation', room)
+    }
+  })
+}
+
+export function removeRoomReservationUpdatesSocket() {
+  socket.removeListener('reservation_update')
+}
 
 export default {
   remove_student: (roomId: string, student: IStudent, removedBy: string) =>

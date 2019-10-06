@@ -1,9 +1,8 @@
 <template>
   <div class="wrapper">
-      <template v-for="(room, idx) in rooms">
-          <room-dynamic-card :room="room" :key="idx">
-          </room-dynamic-card>
-      </template>
+    <template v-for="(room, idx) in rooms">
+      <room-dynamic-card :room="room" :key="idx"></room-dynamic-card>
+    </template>
   </div>
 </template>
 
@@ -13,12 +12,17 @@ import { mapState } from 'vuex'
 import { IResponse } from '@/shared/IResponse'
 import { RoomActions } from '@/shared/Actions'
 import { IRoom } from '@/models/IRoom'
+import {
+  openRoomUpdatesSocket,
+  openRoomReservationUpdatesSocket,
+  removeRoomUpdateSocket,
+  removeRoomReservationUpdatesSocket,
+} from '@/shared/socketApi'
 import RoomDynamicCard from '@/components/in-room-registration/RoomDynamicCard.vue'
-
 
 export default Vue.extend({
   name: 'student-registration',
-  components: {RoomDynamicCard},
+  components: { RoomDynamicCard },
   computed: {
     ...mapState({
       rooms: 'rooms',
@@ -26,6 +30,12 @@ export default Vue.extend({
   },
   mounted() {
     this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS)
+    openRoomReservationUpdatesSocket()
+    openRoomUpdatesSocket()
+  },
+  beforeDestroy() {
+    removeRoomUpdateSocket()
+    removeRoomReservationUpdatesSocket()
   },
 })
 </script>

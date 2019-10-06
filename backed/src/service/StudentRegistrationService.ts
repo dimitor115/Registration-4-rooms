@@ -1,14 +1,12 @@
-import { Context } from 'koa'
 import { logger } from '../common/logger'
 import { Room, IRoom } from '../models/room.model'
 import { IStudent, Student } from '../models/student.model'
-import { Response, Message, MessageType } from '../common/Response'
+import { Message, MessageType } from '../common/Response'
 import { ErrorCodes } from '../common/errorCodes'
-import moment = require('moment')
 
 export default class StudentRegistrationService {
 
-    public static async addStudent(roomId: string, student: IStudent): Promise<Response<IRoom>> {
+    public static async addStudent(roomId: string, student: IStudent): Promise<IRoom> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
 
         const studentModel = this.createAndValidateStudent(student)
@@ -18,7 +16,7 @@ export default class StudentRegistrationService {
             { $push: { students: studentModel } },
             { new: true }
         )
-        return new Response(result)
+        return result
     }
 
     private static createAndValidateStudent(student: IStudent) {
@@ -29,15 +27,15 @@ export default class StudentRegistrationService {
         return model
     }
 
-    public static async removeStudent(roomId: string, student: IStudent, removedBy: string): Promise<Response<IRoom>> {
+    public static async removeStudent(roomId: string, student: IStudent, removedBy: string): Promise<IRoom> {
         logger.info(`Removing student (${student.index}) from room :${roomId} by ${removedBy}`)
         const room: IRoom = await Room.findOne({ _id: roomId })
 
         if (!room.students.find(it => it.index === student.index && it.name == student.name)) {
-            return Response.fromErrorCode(ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
+            throw Message.fromErrorCode(ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
         }
         if (student.addedBy !== removedBy) {
-            return Response.fromErrorCode(ErrorCodes.CANNOT_REMOVE_THIS_STUDENT, MessageType.ERROR)
+            throw Message.fromErrorCode(ErrorCodes.CANNOT_REMOVE_THIS_STUDENT, MessageType.ERROR)
         }
 
         const result = await Room.findOneAndUpdate(
@@ -46,6 +44,6 @@ export default class StudentRegistrationService {
             { new: true }
         )
 
-        return new Response(result)
+        return result
     }
 }

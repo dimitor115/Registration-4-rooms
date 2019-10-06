@@ -25,9 +25,9 @@ app.use(requestLogger)
 app.use(bodyParser())
 app.use(errorHandler)
 
-app.use(
-    Api.prefix('/api/v1').routes()
-).use(Api.allowedMethods())
+app
+    .use(Api.prefix('/api/v1').routes())
+    .use(Api.allowedMethods())
 
 SocketApi(io)
 

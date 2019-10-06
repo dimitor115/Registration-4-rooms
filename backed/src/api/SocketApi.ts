@@ -7,6 +7,7 @@ import { logger } from '../common/logger'
 export default function configureSocketApi(io: SocketIO.Server): void {
 
     io.on('connection', async client => {
+        io.emit('clients_update', Object.keys(io.sockets.sockets).length)
 
         const roomReservationsService = new RoomReservationsService(
             async (updatedResponse: Promise<IRoom>) => {
@@ -44,7 +45,7 @@ export default function configureSocketApi(io: SocketIO.Server): void {
 
         client.on('reserve_room', reserveRoom)
 
-        client.on('disconnect', () => { console.log('user disconnected') })
+        client.on('disconnect', () => { io.emit('clients_update', Object.keys(io.sockets.sockets).length) })
     })
 }
 

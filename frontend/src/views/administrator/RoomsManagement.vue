@@ -27,7 +27,7 @@ import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
 import Spinner from '@/components/Spinner.vue'
 
 export default Vue.extend({
-  name: 'rooms-managment',
+  name: 'rooms-management',
   components: { RoomForm, RoomSimpleCard, ConfirmationDialog, Spinner },
   computed: {
     ...mapState({

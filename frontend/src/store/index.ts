@@ -20,6 +20,7 @@ export default new Vuex.Store({
     user: {
       uuid: '' as string,
     },
+    clientsCount: 0
   },
   mutations: {
     setRooms(state, rooms: IRoom[]) {
@@ -50,6 +51,9 @@ export default new Vuex.Store({
     setUserUUID(state, uuid) {
       state.user.uuid = uuid
     },
+    setClientsCount(state, count) {
+      state.clientsCount = count
+    }
   },
   actions: {
     async [Actions.RESERVE_ROOM]({commit}, {roomId, userUUID}) {

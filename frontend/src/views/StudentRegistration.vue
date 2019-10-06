@@ -7,35 +7,30 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapState } from 'vuex'
-import { IResponse } from '@/shared/IResponse'
-import { RoomActions } from '@/shared/Actions'
-import { IRoom } from '@/models/IRoom'
-import {
-  openRoomUpdatesSocket,
-  openRoomReservationUpdatesSocket,
-  removeRoomUpdateSocket,
-  removeRoomReservationUpdatesSocket,
-} from '@/shared/socketApi'
-import RoomDynamicCard from '@/components/in-room-registration/RoomDynamicCard.vue'
+import Vue from "vue";
+import { mapState } from "vuex";
+import { IResponse } from "@/shared/IResponse";
+import { RoomActions } from "@/shared/Actions";
+import { IRoom } from "@/models/IRoom";
+import { connections } from "@/shared/socketApi";
+import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue";
 
 export default Vue.extend({
-  name: 'student-registration',
+  name: "student-registration",
   components: { RoomDynamicCard },
   computed: {
     ...mapState({
-      rooms: 'rooms',
-    }),
+      rooms: "rooms"
+    })
   },
   mounted() {
-    this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS)
-    openRoomReservationUpdatesSocket()
-    openRoomUpdatesSocket()
+    this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS);
+    connections.roomUpdates.open()
+    connections.reservationUpdates.open()
   },
   beforeDestroy() {
-    removeRoomUpdateSocket()
-    removeRoomReservationUpdatesSocket()
-  },
-})
+    connections.roomUpdates.close()
+    connections.reservationUpdates.close()
+  }
+});
 </script>

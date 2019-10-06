@@ -1,3 +1,3 @@
-export { default as RoomsService } from './roomService'
-export { default as StudentsRoomService } from './studentsRoomService'
+export { default as RoomsManagementService } from './RoomsManagementService'
+export { default as StudentRegistrationService } from './StudentRegistrationService'
 export { default as RoomReservationsService } from './RoomReservationsService'

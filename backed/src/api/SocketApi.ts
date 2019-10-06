@@ -1,4 +1,4 @@
-import { StudentsRoomService, RoomReservationsService } from '../service'
+import { StudentRegistrationService, RoomReservationsService } from '../service'
 import { IStudent } from '../models/student.model'
 import { Response, Message } from '../common/Response'
 import { IRoom } from '../models/room.model'
@@ -24,7 +24,7 @@ export default function configureSocketApi(io: SocketIO.Server) {
         }
 
         client.on('register_student', async (roomId: string, student: IStudent, errorCallback: (msg: Message) => void) => {
-            StudentsRoomService
+            StudentRegistrationService
                 .addStudent(roomId, student)
                 .catch(socketErrorHandler(errorCallback))
                 .then(response => {
@@ -34,7 +34,7 @@ export default function configureSocketApi(io: SocketIO.Server) {
         })
 
         client.on('remove_student', async (roomId: string, student: IStudent, removedBy: string) => {
-            const updatedRoom = await StudentsRoomService.removeStudent(roomId, student, removedBy)
+            const updatedRoom = await StudentRegistrationService.removeStudent(roomId, student, removedBy)
             io.emit('room_update', updatedRoom)
         })
 

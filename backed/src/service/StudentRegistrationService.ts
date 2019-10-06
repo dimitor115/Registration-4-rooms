@@ -6,7 +6,7 @@ import { Response, Message, MessageType } from '../common/Response'
 import { ErrorCodes } from '../common/errorCodes'
 import moment = require('moment')
 
-export default class StudentsRoomService {
+export default class StudentRegistrationService {
 
     public static async addStudent(roomId: string, student: IStudent): Promise<Response<IRoom>> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)

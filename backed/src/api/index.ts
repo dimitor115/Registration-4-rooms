@@ -1,1 +1,2 @@
-export { default as RoomsApi} from './roomsApi'
+export { default as Api} from './Api'
+export { default as SocketApi} from './SocketApi'

@@ -12,8 +12,7 @@ import { requestLogger, logger } from './common/logger'
 import { connectToMongo } from './common/config.mongoose'
 import errorHandler from './common/errorHandler'
 import { config } from './common/config'
-import { RoomsApi } from './api'
-import configureSocketApi from './api/SocketApi'
+import { Api, SocketApi } from './api'
 
 const app = new Koa()
 const server = http.createServer(app.callback())
@@ -27,10 +26,10 @@ app.use(bodyParser())
 app.use(errorHandler)
 
 app.use(
-    RoomsApi.prefix('/api/v1').routes()
-).use(RoomsApi.allowedMethods())
+    Api.prefix('/api/v1').routes()
+).use(Api.allowedMethods())
 
-configureSocketApi(io)
+SocketApi(io)
 
 connectToMongo(config.databaseUrl).then(() => {
     server.listen(config.port)

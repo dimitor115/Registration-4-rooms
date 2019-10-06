@@ -3,7 +3,7 @@ import { logger } from '../common/logger'
 import { Room, IRoom } from '../models/room.model'
 import { Response, Message, MessageType } from '../common/Response'
 
-export default class RoomService {
+export default class RoomsManagementService {
 
     public static async findAll(ctx: Context) {
         logger.info(`Finding all rooms`)

@@ -31,6 +31,10 @@ export class Message {
         readonly message: string,
         readonly type: MessageType = MessageType.ERROR
     ) {}
+
+    static fromErrorCode(errorCode: ErrorCodes, type: MessageType = MessageType.ERROR) {
+        return new this(errorCode, type)
+    }
 }
 
 export enum MessageType {

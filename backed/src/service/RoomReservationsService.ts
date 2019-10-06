@@ -2,7 +2,7 @@ import moment from 'moment'
 
 import { logger } from '../common/logger'
 import { Room, IRoom } from '../models/room.model'
-import { Response } from '../common/Response'
+import { Response, Message } from '../common/Response'
 import { ErrorCodes } from '../common/errorCodes'
 
 const RESERVATION_DURATION = 20 // seconds
@@ -19,13 +19,13 @@ export default class RoomReservationsService {
     public async reserve(
         roomId: string,
         userUUID: string
-    ) {
+    ): Promise<IRoom> {
         logger.info(`Making room : ${roomId} reservation for user: ${userUUID}`)
 
         const room = await Room.findById(roomId)
 
         if (room.reservedBy && room.reservedBy !== userUUID)
-            return Response.fromErrorCode(ErrorCodes.CANNOT_RESERVE_THIS_ROOM)
+            throw Message.fromErrorCode(ErrorCodes.CANNOT_RESERVE_THIS_ROOM)
 
         // don't want to block creating reservation by this call
         this.closeOtherUserReservations(roomId, userUUID)
@@ -42,7 +42,7 @@ export default class RoomReservationsService {
             this.createReservationTimeout(roomId)
         }
 
-        return new Response(result)
+        return result
     }
 
     private async closeOtherUserReservations(roomId: string, userUUID: string) {

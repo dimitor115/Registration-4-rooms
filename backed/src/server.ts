@@ -13,7 +13,7 @@ import { connectToMongo } from './common/config.mongoose'
 import errorHandler from './common/errorHandler'
 import { config } from './common/config'
 import { RoomsApi } from './api'
-import configureRoomsSocketApi from './api/roomsSocketApi';
+import configureSocketApi from './api/SocketApi'
 
 const app = new Koa()
 const server = http.createServer(app.callback())
@@ -30,7 +30,7 @@ app.use(
     RoomsApi.prefix('/api/v1').routes()
 ).use(RoomsApi.allowedMethods())
 
-configureRoomsSocketApi(io)
+configureSocketApi(io)
 
 connectToMongo(config.databaseUrl).then(() => {
     server.listen(config.port)

@@ -19,7 +19,7 @@ export default class StudentRegistrationService {
         return result
     }
 
-    private static createAndValidateStudent(student: IStudent) {
+    private static createAndValidateStudent(student: IStudent): IStudent {
         const model = new Student(student)
         const err = model.validateSync()
         if (err) throw err

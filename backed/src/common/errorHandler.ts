@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import { logger } from './logger'
 
-export default async function (ctx: Context, next: () => Promise<any>) {
+export default async function (ctx: Context, next: () => Promise<any>): Promise<void> {
   try {
     await next()
   } catch (err) {

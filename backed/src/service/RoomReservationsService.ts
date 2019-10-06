@@ -45,7 +45,7 @@ export default class RoomReservationsService {
         return result
     }
 
-    private async closeOtherUserReservations(roomId: string, userUUID: string) {
+    private async closeOtherUserReservations(roomId: string, userUUID: string): Promise<void> {
         const reservedRooms = await Room.find({ reservedBy: userUUID, _id: { $ne: roomId } })
 
         reservedRooms.forEach(async room => {
@@ -54,7 +54,7 @@ export default class RoomReservationsService {
         })
     }
 
-    private async closeReservation(roomId: string) {
+    private async closeReservation(roomId: string): Promise<IRoom> {
         logger.info(`Closing reservation for room: ${roomId}`)
 
         const result = await Room.findOneAndUpdate(
@@ -65,7 +65,7 @@ export default class RoomReservationsService {
         return result
     }
 
-    private findAndClearRoomTimeout(roomId: string) {
+    private findAndClearRoomTimeout(roomId: string): void {
         const previousTimeout = this.timeouts.get(roomId)
         if (previousTimeout) {
             clearTimeout(previousTimeout)
@@ -73,7 +73,7 @@ export default class RoomReservationsService {
         }
     }
 
-    private createReservationTimeout(roomId: string) {
+    private createReservationTimeout(roomId: string): void {
         const reservationTimeout = setTimeout(
             () => {
                 this.findAndClearRoomTimeout(roomId)

@@ -4,7 +4,7 @@ import { Response, Message } from '../common/Response'
 import { IRoom } from '../models/room.model'
 import { logger } from '../common/logger'
 
-export default function configureSocketApi(io: SocketIO.Server) {
+export default function configureSocketApi(io: SocketIO.Server): void {
 
     io.on('connection', async client => {
 
@@ -48,7 +48,7 @@ export default function configureSocketApi(io: SocketIO.Server) {
     })
 }
 
-function socketErrorHandler(errorCallback: (msg: Message) => void) {
+function socketErrorHandler(errorCallback: (msg: Message) => void): (err: any) => void {
     return (err: any) => {
         logger.error(err)
         if (isMessage(err)) {

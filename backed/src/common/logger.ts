@@ -19,7 +19,7 @@ winston.configure({
 
 export const logger = winston
 
-export function requestLogger(ctx: Koa.Context, next: () => Promise<any>) {
+export function requestLogger(ctx: Koa.Context, next: () => Promise<any>): Promise<any> {
 
     const start = new Date().getMilliseconds()
     return next().then(() => {

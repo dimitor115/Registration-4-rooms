@@ -3,6 +3,9 @@
     <el-card>
       <h2>{{ $store.state.clientsCount }}</h2>
     </el-card>
+    <el-card>
+      <el-progress type="circle" :percentage="totalPlacesPercentage"></el-progress>
+    </el-card>
   </div>
 </template>
 
@@ -26,6 +29,23 @@ export default Vue.extend({
     this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS);
     connections.roomUpdates.open();
     connections.clientsUpdates.open();
+  },
+  beforeDestroy() {
+    connections.roomUpdates.close();
+    connections.clientsUpdates.close();
+  },
+  computed: {
+    totalPlacesPercentage(): number {
+      const totalStudents = this.$store.state.rooms
+        .map((room: IRoom) => room.students.length)
+        .reduce((count: number, acc: number) => acc + count, 0);
+
+      const totalSize = this.$store.state.rooms
+        .map((room: IRoom) => room.size)
+        .reduce((count: number, acc: number) => acc + count, 0);
+
+      return Math.round((totalStudents / totalSize) * 100) || 0;
+    }
   }
 });
 </script>

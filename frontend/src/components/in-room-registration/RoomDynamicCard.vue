@@ -8,18 +8,8 @@
 
     <transition name="fade">
       <div v-if="showDetails">
-
-        <template v-for="(student, idx) in room.students">
-          <student-filled-form :student="student" :key="'r' + idx" @onRemove="removeStudent"></student-filled-form>
-        </template>
-        <template v-for="(place, idx) in restPlaces">
-          <student-filled-form :key="'e' + idx"></student-filled-form>
-        </template>
-        
-
-        <student-in-room-form v-if="canRegisterStudents" @onRegister="registerStudent"></student-in-room-form>
-        <el-button v-else-if="room.reservedBy" class="reserve-button" disabled @click="reserveRoom" type="primary">Ktoś inny zapisuje teraz do tego pokoju...</el-button>
-        <el-button v-else class="reserve-button" @click="reserveRoom" type="primary">Rozpocznij wpisywanie</el-button>
+          <slot>
+          </slot>
       </div>
     </transition>
 
@@ -58,39 +48,14 @@ export default Vue.extend({
     showDetails: false,
   }),
   computed: {
-    canRegisterStudents(): boolean {
-      return this.room.reservedBy === this.$store.state.user.uuid
-    },
     restPlaces(): number {
       return this.room.size - this.room.students.length
     },
   },
   methods: {
-    registerStudent(student: IStudent) {
-      this.$store.dispatch(Actions.REGISTER_STUDENT, {
-        roomId: this.room._id,
-        student,
-      })
-    },
-    removeStudent(student: IStudent, removedBy: string) {
-      this.$store.dispatch(
-        Actions.REMOVE_STUDENT, {
-        roomId: this.room._id,
-        student,
-        removedBy,
-      })
-    },
     expandRoom() {
       this.showDetails = this.showDetails ? false : true
-    },
-    reserveRoom() {
-      this.$store.dispatch(
-        Actions.RESERVE_ROOM, {
-          roomId: this.room._id,
-          userUUID: this.$store.state.user.uuid,
-        },
-      )
-    },
+    }, 
   },
 })
 </script>

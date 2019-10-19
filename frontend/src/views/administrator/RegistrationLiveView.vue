@@ -1,11 +1,20 @@
 <template>
-  <div class="wrapper">
-    <el-card>
+  <div class="wrapper live-view">
+    <el-card header="Podłączonych użytkowników:">
       <h2>{{ $store.state.clientsCount }}</h2>
     </el-card>
-    <el-card>
+    <el-card header="Procent zapełnionych miejsc:">
       <el-progress type="circle" :percentage="totalPlacesPercentage"></el-progress>
     </el-card>
+    <div class="rooms-header">
+      <h2>Pokoje: </h2>
+      <div>
+        <el-button type="success">Export</el-button>
+      </div>
+    </div>
+    <template v-for="(room, idx) in rooms">
+      <room-dynamic-card :room="room" :key="idx"></room-dynamic-card>
+    </template>
   </div>
 </template>
 
@@ -17,6 +26,7 @@ import { api } from "@/shared/api";
 import { Actions, RoomActions } from "@/shared/Actions";
 import { IRoom, IRoomForm } from "@/models/IRoom";
 
+import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue"
 import RoomForm from "@/components/RoomForm.vue";
 import RoomSimpleCard from "@/components/RoomSimpleCard.vue";
 import ConfirmationDialog from "@/components/ConfirmationDialog.vue";
@@ -25,6 +35,7 @@ import { connections } from "@/shared/socketApi";
 
 export default Vue.extend({
   name: "RegistrationLiveView",
+  components: {RoomDynamicCard},
   mounted() {
     this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS);
     connections.roomUpdates.open();
@@ -35,6 +46,9 @@ export default Vue.extend({
     connections.clientsUpdates.close();
   },
   computed: {
+    rooms(): Array<IRoom> {
+      return this.$store.state.rooms
+    },
     totalPlacesPercentage(): number {
       const totalStudents = this.$store.state.rooms
         .map((room: IRoom) => room.students.length)
@@ -49,5 +63,26 @@ export default Vue.extend({
   }
 });
 </script>
-<style>
+<style lang="scss">
+div.live-view {
+  text-align: left;
+
+  .el-card{
+    .el-card__header {
+      font-weight: bold;
+    }
+    .el-card__body {
+      text-align: center;
+    }
+  }
+
+  .rooms-header {
+    display: flex;
+    justify-content: space-between;
+    & > div {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
 </style>

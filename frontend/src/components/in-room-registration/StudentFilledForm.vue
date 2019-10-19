@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" 
   class="student-in-room-from mock-form" 
-  :class="{'left-margin': isEmpty || !canEntryByRemove}"
+  :class="{'left-margin': isEmpty || !canEntryByRemove || !allowRemoving}"
   >
     <el-form-item>
       <div class="input-mock" :class="inputMockClass">
@@ -13,7 +13,7 @@
         <span>{{student.index}}</span>
       </div>
     </el-form-item>
-    <el-form-item v-if="!isEmpty && canEntryByRemove">
+    <el-form-item v-if="!isEmpty && canEntryByRemove && allowRemoving">
       <el-button type="danger" icon="el-icon-delete" circle @click.prevent="handleRemove"></el-button>
     </el-form-item>
   </el-form>
@@ -34,6 +34,10 @@ export default Vue.extend({
         addedBy: 'me',
       }),
     },
+    allowRemoving: {
+      type: Object as PropType<boolean>,
+      default: false
+    }
   },
   computed: {
     canEntryByRemove(): boolean {

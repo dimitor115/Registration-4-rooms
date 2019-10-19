@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-for="(student, idx) in room.students">
-      <student-filled-form :student="student" :key="'r' + idx" @onRemove="removeStudent"></student-filled-form>
+      <student-filled-form :student="student" :key="'r' + idx" @onRemove="removeStudent" :allowRemoving="true"></student-filled-form>
     </template>
     <template v-for="(place, idx) in restPlaces">
       <student-filled-form :key="'e' + idx"></student-filled-form>

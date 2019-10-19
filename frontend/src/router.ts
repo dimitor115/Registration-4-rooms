@@ -27,16 +27,16 @@ export default new Router({
       children: [
         {
           path: '/',
-          redirect: '/live'
+          redirect: '/admin/live'
         },
         {
-          path: '/zarzadzanie',
-          name: 'Zarządzanie',
+          path: '/admin/zarzadzanie',
+          name: 'Admin | Zarządzanie',
           component: RoomsManagement,
         },
         {
-          path: '/live',
-          name: 'live',
+          path: '/admin/live',
+          name: 'Admin | Live',
           component: RegistrationLiveView,
         },
       ]

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Home from './views/administrator/Home.vue'
 import StudentRegistration from './views/StudentRegistration.vue'
-import Playground from './Playground.vue'
+import AdminContainer from './views/administrator/AdminContainer.vue'
 import RoomsManagement from './views/administrator/RoomsManagement.vue'
 import RegistrationLiveView from './views/administrator/RegistrationLiveView.vue'
 
@@ -14,28 +14,32 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      redirect: '/zapisy'
     },
     {
-      path: '/management',
-      name: 'management',
-      component: RoomsManagement,
-    },
-    {
-      path: '/live',
-      name: 'live',
-      component: RegistrationLiveView,
-    },
-    {
-      path: '/registration',
-      name: 'registration',
+      path: '/zapisy',
+      name: 'Zapisy',
       component: StudentRegistration,
     },
     {
-      path: '/playground',
-      name: 'playground',
-      component: Playground,
-    }
+      path: '/admin',
+      component: AdminContainer,
+      children: [
+        {
+          path: '/',
+          redirect: '/live'
+        },
+        {
+          path: '/zarzadzanie',
+          name: 'Zarządzanie',
+          component: RoomsManagement,
+        },
+        {
+          path: '/live',
+          name: 'live',
+          component: RegistrationLiveView,
+        },
+      ]
+    },
   ],
 })

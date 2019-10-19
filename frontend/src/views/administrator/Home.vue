@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h1>Apka pokoje </h1>
+  <h1>Panel Admina : Apka pokoje </h1>
 </div>
 </template>
 

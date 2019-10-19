@@ -1,5 +1,5 @@
 <template>
-  <el-card class="object-card">
+  <el-card class="room-simple-card">
     <template slot="header">
       <span>{{room.name}}</span>
       <span>
@@ -33,9 +33,8 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss">
-.object-card {
+.room-simple-card {
   margin: 20px 0;
-  background-color: rgb(221, 218, 218);
   .el-card__header {
     display: flex;
     justify-content: space-between;

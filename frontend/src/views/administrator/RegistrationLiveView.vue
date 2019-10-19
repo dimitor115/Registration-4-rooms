@@ -7,13 +7,21 @@
       <el-progress type="circle" :percentage="totalPlacesPercentage"></el-progress>
     </el-card>
     <div class="rooms-header">
-      <h2>Pokoje: </h2>
+      <h2>Pokoje:</h2>
       <div>
         <el-button type="success">Export</el-button>
       </div>
     </div>
     <template v-for="(room, idx) in rooms">
-      <room-dynamic-card :room="room" :key="idx"></room-dynamic-card>
+      <room-dynamic-card :room="room" :key="idx">
+
+        <template v-for="(student, idx) in room.students">
+          <student-filled-form :student="student" :key="'r' + idx"></student-filled-form>
+        </template>
+        <template v-for="(place, idx) in room.size - room.students.length">
+          <student-filled-form :key="'e' + idx"></student-filled-form>
+        </template>
+      </room-dynamic-card>
     </template>
   </div>
 </template>
@@ -26,7 +34,8 @@ import { api } from "@/shared/api";
 import { Actions, RoomActions } from "@/shared/Actions";
 import { IRoom, IRoomForm } from "@/models/IRoom";
 
-import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue"
+import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue";
+import StudentFilledForm from "@/components/in-room-registration/StudentFilledForm.vue";
 import RoomForm from "@/components/RoomForm.vue";
 import RoomSimpleCard from "@/components/RoomSimpleCard.vue";
 import ConfirmationDialog from "@/components/ConfirmationDialog.vue";
@@ -35,7 +44,7 @@ import { connections } from "@/shared/socketApi";
 
 export default Vue.extend({
   name: "RegistrationLiveView",
-  components: {RoomDynamicCard},
+  components: { RoomDynamicCard, StudentFilledForm },
   mounted() {
     this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS);
     connections.roomUpdates.open();
@@ -47,7 +56,7 @@ export default Vue.extend({
   },
   computed: {
     rooms(): Array<IRoom> {
-      return this.$store.state.rooms
+      return this.$store.state.rooms;
     },
     totalPlacesPercentage(): number {
       const totalStudents = this.$store.state.rooms
@@ -67,7 +76,7 @@ export default Vue.extend({
 div.live-view {
   text-align: left;
 
-  .el-card{
+  .el-card {
     .el-card__header {
       font-weight: bold;
     }

@@ -15,7 +15,7 @@
       disabled
       @click="reserveRoom"
       type="primary">
-    Ktoś inny zapisuje teraz do tego pokoju...
+        Poczekaj chwile...
     </el-button>
 
     <el-button
@@ -89,5 +89,7 @@ button.reserve-button {
         width: 215px;
   }
    width: 485px;
+
+
 }
 </style>

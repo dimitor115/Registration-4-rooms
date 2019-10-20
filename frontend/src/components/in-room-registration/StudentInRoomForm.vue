@@ -114,6 +114,8 @@ export default Vue.extend({
      margin-left: 0;
     .student-input {
       padding-right: 50px;
+      margin-bottom: 15px;
+
     }
     flex-direction: column;
     .form-buttons > div:first-of-type button {

@@ -79,7 +79,7 @@ export default class RoomReservationsService {
                 this.findAndClearRoomTimeout(roomId)
                 this.emitReservationUpdate(this.closeReservation(roomId))
              },
-            RESERVATION_DURATION * 1000
+            (RESERVATION_DURATION - 1) * 1000
         )
 
         this.findAndClearRoomTimeout(roomId)

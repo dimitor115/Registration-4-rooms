@@ -1,9 +1,10 @@
 import IRoomForm from '@/models/RoomFrom'
 import { IRoom } from '@/models/IRoom'
 import createAxios from './config/configureAxios'
+import {API_URL} from './config/consts'
 
 const axios = createAxios({
-    baseURL: 'http://localhost:3000/api/v1',
+    baseURL: API_URL + '/api/v1'
 })
 
 export const api = {

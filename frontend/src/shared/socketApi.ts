@@ -1,12 +1,13 @@
 import io from 'socket.io-client'
 
 import store from '@/store'
+import {API_URL} from './config/consts'
 import { IResponse, isResponse, IMessage } from '@/shared/IResponse'
 import { parseMessageToNotification } from '@/shared/config/configureAxios'
 import { IStudent } from '@/models/IStudent'
 import { IRoom } from '@/models/IRoom'
 
-const socket = io('http://localhost:3000')
+const socket = io(API_URL)
 
 export const connections = {
   roomUpdates: {

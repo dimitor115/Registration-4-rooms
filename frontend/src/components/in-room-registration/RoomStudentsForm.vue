@@ -81,8 +81,13 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 button.reserve-button {
-  width: 485px;
+
   margin-top: 20px;
   margin-right: 58px;
+
+  @media only screen and (max-width: 700px) {
+        width: 215px;
+  }
+   width: 485px;
 }
 </style>

@@ -60,11 +60,6 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss">
-button.reserve-button {
-  width: 485px;
-  margin-top: 20px;
-  margin-right: 58px;
-}
 
 .dynamic-card-footer {
   margin: 15px -20px -20px -20px;

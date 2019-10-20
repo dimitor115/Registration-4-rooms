@@ -48,10 +48,6 @@ export default Vue.extend({
 })
 </script>
 <style>
-.wrapper {
-  width: 800px;
-}
-
 .list-item {
   display: inline-block;
   margin-right: 10px;

@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <h2>Pokoje:</h2>
     <template v-for="(room, idx) in rooms">
       <room-dynamic-card :room="room" :key="idx">
         <room-students-form :room="room"></room-students-form>

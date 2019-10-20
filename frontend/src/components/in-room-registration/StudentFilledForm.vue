@@ -64,7 +64,6 @@ export default Vue.extend({
 .input-mock {
   border: 1px solid #e4e7ed;
   border-radius: 4px;
-  width: 235px;
   text-align: left;
   span {
     margin-left: 14px;
@@ -75,6 +74,11 @@ export default Vue.extend({
   &.empty-input {
     background-color: white;
   }
+
+   width: 235px;
+   @media only screen and (max-width: 700px) {
+        width: 100px;
+    }
 }
 .left-margin {
   padding-right: 50px;

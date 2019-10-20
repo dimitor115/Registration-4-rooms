@@ -1,9 +1,10 @@
 <template>
-  <div class="wrapper">
+  <div>
     <el-menu
       router
       :default-active="activePage"
       mode="horizontal"
+      class="wrapper"
     >
       <el-menu-item index="live">Zapisy live</el-menu-item>
       <el-menu-item index="zarzadzanie">Zarządzanie pokojami</el-menu-item>

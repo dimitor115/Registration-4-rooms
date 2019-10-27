@@ -1,5 +1,5 @@
 import { Context } from 'koa'
-import { logger } from './logger'
+import { logger } from '../config/winstonConfig'
 
 export default async function (ctx: Context, next: () => Promise<any>): Promise<void> {
   try {

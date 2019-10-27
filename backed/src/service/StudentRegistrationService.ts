@@ -1,4 +1,4 @@
-import { logger } from '../common/logger'
+import { logger } from '../config/winstonConfig'
 import { Room, IRoom } from '../models/room.model'
 import { IStudent, Student } from '../models/student.model'
 import { Message, MessageType } from '../common/Response'

@@ -1,11 +1,11 @@
 import moment from 'moment'
 
-import { logger } from '../common/logger'
+import { logger } from '../config/winstonConfig'
 import { Room, IRoom } from '../models/room.model'
-import { Response, Message } from '../common/Response'
+import { Message } from '../common/Response'
 import { ErrorCodes } from '../common/errorCodes'
 
-const RESERVATION_DURATION = 20 // seconds
+const RESERVATION_DURATION = 22 // seconds
 
 export default class RoomReservationsService {
 
@@ -79,7 +79,7 @@ export default class RoomReservationsService {
                 this.findAndClearRoomTimeout(roomId)
                 this.emitReservationUpdate(this.closeReservation(roomId))
              },
-            (RESERVATION_DURATION - 1) * 1000
+            RESERVATION_DURATION * 1000
         )
 
         this.findAndClearRoomTimeout(roomId)

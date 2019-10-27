@@ -2,7 +2,7 @@ import { StudentRegistrationService, RoomReservationsService } from '../service'
 import { IStudent } from '../models/student.model'
 import { Response, Message } from '../common/Response'
 import { IRoom } from '../models/room.model'
-import { logger } from '../common/logger'
+import { logger } from '../config/winstonConfig'
 
 export default function configureSocketApi(io: SocketIO.Server): void {
 

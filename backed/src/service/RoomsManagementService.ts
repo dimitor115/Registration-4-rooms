@@ -1,5 +1,5 @@
 import { Context } from 'koa'
-import { logger } from '../common/logger'
+import { logger } from '../config/winstonConfig'
 import { Room, IRoom } from '../models/room.model'
 import { Response, Message, MessageType } from '../common/Response'
 

@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import { config } from './config'
+import { config } from './envConfig'
 import winston, { format } from 'winston'
 
 winston.configure({

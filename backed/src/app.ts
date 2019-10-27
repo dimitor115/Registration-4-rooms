@@ -8,10 +8,10 @@ import cors from '@koa/cors'
 import 'reflect-metadata'
 
 
-import { requestLogger, logger } from './common/logger'
-import { connectToMongo } from './common/config.mongoose'
+import { requestLogger, logger } from './config/winstonConfig'
+import { connectToMongo } from './config/mongooseConfig'
 import errorHandler from './common/errorHandler'
-import { config } from './common/config'
+import { config } from './config/envConfig'
 import { Api, SocketApi } from './api'
 
 const app = new Koa()

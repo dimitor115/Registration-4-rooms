@@ -1,4 +1,4 @@
-import { logger } from './logger'
+import { logger } from './winstonConfig'
 
 import mongoose from 'mongoose'
 // import slug from 'mongoose-slug-generator'

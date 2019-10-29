@@ -18,7 +18,7 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 
 import { api } from '@/shared/api'
-import { Actions, RoomActions } from '@/shared/Actions'
+import { Actions } from '@/shared/Actions'
 import { IRoom, IRoomForm } from '@/models/IRoom'
 
 import RoomForm from '@/components/RoomForm.vue'
@@ -35,14 +35,14 @@ export default Vue.extend({
     }),
   },
   mounted() {
-    this.$store.dispatch(RoomActions.FETCH_ALL_ROOMS)
+    this.$store.dispatch(Actions.FETCH_ALL_ROOMS)
   },
   methods: {
     async createNewRoom(room: IRoomForm) {
-      this.$store.dispatch(RoomActions.CREATE_ROOM, room)
+      this.$store.dispatch(Actions.CREATE_ROOM, room)
     },
     async removeRoom(id: string) {
-      this.$store.dispatch(RoomActions.DELETE_ROOM, id)
+      this.$store.dispatch(Actions.DELETE_ROOM, id)
     },
   },
 })

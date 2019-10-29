@@ -32,7 +32,7 @@ import Vue from "vue";
 import { mapState } from "vuex";
 
 import { api } from "@/shared/api";
-import { Actions, RoomActions } from "@/shared/Actions";
+import { Actions } from "@/shared/Actions";
 import { IRoom, IRoomForm } from "@/models/IRoom";
 
 import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue";
@@ -47,7 +47,7 @@ export default Vue.extend({
   name: "RegistrationLiveView",
   components: { RoomDynamicCard, StudentFilledForm, Spinner },
   mounted() {
-    this.$store.dispatch(RoomActions.FETCH_ALL_ROOMS);
+    this.$store.dispatch(Actions.FETCH_ALL_ROOMS);
     connections.roomUpdates.open();
     connections.clientsUpdates.open();
   },

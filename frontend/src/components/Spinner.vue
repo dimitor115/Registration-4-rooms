@@ -9,13 +9,13 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import { Actions, RoomActions } from '@/shared/Actions'
+import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
   name: 'spinner',
   props: {
     action: {
-      type: String as PropType<RoomActions>,
+      type: String as PropType<Actions>,
       default: undefined,
     },
     isLoading: {

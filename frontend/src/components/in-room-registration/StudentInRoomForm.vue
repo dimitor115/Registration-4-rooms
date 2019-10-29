@@ -11,7 +11,7 @@
 
     <div class="form-buttons">
       <el-form-item>
-        <el-button type="success" @click.prevent="handleAdd">Dodaj</el-button>
+        <el-button type="success" @click.prevent="handleAdd" :loading="isRegistrationRequestProcessing">Dodaj</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="danger" icon="el-icon-close" circle @click.prevent="clearForm"></el-button>
@@ -23,6 +23,7 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import { IStudent } from "@/models/IStudent";
+import { Actions } from '@/shared/Actions';
 
 export default Vue.extend({
   name: "home",
@@ -33,6 +34,9 @@ export default Vue.extend({
     }
   }),
   computed: {
+    isRegistrationRequestProcessing(): boolean {
+      return this.$store.state.isProcessing[Actions.REGISTER_STUDENT]
+    },
     userUUID(): string {
       return this.$store.state.user.uuid;
     },
@@ -73,7 +77,7 @@ export default Vue.extend({
         addedBy: this.userUUID
       };
       this.$emit("onRegister", student);
-      this.clearForm()
+      this.clearForm();
     },
     clearForm(): void {
       this.form.name = null;
@@ -94,9 +98,8 @@ export default Vue.extend({
     width: 237px;
   }
 
-
   @media only screen and (max-width: 840px) {
-     margin-left: 0;
+    margin-left: 0;
     .student-input {
       padding-right: 50px;
     }
@@ -111,11 +114,10 @@ export default Vue.extend({
       width: 100px;
     }
 
-     margin-left: 0;
+    margin-left: 0;
     .student-input {
       padding-right: 50px;
       margin-bottom: 15px;
-
     }
     flex-direction: column;
     .form-buttons > div:first-of-type button {

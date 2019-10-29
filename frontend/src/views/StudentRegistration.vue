@@ -15,7 +15,7 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import { IResponse } from "@/shared/IResponse";
-import { RoomActions } from "@/shared/Actions";
+import { Actions } from "@/shared/Actions";
 import { IRoom } from "@/models/IRoom";
 import { connections } from "@/shared/socketApi";
 import Spinner from "@/components/Spinner.vue";
@@ -31,7 +31,7 @@ export default Vue.extend({
     })
   },
   mounted() {
-    this.$store.dispatch(RoomActions.FETCH_ALL_ROOMS);
+    this.$store.dispatch(Actions.FETCH_ALL_ROOMS);
     connections.roomUpdates.open();
     connections.reservationUpdates.open();
   },

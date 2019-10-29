@@ -1,7 +1,8 @@
 <template>
-  <el-form :inline="true" 
-  class="student-in-room-from mock-form" 
-  :class="{'left-margin': isEmpty || !canEntryByRemove || !allowRemoving}"
+  <el-form
+    :inline="true"
+    class="student-in-room-from mock-form"
+    :class="{'left-margin': isEmpty || !canEntryByRemove || !allowRemoving}"
   >
     <el-form-item>
       <div class="input-mock" :class="inputMockClass">
@@ -14,51 +15,55 @@
       </div>
     </el-form-item>
     <el-form-item v-if="!isEmpty && canEntryByRemove && allowRemoving">
-      <el-button type="danger" icon="el-icon-delete" circle @click.prevent="handleRemove"></el-button>
+      <el-button type="danger" icon="el-icon-delete" circle :loading="isRemoveRequestProcessing" @click.prevent="handleRemove"></el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import { IStudent } from '@/models/IStudent'
+import Vue, { PropType } from "vue";
+import { IStudent } from "@/models/IStudent";
+import { Actions } from '@/shared/Actions';
 
 export default Vue.extend({
-  name: 'StudentFilledForm',
+  name: "StudentFilledForm",
   props: {
     student: {
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
-        name: '',
-        index: '',
-        addedBy: 'me',
-      }),
+        name: "",
+        index: "",
+        addedBy: "me"
+      })
     },
     allowRemoving: {
-      type: Object as PropType<boolean>,
+      type: Boolean,
       default: false
     }
   },
   computed: {
+    isRemoveRequestProcessing(): boolean {
+      return this.$store.state.isProcessing[Actions.REMOVE_STUDENT]
+    },
     canEntryByRemove(): boolean {
-      return this.student.addedBy === this.userUUID
+      return this.student.addedBy === this.userUUID;
     },
     userUUID(): string {
-      return this.$store.state.user.uuid
+      return this.$store.state.user.uuid;
     },
     isEmpty(): boolean {
-      return !(this.student.name && this.student.index)
+      return !(this.student.name && this.student.index);
     },
     inputMockClass(): string {
-      return this.isEmpty ? 'empty-input' : 'fielled-input'
-    },
+      return this.isEmpty ? "empty-input" : "fielled-input";
+    }
   },
   methods: {
     handleRemove(): void {
-      this.$emit('onRemove', this.student, this.userUUID)
-    },
-  },
-})
+      this.$emit("onRemove", this.student, this.userUUID);
+    }
+  }
+});
 </script>
 <style lang="scss">
 .input-mock {
@@ -75,10 +80,10 @@ export default Vue.extend({
     background-color: white;
   }
 
-   width: 235px;
-   @media only screen and (max-width: 700px) {
-        width: 100px;
-    }
+  width: 235px;
+  @media only screen and (max-width: 700px) {
+    width: 100px;
+  }
 }
 .left-margin {
   padding-right: 50px;

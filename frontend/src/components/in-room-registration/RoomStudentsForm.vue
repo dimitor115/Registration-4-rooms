@@ -22,6 +22,7 @@
       v-else
       class="reserve-button"
       @click="reserveRoom"
+      :loading="isReservationRequestProcessing"
       type="primary">
       Rozpocznij wpisywanie
     </el-button>
@@ -49,6 +50,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    isReservationRequestProcessing(): boolean {
+      return this.$store.state.isProcessing[Actions.RESERVE_ROOM]
+    },
     canRegisterStudents(): boolean {
       return this.room.reservedBy === this.$store.state.user.uuid;
     },

@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 
 import store from '@/store'
-import {API_URL} from './config/consts'
+import { API_URL } from './config/consts'
 import { IResponse, isResponse, IMessage } from '@/shared/IResponse'
 import { parseMessageToNotification } from '@/shared/config/configureAxios'
 import { IStudent } from '@/models/IStudent'
@@ -24,23 +24,24 @@ export const connections = {
   },
   clientsUpdates: {
     open: () => socket.on('clients_update', (count: number) => {
-        store.commit('setClientsCount', count)
+      store.commit('setClientsCount', count)
     }),
     close: () => socket.removeListener('clients_update')
   }
 }
 
 export default {
-  remove_student: (roomId: string, student: IStudent, removedBy: string) =>
-    socket.emit('remove_student', roomId, student, removedBy, socketErrorHandler),
+  remove_student: (roomId: string, student: IStudent, removedBy: string): Promise<void> =>
+    new Promise((resolve, reject) => {
+      socket.emit('remove_student', roomId, student, removedBy, (err: IMessage | null) => { if (err) { parseMessageToNotification(err); reject(err) } else { resolve() } })
+    }),
 
-  register_student: (roomId: string, student: IStudent) =>
-    socket.emit('register_student', roomId, student, socketErrorHandler),
+  register_student: (roomId: string, student: IStudent): Promise<void> =>
+    new Promise((resolve, reject) => {
+      socket.emit('register_student', roomId, student, (err: IMessage | null) => { if (err) { parseMessageToNotification(err); reject(err) } else { resolve() } })
+    }),
 
-  reserve_room: (roomId: string, userUUID: string) =>
-    socket.emit('reserve_room', roomId, userUUID, socketErrorHandler),
-}
-
-function socketErrorHandler<T>(msg: IMessage) {
-  parseMessageToNotification(msg)
+  reserve_room: (roomId: string, userUUID: string): Promise<void> => new Promise((resolve, reject) => {
+    socket.emit('reserve_room', roomId, userUUID, (err: IMessage | null) => { if (err) { parseMessageToNotification(err); reject(err) } else { resolve() } })
+  }),
 }

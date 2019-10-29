@@ -12,29 +12,46 @@ import { requestLogger, logger } from './config/winstonConfig'
 import { connectToMongo } from './config/mongooseConfig'
 import errorHandler from './common/errorHandler'
 import { config } from './config/envConfig'
-import { Api, SocketApi } from './api'
+import initApi from './core/api'
+import { SocketSender } from './core/socketSender'
+import { RequestManager } from './modules/reservations/requestsManager'
+import RoomReservationsService from './modules/reservations/RoomReservationsService'
+import StudentRegistrationService from './modules/registrations/StudentRegistrationService'
+import RoomsManagementService from './modules/rooms/RoomsManagementService'
 
-const app = new Koa()
-const server = http.createServer(app.callback())
-const io = socketIO(server)
+(async function start(): Promise<void> {
+    logger.info('Starting application')
+
+    const app = new Koa()
+    const server = http.createServer(app.callback())
+    const io = socketIO(server)
 
 
-app.use(helmet())
-app.use(cors())
-app.use(requestLogger)
-app.use(bodyParser())
-app.use(errorHandler)
+    app.use(helmet())
+    app.use(cors())
+    app.use(requestLogger)
+    app.use(bodyParser())
+    app.use(errorHandler)
 
-app
-    .use(Api.prefix('/api/v1').routes())
-    .use(Api.allowedMethods())
+    const socketSender = new SocketSender(io)
+    const reservationsService = new RoomReservationsService(socketSender)
+    const studentRegistrationService = new StudentRegistrationService()
+    const roomManagmentService = new RoomsManagementService()
+    // const requestManager = new RequestManager(socketSender, reservationsService)
 
-SocketApi(io)
+    const api = initApi(io, socketSender, reservationsService, studentRegistrationService, roomManagmentService)
 
-connectToMongo(config.databaseUrl).then(() => {
+    app
+        .use(api.prefix('/api/v1').routes())
+        .use(api.allowedMethods())
+
+    await connectToMongo(config.databaseUrl)
+
     server.listen(config.port)
+
+    logger.info(`Application ready!`)
     logger.info(`Server running on port : ${config.port}`)
-})
+})()
 
 
 // -- temporary protected routes are disabled

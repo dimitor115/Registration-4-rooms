@@ -1,20 +1,19 @@
 import moment from 'moment'
 
-import { logger } from '../config/winstonConfig'
-import { Room, IRoom } from '../models/room.model'
-import { Message } from '../common/Response'
-import { ErrorCodes } from '../common/errorCodes'
+import { logger } from '../../config/winstonConfig'
+import { Room, IRoom } from '../../core/RoomModel'
+import { Message } from '../../common/Response'
+import { ErrorCodes } from '../../common/errorCodes'
+import { SocketSender } from '../../core/socketSender'
 
 const RESERVATION_DURATION = 22 // seconds
 
 export default class RoomReservationsService {
+    constructor(
+        private readonly socketSender: SocketSender
+    ) {}
 
     private timeouts: Map<string, NodeJS.Timeout> = new Map()
-    private emitReservationUpdate: (updatedResponse: Promise<IRoom>) => void
-
-    constructor(emitReservationUpdate: (updatedResponse: Promise<IRoom>) => void) {
-        this.emitReservationUpdate = emitReservationUpdate
-    }
 
     public async reserve(
         roomId: string,
@@ -50,7 +49,8 @@ export default class RoomReservationsService {
 
         reservedRooms.forEach(async room => {
             this.findAndClearRoomTimeout(room._id.toString())
-            this.emitReservationUpdate(this.closeReservation(room._id))
+            const updatedRoom = await this.closeReservation(room._id)
+            this.socketSender.sendReservationUpdate(updatedRoom)
         })
     }
 
@@ -75,9 +75,10 @@ export default class RoomReservationsService {
 
     private createReservationTimeout(roomId: string): void {
         const reservationTimeout = setTimeout(
-            () => {
+           async () => {
                 this.findAndClearRoomTimeout(roomId)
-                this.emitReservationUpdate(this.closeReservation(roomId))
+                const updatedRoom = await this.closeReservation(roomId)
+                this.socketSender.sendReservationUpdate(updatedRoom)
              },
             RESERVATION_DURATION * 1000
         )

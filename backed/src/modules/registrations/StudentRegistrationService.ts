@@ -1,12 +1,12 @@
-import { logger } from '../config/winstonConfig'
-import { Room, IRoom } from '../models/room.model'
-import { IStudent, Student } from '../models/student.model'
-import { Message, MessageType } from '../common/Response'
-import { ErrorCodes } from '../common/errorCodes'
+import { logger } from '../../config/winstonConfig'
+import { Room, IRoom } from '../../core/RoomModel'
+import { IStudent, Student } from './StudentModel'
+import { Message, MessageType } from '../../common/Response'
+import { ErrorCodes } from '../../common/errorCodes'
 
 export default class StudentRegistrationService {
 
-    public static async addStudent(roomId: string, student: IStudent): Promise<IRoom> {
+    public async addStudent(roomId: string, student: IStudent): Promise<IRoom> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
 
         const studentModel = this.createAndValidateStudent(student)
@@ -19,7 +19,7 @@ export default class StudentRegistrationService {
         return result
     }
 
-    private static createAndValidateStudent(student: IStudent): IStudent {
+    private createAndValidateStudent(student: IStudent): IStudent {
         const model = new Student(student)
         const err = model.validateSync()
         if (err) throw err
@@ -27,7 +27,7 @@ export default class StudentRegistrationService {
         return model
     }
 
-    public static async removeStudent(roomId: string, student: IStudent, removedBy: string): Promise<IRoom> {
+    public async removeStudent(roomId: string, student: IStudent, removedBy: string): Promise<IRoom> {
         logger.info(`Removing student (${student.index}) from room :${roomId} by ${removedBy}`)
         const room: IRoom = await Room.findOne({ _id: roomId })
 

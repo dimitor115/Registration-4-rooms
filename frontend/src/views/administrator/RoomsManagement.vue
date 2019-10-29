@@ -3,7 +3,7 @@
     <el-card>
       <room-form @onSubmit="createNewRoom"></room-form>
     </el-card>
-    <spinner action="FEATCH_ALL_ROOMS">
+    <spinner action="FETCH_ALL_ROOMS">
       <transition-group name="list">
         <template v-for="(room, idx) in rooms">
           <room-simple-card :room="room" :key="idx" @onDeleteClick="removeRoom" />
@@ -35,7 +35,7 @@ export default Vue.extend({
     }),
   },
   mounted() {
-    this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS)
+    this.$store.dispatch(RoomActions.FETCH_ALL_ROOMS)
   },
   methods: {
     async createNewRoom(room: IRoomForm) {

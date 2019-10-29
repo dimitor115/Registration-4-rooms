@@ -12,17 +12,18 @@
         <el-button type="success">Export</el-button>
       </div>
     </div>
-    <template v-for="(room, idx) in rooms">
-      <room-dynamic-card :room="room" :key="idx">
-
-        <template v-for="(student, idx) in room.students">
-          <student-filled-form :student="student" :key="'r' + idx"></student-filled-form>
-        </template>
-        <template v-for="(place, idx) in room.size - room.students.length">
-          <student-filled-form :key="'e' + idx"></student-filled-form>
-        </template>
-      </room-dynamic-card>
-    </template>
+    <spinner action="FETCH_ALL_ROOMS">
+      <template v-for="(room, idx) in rooms">
+        <room-dynamic-card :room="room" :key="idx">
+          <template v-for="(student, idx) in room.students">
+            <student-filled-form :student="student" :key="'r' + idx"></student-filled-form>
+          </template>
+          <template v-for="(place, idx) in room.size - room.students.length">
+            <student-filled-form :key="'e' + idx"></student-filled-form>
+          </template>
+        </room-dynamic-card>
+      </template>
+    </spinner>
   </div>
 </template>
 
@@ -44,9 +45,9 @@ import { connections } from "@/shared/socketApi";
 
 export default Vue.extend({
   name: "RegistrationLiveView",
-  components: { RoomDynamicCard, StudentFilledForm },
+  components: { RoomDynamicCard, StudentFilledForm, Spinner },
   mounted() {
-    this.$store.dispatch(RoomActions.FEACH_ALL_ROOMS);
+    this.$store.dispatch(RoomActions.FETCH_ALL_ROOMS);
     connections.roomUpdates.open();
     connections.clientsUpdates.open();
   },

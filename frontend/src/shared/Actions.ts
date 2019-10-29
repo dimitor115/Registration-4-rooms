@@ -5,7 +5,7 @@ export enum Actions {
 }
 
 export enum RoomActions {
-    FEACH_ALL_ROOMS = 'FEACH_ALL_ROOMS',
+    FETCH_ALL_ROOMS = 'FETCH_ALL_ROOMS',
     CREATE_ROOM = 'CREATE_ROOM',
     DELETE_ROOM = 'DELETE_ROOM',
 }

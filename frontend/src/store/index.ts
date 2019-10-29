@@ -13,7 +13,7 @@ export default new Vuex.Store({
   state: {
     rooms: [] as IRoom[],
     isProcessing: {
-      [RoomActions.FEACH_ALL_ROOMS]: false as boolean,
+      [RoomActions.FETCH_ALL_ROOMS]: false as boolean,
       [RoomActions.CREATE_ROOM]: false as boolean,
       [RoomActions.DELETE_ROOM]: false as boolean,
     },
@@ -65,13 +65,13 @@ export default new Vuex.Store({
     async [Actions.REGISTER_STUDENT]({ commit }, { roomId, student }) {
       socketApi.register_student(roomId, student)
     },
-    async [RoomActions.FEACH_ALL_ROOMS]({ commit }) {
-      commit('updateRoomProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: true })
+    async [RoomActions.FETCH_ALL_ROOMS]({ commit }) {
+      commit('updateRoomProcessing', { type: RoomActions.FETCH_ALL_ROOMS, isProcessing: true })
       try {
         const response = await api.rooms.findAll()
         commit('setRooms', response.data)
       } finally {
-        commit('updateRoomProcessing', { type: RoomActions.FEACH_ALL_ROOMS, isProcessing: false })
+        commit('updateRoomProcessing', { type: RoomActions.FETCH_ALL_ROOMS, isProcessing: false })
       }
     },
     async [RoomActions.CREATE_ROOM]({ commit }, room: IRoomForm) {

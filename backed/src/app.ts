@@ -37,9 +37,9 @@ import RoomsManagementService from './modules/rooms/RoomsManagementService'
     const reservationsService = new RoomReservationsService(socketSender)
     const studentRegistrationService = new StudentRegistrationService()
     const roomManagmentService = new RoomsManagementService()
-    // const requestManager = new RequestManager(socketSender, reservationsService)
+    const requestManager = new RequestManager(socketSender, reservationsService)
 
-    const api = initApi(io, socketSender, reservationsService, studentRegistrationService, roomManagmentService)
+    const api = initApi(io, socketSender, reservationsService, studentRegistrationService, roomManagmentService, requestManager)
 
     app
         .use(api.prefix('/api/v1').routes())

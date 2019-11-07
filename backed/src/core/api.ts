@@ -8,15 +8,17 @@ import { Message } from 'src/common/Response'
 import { socketErrorHandler } from './socketErrorHandler'
 import { IRoom } from './RoomModel'
 import { IStudent } from '../modules/registrations/StudentModel'
+import { RequestManager, ReservationRequest } from '../modules/reservations/requestsManager'
 
 export default function api(
     io: SocketIO.Server,
     socketSender: SocketSender,
     roomReservationsService: RoomReservationsService,
     studentRegistrationService: StudentRegistrationService,
-    roomManagementService: RoomsManagementService
+    roomManagementService: RoomsManagementService,
+    requestManger: RequestManager
 ): Router {
-    initSocketApi(io, socketSender, roomReservationsService, studentRegistrationService)
+    initSocketApi(io, socketSender, roomReservationsService, studentRegistrationService, requestManger)
     return initRestApi(roomManagementService)
 }
 
@@ -24,7 +26,8 @@ function initSocketApi(
     io: SocketIO.Server,
     socketSender: SocketSender,
     roomReservationsService: RoomReservationsService,
-    studentRegistrationService: StudentRegistrationService
+    studentRegistrationService: StudentRegistrationService,
+    requestManger: RequestManager
 ): void {
     io.on('connection', async client => {
 
@@ -65,8 +68,8 @@ function initSocketApi(
             userUUID: string,
             callback: (msg: Message | null) => void
         ) => {
-            roomReservationsService
-                .reserve(roomId, userUUID)
+            requestManger
+                .handleRequest(new ReservationRequest(roomId, userUUID))
                 .catch(socketErrorHandler(callback))
                 .then((updatedRoom: IRoom) => {
                     socketSender.sendReservationUpdate(updatedRoom)

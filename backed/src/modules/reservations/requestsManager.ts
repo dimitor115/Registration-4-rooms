@@ -18,9 +18,14 @@ export class RequestManager {
     async handleRequest(request: ReservationRequest): Promise<IRoom> {
         this.addNewRequestToQueue(request)
         await this.waitForRequestTime(request)
-        const result = await this.roomReservationService.reserve(request.roomId, request.userUUID)
-        this.removeRequestFromQueue(request)
-        return result
+        try {
+            const result = await this.roomReservationService.reserve(request.roomId, request.userUUID)
+            this.removeRequestFromQueue(request)
+            return result
+        } catch(err) {
+            this.removeRequestFromQueue(request)
+            throw err
+        }
     }
 
     private removeRequestFromQueue(request: ReservationRequest): void {

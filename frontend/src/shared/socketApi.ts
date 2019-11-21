@@ -41,7 +41,15 @@ export default {
       socket.emit('register_student', roomId, student, (err: IMessage | null) => { if (err) { parseMessageToNotification(err); reject(err) } else { resolve() } })
     }),
 
-  reserve_room: (roomId: string, userUUID: string): Promise<void> => new Promise((resolve, reject) => {
-    socket.emit('reserve_room', roomId, userUUID, (err: IMessage | null) => { if (err) { parseMessageToNotification(err); reject(err) } else { resolve() } })
-  }),
+  reserve_room: (roomId: string, userUUID: string): Promise<void> =>
+    new Promise((resolve, reject) => {
+      socket.emit('reserve_room', roomId, userUUID, (err: IMessage | null) => {
+        if (err) {
+          parseMessageToNotification(err);
+          reject(err)
+        } else {
+          resolve()
+        }
+      })
+    }),
 }

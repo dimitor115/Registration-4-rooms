@@ -10,8 +10,9 @@ export default class RoomsManagementService {
         const result = await Room.find()
         if (result) {
             ctx.body = new Response(result)
+            ctx.status = 200
         } else {
-            ctx.state = 404
+            ctx.status = 500
             ctx.body = Response.fromMessage(
                 new Message(`There is problem with fetching all available rooms`)
             )

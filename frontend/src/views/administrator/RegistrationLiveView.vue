@@ -9,7 +9,7 @@
     <div class="rooms-header">
       <h2>Pokoje:</h2>
       <div>
-        <el-button type="success">Export</el-button>
+        <el-button type="success" @click="exportToExcel">Export</el-button>
       </div>
     </div>
     <spinner action="FETCH_ALL_ROOMS">
@@ -34,6 +34,7 @@ import { mapState } from "vuex";
 import { api } from "@/shared/api";
 import { Actions } from "@/shared/Actions";
 import { IRoom, IRoomForm } from "@/models/IRoom";
+import {API_URL} from "@/shared/config/consts"
 
 import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue";
 import StudentFilledForm from "@/components/in-room-registration/StudentFilledForm.vue";
@@ -69,6 +70,14 @@ export default Vue.extend({
         .reduce((count: number, acc: number) => acc + count, 0);
 
       return Math.round((totalStudents / totalSize) * 100) || 0;
+    }
+  },
+  methods: {
+    exportToExcel(){
+       const link = document.createElement('a')
+        link.setAttribute('href', API_URL + '/eksport.xlsx')
+        link.setAttribute('download', 'export.xlsx')
+        link.click()
     }
   }
 });

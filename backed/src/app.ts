@@ -5,6 +5,7 @@ import jwt from 'koa-jwt'
 import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import cors from '@koa/cors'
+import serve from 'koa-static'
 import 'reflect-metadata'
 
 
@@ -26,7 +27,7 @@ import RoomsManagementService from './modules/rooms/RoomsManagementService'
     const server = http.createServer(app.callback())
     const io = socketIO(server)
 
-
+    app.use(serve('./public'))
     app.use(helmet())
     app.use(cors())
     app.use(requestLogger)

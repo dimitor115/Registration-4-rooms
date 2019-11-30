@@ -2,3 +2,5 @@ node_modules/
 dist/
 frontend/dist/
 backend/dist/
+public/
+backend/public/

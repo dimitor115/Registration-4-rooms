@@ -25,7 +25,7 @@ async function startTest() {
     await Promise.all(
         clients.map((_,idx )=> reserveRoom(idx))
     )
-    console.log('Results : ',results)
+    console.log('Results :\n ',results)
     process.exit()
 }
 

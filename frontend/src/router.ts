@@ -35,6 +35,11 @@ export default new Router({
           component: RoomsManagement,
         },
         {
+          path: '/admin/login',
+          name: 'Login',
+          component: Home,
+        },
+        {
           path: '/admin/live',
           name: 'Admin | Live',
           component: RegistrationLiveView,

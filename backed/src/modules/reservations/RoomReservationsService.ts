@@ -1,10 +1,10 @@
 import moment from 'moment'
 
-import { logger } from '../../config/winstonConfig'
-import { Room, IRoom } from '../../core/RoomModel'
-import { Message } from '../../common/Response'
-import { ErrorCodes } from '../../common/errorCodes'
-import { SocketSender } from '../../core/socketSender'
+import { logger } from 'config/winstonConfig'
+import { Room, IRoom } from 'core/RoomModel'
+import { Message } from 'common/Response'
+import { ErrorCodes } from 'common/errorCodes'
+import { SocketSender } from 'core/socketSender'
 
 const RESERVATION_DURATION = 22 // seconds
 

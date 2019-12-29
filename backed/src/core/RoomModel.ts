@@ -1,5 +1,5 @@
 import { Schema, Document, model } from 'mongoose'
-import { IStudent, StudentSchema } from '../modules/registrations/StudentModel'
+import { IStudent, StudentSchema } from 'modules/registrations/StudentModel'
 
 export interface IRoom extends Document {
     name: string,

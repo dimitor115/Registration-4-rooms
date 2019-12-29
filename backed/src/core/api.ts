@@ -1,14 +1,15 @@
 import Router from 'koa-router'
 import { Context } from 'koa'
-import RoomsManagementService from '../modules/rooms/RoomsManagementService'
+import { Message } from 'common/Response'
 import { SocketSender } from './socketSender'
-import RoomReservationsService from '../modules/reservations/RoomReservationsService'
-import StudentRegistrationService from '../modules/registrations/StudentRegistrationService'
-import { Message } from 'src/common/Response'
 import { socketErrorHandler } from './socketErrorHandler'
+
 import { IRoom } from './RoomModel'
-import { IStudent } from '../modules/registrations/StudentModel'
-import { RequestManager, ReservationRequest } from '../modules/reservations/requestsManager'
+import RoomsManagementService from 'modules/rooms/RoomsManagementService'
+import RoomReservationsService from 'modules/reservations/RoomReservationsService'
+import StudentRegistrationService from 'modules/registrations/StudentRegistrationService'
+import { IStudent } from 'modules/registrations/StudentModel'
+import { RequestManager, ReservationRequest } from 'modules/reservations/RequestsManager'
 
 export default function api(
     io: SocketIO.Server,

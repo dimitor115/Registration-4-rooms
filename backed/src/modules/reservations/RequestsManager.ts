@@ -1,9 +1,9 @@
 import uuid from 'uuid/v4'
-import { SocketSender } from '../../core/socketSender'
+import { SocketSender } from 'core/socketSender'
 import RoomReservationsService from './RoomReservationsService'
 import { clearInterval } from 'timers'
-import { IRoom } from '../../core/RoomModel'
-import { logger } from '../../config/winstonConfig'
+import { IRoom } from 'core/RoomModel'
+import { logger } from 'config/winstonConfig'
 
 const CHECK_INTERVAL = 100
 export class RequestManager {

@@ -1,8 +1,8 @@
-import { logger } from '../../config/winstonConfig'
-import { Room, IRoom } from '../../core/RoomModel'
+import { logger } from 'config/winstonConfig'
+import { Room, IRoom } from 'core/RoomModel'
 import { IStudent, Student } from './StudentModel'
-import { Message, MessageType } from '../../common/Response'
-import { ErrorCodes } from '../../common/errorCodes'
+import { Message, MessageType } from 'common/Response'
+import { ErrorCodes } from 'common/errorCodes'
 
 export default class StudentRegistrationService {
 

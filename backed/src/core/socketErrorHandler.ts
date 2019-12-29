@@ -1,5 +1,5 @@
-import { Message } from '../common/Response'
-import { logger } from '../config/winstonConfig'
+import { Message } from 'common/Response'
+import { logger } from 'config/winstonConfig'
 
 export function socketErrorHandler(errorCallback: (msg: Message) => void): (err: any) => void {
     return (err: any) => {

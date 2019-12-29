@@ -1,7 +1,7 @@
 import { Context } from 'koa'
-import { logger } from '../../config/winstonConfig'
-import { Room, IRoom } from '../../core/RoomModel'
-import { Response, Message, MessageType } from '../../common/Response'
+import { logger } from 'config/winstonConfig'
+import { Room, IRoom } from 'core/RoomModel'
+import { Response, Message, MessageType } from 'common/Response'
 
 export default class RoomsManagementService {
 

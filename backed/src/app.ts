@@ -1,7 +1,6 @@
 import Koa from 'koa'
 import http from 'http'
 import socketIO from 'socket.io'
-import jwt from 'koa-jwt'
 import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import cors from '@koa/cors'
@@ -19,6 +18,7 @@ import { RequestManager } from './modules/reservations/RequestsManager'
 import RoomReservationsService from './modules/reservations/RoomReservationsService'
 import StudentRegistrationService from './modules/registrations/StudentRegistrationService'
 import RoomsManagementService from './modules/rooms/RoomsManagementService'
+import AdministratorsService from './modules/administrators/AdministratorsService'
 
 (async function start(): Promise<void> {
     logger.info('Starting application')
@@ -35,12 +35,13 @@ import RoomsManagementService from './modules/rooms/RoomsManagementService'
     app.use(errorHandler)
 
     const socketSender = new SocketSender(io)
+    const administratorsService = new AdministratorsService()
     const reservationsService = new RoomReservationsService(socketSender)
     const studentRegistrationService = new StudentRegistrationService()
     const roomManagmentService = new RoomsManagementService()
     const requestManager = new RequestManager(socketSender, reservationsService)
 
-    const api = initApi(io, socketSender, reservationsService, studentRegistrationService, roomManagmentService, requestManager)
+    const api = initApi(io, socketSender, administratorsService, reservationsService, studentRegistrationService, roomManagmentService, requestManager)
 
     app
         .use(api.prefix('/api/v1').routes())

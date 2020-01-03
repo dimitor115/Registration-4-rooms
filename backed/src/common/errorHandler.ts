@@ -11,7 +11,7 @@ export default async function (ctx: Context, next: () => Promise<any>): Promise<
       const msg = `${err.name}: ${(err as any).message}`
       ctx.status = err.name === 'ValidationError' ? 400 : 500
       ctx.body = {
-        messages: [err.message]
+        messages: [msg]
       }
     } else {
       ctx.status = err.statusCode || err.status || 500

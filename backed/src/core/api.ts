@@ -10,17 +10,20 @@ import RoomReservationsService from 'modules/reservations/RoomReservationsServic
 import StudentRegistrationService from 'modules/registrations/StudentRegistrationService'
 import { IStudent } from 'modules/registrations/StudentModel'
 import { RequestManager, ReservationRequest } from 'modules/reservations/RequestsManager'
+import { authMiddleware } from 'common/authentication';
+import AdministratorsService from '../modules/administrators/AdministratorsService';
 
 export default function api(
     io: SocketIO.Server,
     socketSender: SocketSender,
+    administratorsService: AdministratorsService,
     roomReservationsService: RoomReservationsService,
     studentRegistrationService: StudentRegistrationService,
     roomManagementService: RoomsManagementService,
-    requestManger: RequestManager
+    requestManger: RequestManager,
 ): Router {
     initSocketApi(io, socketSender, roomReservationsService, studentRegistrationService, requestManger)
-    return initRestApi(roomManagementService)
+    return initRestApi(roomManagementService, administratorsService)
 }
 
 function initSocketApi(
@@ -86,16 +89,21 @@ function initSocketApi(
 }
 
 function initRestApi(
-    roomManagementService: RoomsManagementService
+    roomManagementService: RoomsManagementService,
+    administratorsService: AdministratorsService
 ): Router {
     const router = new Router()
 
     router.get('/', (ctx: Context) => { ctx.body = 'Witaj przybyszu w świecie Api !' })
 
+    router.post('/admins', administratorsService.verifyAndCreateAdmin)
+    router.get('/admins', authMiddleware, administratorsService.findAll)
+    router.put('/admins/accept/:email', authMiddleware, administratorsService.accept)
+    router.delete('/admins/:email', authMiddleware, administratorsService.remove)
+
     router.get('/rooms', roomManagementService.findAll)
-    router.post('/rooms', roomManagementService.create)
-    router.delete('/rooms/:id', roomManagementService.delete)
+    router.post('/rooms', authMiddleware, roomManagementService.create)
+    router.delete('/rooms/:id', authMiddleware, roomManagementService.delete)
 
     return router
 }
-

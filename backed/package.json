@@ -64,6 +64,7 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.9.1",
     "dotenv": "^8.0.0",
+    "google-auth-library": "^5.7.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-helmet": "^4.2.0",

@@ -22,7 +22,6 @@ export default new Vuex.Store({
     },
     user: {
       uuid: '' as string,
-      googleToken: null as string | null,
       data: {
         name: null as string | null,
         imageUrl: null as string | null,
@@ -64,7 +63,6 @@ export default new Vuex.Store({
       state.clientsCount = count
     },
     setUserData(state, data) {
-      state.user.googleToken = data.googleToken
       state.user.data = data.userData
     }
   },

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/administrator/Home.vue'
+import Login from './views/administrator/Login.vue'
 import StudentRegistration from './views/StudentRegistration.vue'
 import AdminContainer from './views/administrator/AdminContainer.vue'
 import RoomsManagement from './views/administrator/RoomsManagement.vue'
@@ -22,6 +22,11 @@ export default new Router({
       component: StudentRegistration,
     },
     {
+      path: '/admin/login',
+      name: 'Login',
+      component: Login,
+    },
+    {
       path: '/admin',
       component: AdminContainer,
       children: [
@@ -33,11 +38,6 @@ export default new Router({
           path: '/admin/zarzadzanie',
           name: 'Admin | Zarządzanie',
           component: RoomsManagement,
-        },
-        {
-          path: '/admin/login',
-          name: 'Login',
-          component: Home,
         },
         {
           path: '/admin/live',

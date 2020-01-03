@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import { IMessage, ResponseOrAny, isResponse } from '../IResponse'
 import { Message } from 'element-ui'
+import store from '@/store';
 
 export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
+
+    
     const instance = axios.create(config)
 
     instance.interceptors.response.use(

@@ -8,6 +8,7 @@
     >
       <el-menu-item index="live">Zapisy live</el-menu-item>
       <el-menu-item index="zarzadzanie">Zarządzanie pokojami</el-menu-item>
+      <el-menu-item index="zarzadzanie">Zarządzanie administratorami</el-menu-item>
     </el-menu>
     <router-view></router-view>
   </div>

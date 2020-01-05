@@ -8,7 +8,7 @@ export default class AdministratorsService {
 
     public async verifyAndCreateAdmin(ctx: Context): Promise<void> {
         const token = ctx.request.headers['authorization']
-        const { name, email } = await verifyTokenAndFetchUserData(token)
+        const { name, email, picture } = await verifyTokenAndFetchUserData(token)
 
         const result = await Admin.findOne({ email })
 
@@ -28,6 +28,7 @@ export default class AdministratorsService {
             const admin = new Admin({
                 name,
                 email,
+                picture,
                 isAccepted: false
             })
 

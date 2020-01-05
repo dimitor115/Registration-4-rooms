@@ -75,7 +75,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async deleteAdmin({dispatch}, email) {
+    async removeAdmin({dispatch}, email) {
       await api.admins.remove(email)
       dispatch(Actions.FETCH_ALL_ADMINS)
     },

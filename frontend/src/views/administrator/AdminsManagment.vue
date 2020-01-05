@@ -1,41 +1,73 @@
 <template>
   <div class="wrapper">
     <spinner action="FETCH_ALL_ADMINS">
-      {{admins}}
+      <h2>Administratorzy</h2>
+      <el-card>
+        <template v-for="(admin, idx) in admins">
+          <single-admin :admin="admin" :key="idx" @onAdminRemove="removeAdmin"></single-admin>
+        </template>
+      </el-card>
+      <h2>Prośby o dołączenie</h2>
+      <el-card>
+        <template v-for="(admin, idx) in adminRequests">
+          <single-admin
+            :admin="admin"
+            :key="idx"
+            is-acceptable
+            @onAdminAccept="acceptAdmin"
+            @onAdminRemove="removeAdmin"
+          ></single-admin>
+        </template>
+      </el-card>
     </spinner>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapState } from 'vuex'
+import Vue from "vue";
+import { mapState } from "vuex";
 
-import { api } from '@/shared/api'
-import { Actions } from '@/shared/Actions'
-import { IRoom, IRoomForm } from '@/models/IRoom'
+import { api } from "@/shared/api";
+import { Actions } from "@/shared/Actions";
+import { IRoom, IRoomForm } from "@/models/IRoom";
 
-import RoomForm from '@/components/RoomForm.vue'
-import RoomSimpleCard from '@/components/RoomSimpleCard.vue'
-import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
-import Spinner from '@/components/Spinner.vue'
+import RoomForm from "@/components/RoomForm.vue";
+import SingleAdmin from "@/components/SingleAdmin.vue";
+import RoomSimpleCard from "@/components/RoomSimpleCard.vue";
+import ConfirmationDialog from "@/components/ConfirmationDialog.vue";
+import Spinner from "@/components/Spinner.vue";
+import { Admin } from "../../models/Admin";
 
 export default Vue.extend({
-  components: { RoomForm, RoomSimpleCard, ConfirmationDialog, Spinner },
+  components: {
+    RoomForm,
+    SingleAdmin,
+    RoomSimpleCard,
+    ConfirmationDialog,
+    Spinner
+  },
   computed: {
-    ...mapState({
-      admins: 'admins',
-    }),
+    admins(): Admin[] {
+      return this.$store.state.admins.filter(
+        (it: Admin) => it.isAccepted === true
+      );
+    },
+    adminRequests(): Admin[] {
+      return this.$store.state.admins.filter(
+        (it: Admin) => it.isAccepted === false
+      );
+    }
   },
   mounted() {
-    this.$store.dispatch(Actions.FETCH_ALL_ADMINS)
+    this.$store.dispatch(Actions.FETCH_ALL_ADMINS);
   },
   methods: {
-    async createNewRoom(room: IRoomForm) {
-      this.$store.dispatch(Actions.CREATE_ROOM, room)
+    async acceptAdmin(email: string) {
+      this.$store.dispatch("acceptAdmin", email);
     },
-    async removeRoom(id: string) {
-      this.$store.dispatch(Actions.DELETE_ROOM, id)
-    },
-  },
-})
+    async removeAdmin(email: string) {
+      this.$store.dispatch("removeAdmin", email);
+    }
+  }
+});
 </script>

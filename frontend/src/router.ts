@@ -5,6 +5,7 @@ import StudentRegistration from './views/StudentRegistration.vue'
 import AdminContainer from './views/administrator/AdminContainer.vue'
 import RoomsManagement from './views/administrator/RoomsManagement.vue'
 import RegistrationLiveView from './views/administrator/RegistrationLiveView.vue'
+import AdminsManagement from './views/administrator/AdminsManagment.vue'
 
 Vue.use(Router)
 
@@ -43,6 +44,11 @@ export default new Router({
           path: '/admin/live',
           name: 'Admin | Live',
           component: RegistrationLiveView,
+        },
+        {
+          path: '/admin/administratorzy',
+          name: 'Admin | Administratorzy',
+          component: AdminsManagement,
         },
       ]
     },

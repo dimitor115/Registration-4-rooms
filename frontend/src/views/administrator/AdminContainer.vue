@@ -4,7 +4,7 @@
       <el-menu class="menu" router :default-active="activePage" mode="horizontal">
         <el-menu-item index="live">Zapisy live</el-menu-item>
         <el-menu-item index="zarzadzanie">Zarządzanie pokojami</el-menu-item>
-        <el-menu-item index="zarzadzanie">Zarządzanie administratorami</el-menu-item>
+        <el-menu-item index="administratorzy">Zarządzanie administratorami</el-menu-item>
       </el-menu>
       <user-avatar></user-avatar>
     </div>

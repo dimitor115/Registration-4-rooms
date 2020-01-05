@@ -20,7 +20,7 @@ export default class RoomsManagementService {
     }
 
     public async create(ctx: Context): Promise<void> {
-        const room: IRoom = new Room(ctx.request.body)
+        const room: IRoom = new Room((ctx.request as any).body)
         logger.info(`Creating new room with name: ${room.name}`)
         const result = await room.save()
         ctx.body = new Response(result)

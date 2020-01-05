@@ -6,6 +6,7 @@ import { IRoom, IRoomForm } from '@/models/IRoom'
 import { api } from '@/shared/api'
 import socketApi from '@/shared/socketApi'
 import { Actions } from '@/shared/Actions'
+import { Admin } from '@/models/Admin'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,9 @@ export default new Vuex.Store({
       [Actions.REGISTER_STUDENT]: false as boolean,
       [Actions.REMOVE_STUDENT]: false as boolean,
       [Actions.RESERVE_ROOM]: false as boolean,
+      [Actions.FETCH_ALL_ADMINS]: false as boolean,
     },
+    admins: [] as Admin[],
     user: {
       uuid: '' as string,
       data: {
@@ -40,6 +43,7 @@ export default new Vuex.Store({
     removeRoom(state, room: IRoom) {
       state.rooms = state.rooms.filter((it: IRoom) => it._id !== room._id)
     },
+
     updateRoomStudents(state, updatedRoom: IRoom) {
       const room = state.rooms.find((it) => it._id === updatedRoom._id)
       if (room) {
@@ -53,7 +57,7 @@ export default new Vuex.Store({
         room.reservedUntil = updatedRoom.reservedUntil
       }
     },
-    updateRoomProcessing(state, { type, isProcessing }: { type: Actions, isProcessing: boolean }) {
+    updateProcessing(state, { type, isProcessing }: { type: Actions, isProcessing: boolean }) {
       state.isProcessing[type] = isProcessing
     },
     setUserUUID(state, uuid) {
@@ -64,58 +68,83 @@ export default new Vuex.Store({
     },
     setUserData(state, data) {
       state.user.data = data.userData
+    },
+
+    setAdmins(state, admins) {
+      state.admins = admins
     }
   },
   actions: {
+    async deleteAdmin({dispatch}, email) {
+      await api.admins.remove(email)
+      dispatch(Actions.FETCH_ALL_ADMINS)
+    },
+
+    async acceptAdmin({dispatch}, email) {
+        await api.admins.accept(email)
+        dispatch(Actions.FETCH_ALL_ADMINS)
+    },
+
+    async [Actions.FETCH_ALL_ADMINS]({commit}) {
+      commit('updateProcessing', { type: Actions.FETCH_ALL_ADMINS, isProcessing: true })
+      try {
+        const result = await api.admins.fetchAll()
+        commit('setAdmins', result.data)
+
+      } finally {
+        commit('updateProcessing', { type: Actions.FETCH_ALL_ADMINS, isProcessing: false })
+      }
+    },
+
     async [Actions.RESERVE_ROOM]({ commit }, { roomId, userUUID }) {
-      commit('updateRoomProcessing', { type: Actions.RESERVE_ROOM, isProcessing: true })
+      commit('updateProcessing', { type: Actions.RESERVE_ROOM, isProcessing: true })
       try {
         await socketApi.reserve_room(roomId, userUUID)
       } finally {
-        commit('updateRoomProcessing', { type: Actions.RESERVE_ROOM, isProcessing: false })
+        commit('updateProcessing', { type: Actions.RESERVE_ROOM, isProcessing: false })
       }
     },
     async [Actions.REMOVE_STUDENT]({ commit }, { roomId, student, removedBy }) {
-      commit('updateRoomProcessing', { type: Actions.REMOVE_STUDENT, isProcessing: true })
+      commit('updateProcessing', { type: Actions.REMOVE_STUDENT, isProcessing: true })
       try {
         await socketApi.remove_student(roomId, student, removedBy)
       } finally {
-        commit('updateRoomProcessing', { type: Actions.REMOVE_STUDENT, isProcessing: false })
+        commit('updateProcessing', { type: Actions.REMOVE_STUDENT, isProcessing: false })
       }
     },
     async [Actions.REGISTER_STUDENT]({ commit }, { roomId, student }) {
-      commit('updateRoomProcessing', { type: Actions.REGISTER_STUDENT, isProcessing: true })
+      commit('updateProcessing', { type: Actions.REGISTER_STUDENT, isProcessing: true })
       try {
         await socketApi.register_student(roomId, student)
       } finally {
-        commit('updateRoomProcessing', { type: Actions.REGISTER_STUDENT, isProcessing: false })
+        commit('updateProcessing', { type: Actions.REGISTER_STUDENT, isProcessing: false })
       }
     },
     async [Actions.FETCH_ALL_ROOMS]({ commit }) {
-      commit('updateRoomProcessing', { type: Actions.FETCH_ALL_ROOMS, isProcessing: true })
+      commit('updateProcessing', { type: Actions.FETCH_ALL_ROOMS, isProcessing: true })
       try {
         const response = await api.rooms.findAll()
         commit('setRooms', response.data)
       } finally {
-        commit('updateRoomProcessing', { type: Actions.FETCH_ALL_ROOMS, isProcessing: false })
+        commit('updateProcessing', { type: Actions.FETCH_ALL_ROOMS, isProcessing: false })
       }
     },
     async [Actions.CREATE_ROOM]({ commit }, room: IRoomForm) {
-      commit('updateRoomProcessing', { type: Actions.CREATE_ROOM, isProcessing: true })
+      commit('updateProcessing', { type: Actions.CREATE_ROOM, isProcessing: true })
       try {
         const response = await api.rooms.create(room)
         commit('pushRoom', response.data)
       } finally {
-        commit('updateRoomProcessing', { type: Actions.CREATE_ROOM, isProcessing: false })
+        commit('updateProcessing', { type: Actions.CREATE_ROOM, isProcessing: false })
       }
     },
     async [Actions.DELETE_ROOM]({ commit }, id: string) {
-      commit('updateRoomProcessing', { type: Actions.DELETE_ROOM, isProcessing: true })
+      commit('updateProcessing', { type: Actions.DELETE_ROOM, isProcessing: true })
       try {
         const response = await api.rooms.delete(id)
         commit('removeRoom', response.data)
       } finally {
-        commit('updateRoomProcessing', { type: Actions.DELETE_ROOM, isProcessing: false })
+        commit('updateProcessing', { type: Actions.DELETE_ROOM, isProcessing: false })
       }
     },
     countUserFingerPrint({ commit }) {

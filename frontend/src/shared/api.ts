@@ -3,6 +3,7 @@ import { IRoom } from '@/models/IRoom'
 import createAxios from './config/configureAxios'
 import {API_URL} from './config/consts'
 import store from '@/store'
+import { Admin } from '@/models/Admin'
 
 const axios = createAxios({
     baseURL: API_URL + '/api/v1'
@@ -19,8 +20,9 @@ export const api = {
         findAll: () => axios.get<IRoom[]>('/rooms'),
     },
     admins: {
-        verifyAndCreate: () => axios.post('admins'),
-        accept: (email: string) => axios.put(`admins/accept/${email}`),
-        remove: (email: string) => axios.delete(`admins/${email}`),
+        verifyAndCreate: () => axios.post('/admins'),
+        accept: (email: string) => axios.put(`/admins/accept/${email}`),
+        remove: (email: string) => axios.delete(`/admins/${email}`),
+        fetchAll: () => axios.get<Admin[]>('/admins')
     }
 }

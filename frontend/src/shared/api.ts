@@ -23,6 +23,7 @@ export const api = {
         verifyAndCreate: () => axios.post('/admins'),
         accept: (email: string) => axios.put(`/admins/accept/${email}`),
         remove: (email: string) => axios.delete(`/admins/${email}`),
-        fetchAll: () => axios.get<Admin[]>('/admins')
+        fetchAll: () => axios.get<Admin[]>('/admins'),
+        findMe: () => axios.get<Admin>('/admins/me')
     }
 }

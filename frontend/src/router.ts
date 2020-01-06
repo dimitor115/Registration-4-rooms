@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import store from '@/store'
+import Router, { Route } from 'vue-router'
 import Login from './views/administrator/Login.vue'
 import StudentRegistration from './views/StudentRegistration.vue'
 import AdminContainer from './views/administrator/AdminContainer.vue'
@@ -9,7 +10,7 @@ import AdminsManagement from './views/administrator/AdminsManagment.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -23,7 +24,7 @@ export default new Router({
       component: StudentRegistration,
     },
     {
-      path: '/admin/login',
+      path: '/login',
       name: 'Login',
       component: Login,
     },
@@ -54,3 +55,30 @@ export default new Router({
     },
   ],
 })
+
+const ADMIN_PREFIX = '/admin'
+
+router.beforeEach(async (to: Route, from: Route, next: Function) => {
+
+  const isAdminPage = to.path.startsWith(ADMIN_PREFIX)
+  if(!isAdminPage) {
+    return next()
+  }
+
+  const isUserSignIn = !!store.state.user.data.email
+  if(isUserSignIn) {
+    return next()
+  }
+
+  // try {
+  //   await store.dispatch('fetchUserData')
+  //   return next()
+  // } catch {
+  //   return next('login')
+  // }
+
+  return next('/login')
+
+})
+
+export default router

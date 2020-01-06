@@ -98,6 +98,7 @@ function initRestApi(
 
     router.post('/admins', administratorsService.verifyAndCreateAdmin)
     router.get('/admins', authMiddleware, administratorsService.findAll)
+    router.get('/admins/me', authMiddleware, administratorsService.findAdminDataByToken)
     router.put('/admins/accept/:email', authMiddleware, administratorsService.accept)
     router.delete('/admins/:email', authMiddleware, administratorsService.remove)
 

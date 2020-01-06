@@ -66,8 +66,8 @@ export default new Vuex.Store({
     setClientsCount(state, count) {
       state.clientsCount = count
     },
-    setUserData(state, data) {
-      state.user.data = data.userData
+    setUserData(state, userData) {
+      state.user.data = userData
     },
 
     setAdmins(state, admins) {
@@ -75,6 +75,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async fetchUserData({commit}) {
+      const result  = await api.admins.findMe()
+      commit('setUserData', result.data)
+    },
+
     async removeAdmin({dispatch}, email) {
       await api.admins.remove(email)
       dispatch(Actions.FETCH_ALL_ADMINS)

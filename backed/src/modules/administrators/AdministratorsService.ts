@@ -6,6 +6,13 @@ import { Response } from 'common/Response'
 
 export default class AdministratorsService {
 
+    public async findAdminDataByToken(ctx: Context): Promise<void> {
+        const token = ctx.request.headers['authorization']
+        const { name, email, picture } = await verifyTokenAndFetchUserData(token)
+        ctx.body = new Response({name, email, picture})
+        ctx.status = 200
+    }
+
     public async verifyAndCreateAdmin(ctx: Context): Promise<void> {
         const token = ctx.request.headers['authorization']
         const { name, email, picture } = await verifyTokenAndFetchUserData(token)

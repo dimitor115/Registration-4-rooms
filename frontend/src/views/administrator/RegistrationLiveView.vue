@@ -75,8 +75,8 @@ export default Vue.extend({
   methods: {
     exportToExcel(){
        const link = document.createElement('a')
-        link.setAttribute('href', API_URL + '/eksport.xlsx')
-        link.setAttribute('download', 'export.xlsx')
+        link.setAttribute('href', API_URL + '/api/v1/rooms/export')
+        link.setAttribute('download', 'stoliki.xlsx')
         link.click()
     }
   }

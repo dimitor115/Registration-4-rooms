@@ -4,7 +4,6 @@ import socketIO from 'socket.io'
 import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import cors from '@koa/cors'
-import serve from 'koa-static'
 import 'reflect-metadata'
 
 
@@ -19,6 +18,7 @@ import RoomReservationsService from './modules/reservations/RoomReservationsServ
 import StudentRegistrationService from './modules/registrations/StudentRegistrationService'
 import RoomsManagementService from './modules/rooms/RoomsManagementService'
 import AdministratorsService from './modules/administrators/AdministratorsService'
+import RoomExportService from './modules/rooms/RoomsExportService';
 
 (async function start(): Promise<void> {
     logger.info('Starting application')
@@ -27,7 +27,6 @@ import AdministratorsService from './modules/administrators/AdministratorsServic
     const server = http.createServer(app.callback())
     const io = socketIO(server)
 
-    app.use(serve('./public'))
     app.use(helmet())
     app.use(cors())
     app.use(requestLogger)
@@ -40,8 +39,9 @@ import AdministratorsService from './modules/administrators/AdministratorsServic
     const studentRegistrationService = new StudentRegistrationService()
     const roomManagmentService = new RoomsManagementService()
     const requestManager = new RequestManager(socketSender, reservationsService)
+    const roomExportService = new RoomExportService()
 
-    const api = initApi(io, socketSender, administratorsService, reservationsService, studentRegistrationService, roomManagmentService, requestManager)
+    const api = initApi(io, socketSender, administratorsService, reservationsService, studentRegistrationService, roomManagmentService, requestManager, roomExportService)
 
     app
         .use(api.prefix('/api/v1').routes())

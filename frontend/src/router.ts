@@ -73,7 +73,7 @@ router.beforeEach(async (to: Route, from: Route, next: Function) => {
   // try {
   //   await store.dispatch('fetchUserData')
   //   return next()
-  // } catch {
+  // } catch {  
   //   return next('login')
   // }
 

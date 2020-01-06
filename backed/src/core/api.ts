@@ -10,8 +10,9 @@ import RoomReservationsService from 'modules/reservations/RoomReservationsServic
 import StudentRegistrationService from 'modules/registrations/StudentRegistrationService'
 import { IStudent } from 'modules/registrations/StudentModel'
 import { RequestManager, ReservationRequest } from 'modules/reservations/RequestsManager'
-import { authMiddleware } from 'common/authentication';
-import AdministratorsService from '../modules/administrators/AdministratorsService';
+import { authMiddleware } from 'common/authentication'
+import AdministratorsService from 'modules/administrators/AdministratorsService'
+import RoomExportService from 'modules/rooms/RoomsExportService';
 
 export default function api(
     io: SocketIO.Server,
@@ -21,9 +22,10 @@ export default function api(
     studentRegistrationService: StudentRegistrationService,
     roomManagementService: RoomsManagementService,
     requestManger: RequestManager,
+    roomExportService: RoomExportService
 ): Router {
     initSocketApi(io, socketSender, roomReservationsService, studentRegistrationService, requestManger)
-    return initRestApi(roomManagementService, administratorsService)
+    return initRestApi(roomManagementService, administratorsService, roomExportService)
 }
 
 function initSocketApi(
@@ -90,7 +92,8 @@ function initSocketApi(
 
 function initRestApi(
     roomManagementService: RoomsManagementService,
-    administratorsService: AdministratorsService
+    administratorsService: AdministratorsService,
+    roomExportService: RoomExportService
 ): Router {
     const router = new Router()
 
@@ -103,6 +106,7 @@ function initRestApi(
     router.delete('/admins/:email', authMiddleware, administratorsService.remove)
 
     router.get('/rooms', roomManagementService.findAll)
+    router.get('/rooms/export', roomExportService.exportAndHost)
     router.post('/rooms', authMiddleware, roomManagementService.create)
     router.delete('/rooms/:id', authMiddleware, roomManagementService.delete)
 

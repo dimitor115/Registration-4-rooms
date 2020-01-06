@@ -64,14 +64,12 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.9.1",
     "dotenv": "^8.0.0",
+    "exceljs": "^3.5.0",
     "google-auth-library": "^5.7.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-helmet": "^4.2.0",
-    "koa-jwt": "^3.3.2",
     "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0",
-    "koa-swagger-decorator": "^1.5.16",
     "moment": "^2.24.0",
     "mongoose": "^5.6.8",
     "pg": "^7.4.3",
@@ -80,7 +78,6 @@
     "socket.io": "^2.2.0",
     "typeorm": "^0.2.18",
     "uuid": "^3.3.3",
-    "winston": "^3.2.1",
-    "xlsx": "^0.15.2"
+    "winston": "^3.2.1"
   }
 }

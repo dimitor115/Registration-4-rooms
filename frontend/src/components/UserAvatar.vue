@@ -22,7 +22,7 @@ export default Vue.extend({
         async logout() {
             const auth2 = window.gapi.auth2.getAuthInstance()
             await auth2.signOut()
-            this.$router.push('/admin/login')
+            this.$router.push('/login')
         }
     }
 })

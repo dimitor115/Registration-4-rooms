@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import { IMessage, ResponseOrAny, isResponse } from '../IResponse'
-import { Message } from 'element-ui'
+import { Notification } from 'element-ui'
 import store from '@/store';
 
 export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
@@ -23,10 +23,10 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
                 body.messages.forEach(parseMessageToNotification)
 
             } else {
-                Message({
+                Notification({
+                    title: 'Błąd!',
                     message: error.message,
-                    type: 'error',
-                    showClose: true,
+                    type: 'error'
                 })
             }
             Promise.reject(error)
@@ -38,9 +38,9 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
 
 
 export function parseMessageToNotification({ message, type }: IMessage) {
-    Message({
+    Notification({
+        title: type === 'error' ? 'Bład!' : 'Wiadomość',
         message,
-        type,
-        showClose: true,
+        type
     })
 }

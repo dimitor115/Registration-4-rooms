@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app">
     <router-view></router-view>
-    <div class="footer">2019 Maciej Kopeć | Native flow</div>
+    <div class="footer">2020 Maciej Kopeć | Native flow</div>
   </div>
 </template>
 <script>

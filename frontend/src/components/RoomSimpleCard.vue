@@ -6,7 +6,7 @@
         <i class="el-icon-error remove-icon" @click.prevent="onDelete"></i>
        </span>
     </template>
-    Miejsca: {{roomFreeSpace(room)}} / {{room.size}}
+    Wolne miejsca: {{roomFreeSpace(room)}} / {{room.size}}
   </el-card>
 </template>
 

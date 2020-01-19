@@ -8,17 +8,18 @@
         </template>
       </el-card>
       <h2>Prośby o dołączenie</h2>
-      <el-card>
+      <el-card v-if="adminRequests && adminRequests.length > 0">
         <template v-for="(admin, idx) in adminRequests">
           <single-admin
             :admin="admin"
             :key="idx"
             is-acceptable
             @onAdminAccept="acceptAdmin"
-            @onAdminRemove="removeAdmin"
+            @onAdminRemove="rejectAdmin"
           ></single-admin>
         </template>
       </el-card>
+      <el-alert v-else :closable="false" show-icon title="W tej chwili nie ma żadnych próśb o dołączenie." type="info"></el-alert>
     </spinner>
   </div>
 </template>
@@ -63,10 +64,43 @@ export default Vue.extend({
   },
   methods: {
     async acceptAdmin(email: string) {
-      this.$store.dispatch("acceptAdmin", email);
+      this.$confirm(
+        `Jesteś pewnien, że chcesz zezwolić użytkownikowi ${email} na dostęp do systemu?`,
+        "Potwierdzenie",
+        {
+          confirmButtonText: "Tak",
+          cancelButtonText: "Nie",
+          type: "success"
+        }
+      ).then(() => {
+        this.$store.dispatch("acceptAdmin", email);
+      });
     },
     async removeAdmin(email: string) {
-      this.$store.dispatch("removeAdmin", email);
+      this.$confirm(
+        `Jesteś pewnien, że chcesz usunąć administratora ${email}?`,
+        "Potwierdzenie",
+        {
+          confirmButtonText: "Tak",
+          cancelButtonText: "Nie",
+          type: "error"
+        }
+      ).then(() => {
+        this.$store.dispatch("removeAdmin", email);
+      });
+    },
+    async rejectAdmin(email: string) {
+      this.$confirm(
+        `Jesteś pewnien, że chcesz odrzucić prośbę użytkownika ${email} o dostęp do systemu?`,
+        "Potwierdzenie",
+        {
+          confirmButtonText: "Tak",
+          cancelButtonText: "Nie",
+          type: "error"
+        }
+      ).then(() => {
+        this.$store.dispatch("removeAdmin", email);
+      });
     }
   }
 });

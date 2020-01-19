@@ -5,7 +5,7 @@
       :stroke-width="20"
       :percentage="untilPercentage"
       :format="progressFormat"
-      :status="isCurrentUser ? 'success' : 'primary'"
+      :status="isCurrentUser ? 'success' : null"
     ></el-progress>
   </div>
 </template>

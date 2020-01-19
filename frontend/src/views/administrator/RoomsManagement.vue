@@ -4,11 +4,9 @@
       <room-form @onSubmit="createNewRoom"></room-form>
     </el-card>
     <spinner action="FETCH_ALL_ROOMS">
-      <transition-group name="list">
         <template v-for="(room, idx) in rooms">
           <room-simple-card :room="room" :key="idx" @onDeleteClick="removeRoom" />
         </template>
-      </transition-group>
     </spinner>
   </div>
 </template>
@@ -42,7 +40,13 @@ export default Vue.extend({
       this.$store.dispatch(Actions.CREATE_ROOM, room)
     },
     async removeRoom(id: string) {
-      this.$store.dispatch(Actions.DELETE_ROOM, id)
+       this.$confirm('Jesteś pewnien, że chcesz usunąć ten pokój ?', 'Potwierdzenie', {
+          confirmButtonText: 'Tak',
+          cancelButtonText: 'Nie',
+          type: 'error'
+        }).then(() => {
+            this.$store.dispatch(Actions.DELETE_ROOM, id)
+        })
     },
   },
 })
@@ -51,12 +55,5 @@ export default Vue.extend({
 .list-item {
   display: inline-block;
   margin-right: 10px;
-}
-.list-enter-active, .list-leave-active {
-  transition: all 1s;
-}
-.list-enter, .list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
 }
 </style>

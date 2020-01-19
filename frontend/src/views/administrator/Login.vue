@@ -2,12 +2,8 @@
   <div class="login-container">
     <h1 class="title">Logowanie</h1>
     <el-card v-if="!hasToWaitForAccept">
-      <el-button type="primary" :loading="isSignInProcessing" @click="isSignInProcessing = true">
-        <g-signin-button
-          :params="signInParams"
-          @success="onSignIn"
-          @error="onError"
-        >Zaloguj przez Google</g-signin-button>
+      <el-button id="login-button" type="primary" :loading="isSignInProcessing" @click="isSignInProcessing = true">
+        Zaloguj przez Google
       </el-button>
     </el-card>
 
@@ -25,15 +21,28 @@
 import Vue from "vue";
 import { api, setAuthorization } from "@/shared/api";
 
+const CLIENT_ID =
+  "337491963162-1hjps4cha1j7lcotju1nl45ucepjisjn.apps.googleusercontent.com";
+
 export default Vue.extend({
   data: () => ({
-    signInParams: {
-      client_id:
-        "337491963162-1hjps4cha1j7lcotju1nl45ucepjisjn.apps.googleusercontent.com"
-    },
     isSignInProcessing: false,
     hasToWaitForAccept: false
   }),
+  mounted() {
+    window.gapi.load("auth", () => {
+      const auth2 = window.gapi.auth2.init({
+        client_id: CLIENT_ID,
+        cookiepolicy: 'single_host_origin'
+      })
+      auth2.attachClickHandler(
+        document.getElementById('login-button'),
+        {},
+        this.onSignIn,
+        this.onError
+      )
+    })
+  },
   methods: {
     onSignIn(googleUser: any) {
       const profile = googleUser.getBasicProfile();

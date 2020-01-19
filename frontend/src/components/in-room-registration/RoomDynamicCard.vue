@@ -4,7 +4,7 @@
       <span @click="expandRoom">{{room.name}}</span>
     </template>
     <reservation-count-down v-if="room.reservedBy" :until="room.reservedUntil" :is-current-user="isCurrentUserReservation"></reservation-count-down>
-    <div class="places-container">Miejsca: {{room.students.length}} / {{room.size}}</div>
+    <div class="places-container">Wolne miejsca: {{room.size - room.students.length}} / {{room.size}}</div>
 
     <transition name="fade">
       <div v-if="showDetails">

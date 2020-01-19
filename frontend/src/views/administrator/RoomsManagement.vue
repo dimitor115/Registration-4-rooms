@@ -16,7 +16,7 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 
 import { api } from '@/shared/api'
-import { Actions } from '@/shared/Actions'
+import { SingleActions, Actions } from '@/shared/Actions'
 import { IRoom, IRoomForm } from '@/models/IRoom'
 
 import RoomForm from '@/components/RoomForm.vue'
@@ -33,11 +33,11 @@ export default Vue.extend({
     }),
   },
   mounted() {
-    this.$store.dispatch(Actions.FETCH_ALL_ROOMS)
+    this.$store.dispatch(SingleActions.FETCH_ALL_ROOMS)
   },
   methods: {
     async createNewRoom(room: IRoomForm) {
-      this.$store.dispatch(Actions.CREATE_ROOM, room)
+      this.$store.dispatch(SingleActions.CREATE_ROOM, room)
     },
     async removeRoom(id: string) {
        this.$confirm('Jesteś pewnien, że chcesz usunąć ten pokój ?', 'Potwierdzenie', {

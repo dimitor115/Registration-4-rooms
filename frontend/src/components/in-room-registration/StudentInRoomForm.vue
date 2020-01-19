@@ -27,6 +27,11 @@ import { Actions } from '@/shared/Actions';
 
 export default Vue.extend({
   name: "home",
+  props: {
+    roomId: {
+      type: String as PropType<string>
+    }
+  },
   data: () => ({
     form: {
       name: null,
@@ -35,7 +40,7 @@ export default Vue.extend({
   }),
   computed: {
     isRegistrationRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.REGISTER_STUDENT]
+      return this.$store.state.isProcessing[Actions.REGISTER_STUDENT][this.roomId] || false
     },
     userUUID(): string {
       return this.$store.state.user.uuid;

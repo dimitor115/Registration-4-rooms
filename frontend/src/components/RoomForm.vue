@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Actions } from '@/shared/Actions'
+import { SingleActions } from '@/shared/Actions'
 
 export default Vue.extend({
   name: 'room-form',
@@ -26,7 +26,7 @@ export default Vue.extend({
   }),
   computed: {
     isProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.CREATE_ROOM]
+      return this.$store.state.isProcessing[SingleActions.CREATE_ROOM]
     },
   },
   methods: {

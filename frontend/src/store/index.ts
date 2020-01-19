@@ -7,20 +7,22 @@ import { api } from '@/shared/api'
 import socketApi from '@/shared/socketApi'
 import { Actions } from '@/shared/Actions'
 import { Admin } from '@/models/Admin'
+import { SingleActions } from '../shared/Actions';
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store =  new Vuex.Store({
   state: {
     rooms: [] as IRoom[],
     isProcessing: {
-      [Actions.FETCH_ALL_ROOMS]: false as boolean,
-      [Actions.CREATE_ROOM]: false as boolean,
-      [Actions.DELETE_ROOM]: false as boolean,
-      [Actions.REGISTER_STUDENT]: false as boolean,
-      [Actions.REMOVE_STUDENT]: false as boolean,
-      [Actions.RESERVE_ROOM]: false as boolean,
-      [Actions.FETCH_ALL_ADMINS]: false as boolean,
+      [SingleActions.FETCH_ALL_ROOMS]: false as boolean,
+      [SingleActions.CREATE_ROOM]: false as boolean,
+      [SingleActions.FETCH_ALL_ADMINS]: false as boolean,
+
+      [Actions.DELETE_ROOM]: {} as any,
+      [Actions.REGISTER_STUDENT]: {} as any,
+      [Actions.REMOVE_STUDENT]: {} as any,
+      [Actions.RESERVE_ROOM]: {} as any,
     },
     admins: [] as Admin[],
     user: {
@@ -57,9 +59,6 @@ export default new Vuex.Store({
         room.reservedUntil = updatedRoom.reservedUntil
       }
     },
-    updateProcessing(state, { type, isProcessing }: { type: Actions, isProcessing: boolean }) {
-      state.isProcessing[type] = isProcessing
-    },
     setUserUUID(state, uuid) {
       state.user.uuid = uuid
     },
@@ -69,9 +68,15 @@ export default new Vuex.Store({
     setUserData(state, userData) {
       state.user.data = userData
     },
-
     setAdmins(state, admins) {
       state.admins = admins
+    },
+
+    updateProcessing(state, { type, isProcessing }: { type: SingleActions, isProcessing: boolean }) {
+      state.isProcessing[type] = isProcessing
+    },
+    updateActionProcessing(state, {type, id, isProcessing}: { type: Actions, id: any, isProcessing: boolean }) {
+      Vue.set(state.isProcessing[type], id, isProcessing)
     }
   },
   actions: {
@@ -82,74 +87,74 @@ export default new Vuex.Store({
 
     async removeAdmin({dispatch}, email) {
       await api.admins.remove(email)
-      dispatch(Actions.FETCH_ALL_ADMINS)
+      dispatch(SingleActions.FETCH_ALL_ADMINS)
     },
 
     async acceptAdmin({dispatch}, email) {
         await api.admins.accept(email)
-        dispatch(Actions.FETCH_ALL_ADMINS)
+        dispatch(SingleActions.FETCH_ALL_ADMINS)
     },
 
-    async [Actions.FETCH_ALL_ADMINS]({commit}) {
-      commit('updateProcessing', { type: Actions.FETCH_ALL_ADMINS, isProcessing: true })
+    async [SingleActions.FETCH_ALL_ADMINS]({commit}) {
+      _setSingleProcessing(SingleActions.FETCH_ALL_ADMINS)
       try {
         const result = await api.admins.fetchAll()
         commit('setAdmins', result.data)
 
       } finally {
-        commit('updateProcessing', { type: Actions.FETCH_ALL_ADMINS, isProcessing: false })
+        _setSingleDone(SingleActions.FETCH_ALL_ADMINS)
       }
     },
 
-    async [Actions.RESERVE_ROOM]({ commit }, { roomId, userUUID }) {
-      commit('updateProcessing', { type: Actions.RESERVE_ROOM, isProcessing: true })
+    async [Actions.RESERVE_ROOM]({ }, { roomId, userUUID }) {
+      _setActionProcessing(roomId, Actions.RESERVE_ROOM)
       try {
         await socketApi.reserve_room(roomId, userUUID)
       } finally {
-        commit('updateProcessing', { type: Actions.RESERVE_ROOM, isProcessing: false })
+       _setActionDone(roomId, Actions.RESERVE_ROOM)
       }
     },
-    async [Actions.REMOVE_STUDENT]({ commit }, { roomId, student, removedBy }) {
-      commit('updateProcessing', { type: Actions.REMOVE_STUDENT, isProcessing: true })
+    async [Actions.REMOVE_STUDENT]({ }, { roomId, student, removedBy }) {
+      _setActionProcessing(roomId+student, Actions.REMOVE_STUDENT)
       try {
         await socketApi.remove_student(roomId, student, removedBy)
       } finally {
-        commit('updateProcessing', { type: Actions.REMOVE_STUDENT, isProcessing: false })
+       _setActionDone(roomId+student, Actions.REMOVE_STUDENT)
       }
     },
-    async [Actions.REGISTER_STUDENT]({ commit }, { roomId, student }) {
-      commit('updateProcessing', { type: Actions.REGISTER_STUDENT, isProcessing: true })
+    async [Actions.REGISTER_STUDENT]({ }, { roomId, student }) {
+      _setActionProcessing(roomId, Actions.REGISTER_STUDENT)
       try {
         await socketApi.register_student(roomId, student)
       } finally {
-        commit('updateProcessing', { type: Actions.REGISTER_STUDENT, isProcessing: false })
+        _setActionDone(roomId, Actions.REGISTER_STUDENT)
       }
     },
-    async [Actions.FETCH_ALL_ROOMS]({ commit }) {
-      commit('updateProcessing', { type: Actions.FETCH_ALL_ROOMS, isProcessing: true })
+    async [SingleActions.FETCH_ALL_ROOMS]({ commit }) {
+     _setSingleProcessing(SingleActions.FETCH_ALL_ROOMS)
       try {
         const response = await api.rooms.findAll()
         commit('setRooms', response.data)
       } finally {
-        commit('updateProcessing', { type: Actions.FETCH_ALL_ROOMS, isProcessing: false })
+        _setSingleDone(SingleActions.FETCH_ALL_ROOMS)
       }
     },
-    async [Actions.CREATE_ROOM]({ commit }, room: IRoomForm) {
-      commit('updateProcessing', { type: Actions.CREATE_ROOM, isProcessing: true })
+    async [SingleActions.CREATE_ROOM]({ commit }, room: IRoomForm) {
+      _setSingleProcessing(SingleActions.CREATE_ROOM)
       try {
         const response = await api.rooms.create(room)
         commit('pushRoom', response.data)
       } finally {
-        commit('updateProcessing', { type: Actions.CREATE_ROOM, isProcessing: false })
+        _setSingleDone(SingleActions.CREATE_ROOM)
       }
     },
     async [Actions.DELETE_ROOM]({ commit }, id: string) {
-      commit('updateProcessing', { type: Actions.DELETE_ROOM, isProcessing: true })
+      _setActionProcessing(id, Actions.DELETE_ROOM)
       try {
         const response = await api.rooms.delete(id)
         commit('removeRoom', response.data)
       } finally {
-        commit('updateProcessing', { type: Actions.DELETE_ROOM, isProcessing: false })
+        _setActionDone(id, Actions.DELETE_ROOM)
       }
     },
     countUserFingerPrint({ commit }) {
@@ -161,5 +166,23 @@ export default new Vuex.Store({
         })
       }, 500)
     },
-  },
+  }
 })
+
+function _setSingleProcessing(type: SingleActions) {
+  store.commit('updateProcessing', {type, isProcessing: true})
+}
+
+function _setSingleDone(type: SingleActions) {
+  store.commit('updateProcessing', {type, isProcessing: false})
+}
+
+function _setActionProcessing(id: any, type: Actions) {
+  store.commit('updateActionProcessing', {type, id, isProcessing: true})
+}
+
+function _setActionDone(id: any, type: Actions) {
+  store.commit('updateActionProcessing', {type, id, isProcessing: false})
+}
+
+export default store

@@ -36,6 +36,10 @@ export default Vue.extend({
         addedBy: "me"
       })
     },
+    roomId: {
+      type: String as PropType<string>,
+      required: true
+    },
     allowRemoving: {
       type: Boolean,
       default: false
@@ -43,7 +47,7 @@ export default Vue.extend({
   },
   computed: {
     isRemoveRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.REMOVE_STUDENT]
+      return this.$store.state.isProcessing[Actions.REMOVE_STUDENT][this.roomId + this.student]
     },
     canEntryByRemove(): boolean {
       return this.student.addedBy === this.userUUID;

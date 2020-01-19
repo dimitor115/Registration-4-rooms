@@ -29,7 +29,7 @@ import Vue from "vue";
 import { mapState } from "vuex";
 
 import { api } from "@/shared/api";
-import { Actions } from "@/shared/Actions";
+import { SingleActions } from "@/shared/Actions";
 import { IRoom, IRoomForm } from "@/models/IRoom";
 
 import RoomForm from "@/components/RoomForm.vue";
@@ -37,7 +37,7 @@ import SingleAdmin from "@/components/SingleAdmin.vue";
 import RoomSimpleCard from "@/components/RoomSimpleCard.vue";
 import ConfirmationDialog from "@/components/ConfirmationDialog.vue";
 import Spinner from "@/components/Spinner.vue";
-import { Admin } from "../../models/Admin";
+import { Admin } from "@/models/Admin";
 
 export default Vue.extend({
   components: {
@@ -60,7 +60,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$store.dispatch(Actions.FETCH_ALL_ADMINS);
+    this.$store.dispatch(SingleActions.FETCH_ALL_ADMINS);
   },
   methods: {
     async acceptAdmin(email: string) {

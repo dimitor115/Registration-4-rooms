@@ -1,13 +1,13 @@
 <template>
   <div>
     <template v-for="(student, idx) in room.students">
-      <student-filled-form :student="student" :key="'r' + idx" @onRemove="removeStudent" :allowRemoving="true"></student-filled-form>
+      <student-filled-form :student="student" :key="'r' + idx" @onRemove="removeStudent" :allowRemoving="true" :room-id="room._id"></student-filled-form>
     </template>
     <template v-for="(place, idx) in restPlaces">
-      <student-filled-form :key="'e' + idx"></student-filled-form>
+      <student-filled-form :key="'e' + idx" :room-id="room._id"></student-filled-form>
     </template>
 
-    <student-in-room-form v-if="canRegisterStudents" @onRegister="registerStudent"></student-in-room-form>
+    <student-in-room-form v-if="canRegisterStudents" @onRegister="registerStudent" :room-id="room._id"></student-in-room-form>
 
     <el-button
       v-else-if="room.reservedBy"
@@ -51,7 +51,7 @@ export default Vue.extend({
   },
   computed: {
     isReservationRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.RESERVE_ROOM]
+      return this.$store.state.isProcessing[Actions.RESERVE_ROOM][this.room._id]
     },
     canRegisterStudents(): boolean {
       return this.room.reservedBy === this.$store.state.user.uuid;

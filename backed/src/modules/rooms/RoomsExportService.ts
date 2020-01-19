@@ -1,8 +1,6 @@
 import exceljs from 'exceljs'
-import { Context } from 'koa';
-
+import { Context } from 'koa'
 import { Room, IRoom } from 'core/RoomModel'
-import { IStudent } from 'modules/registrations/StudentModel'
 
 export default class RoomExportService {
 
@@ -13,9 +11,9 @@ export default class RoomExportService {
         const workbook = new exceljs.Workbook()
         const worksheet = workbook.addWorksheet('Stoliki')
 
-        worksheet.columns = [{ width: 20 }, { width: 20 }]
+        worksheet.columns = [{ width: 5 }, { width: 20 }, { width: 20 }]
         rooms.forEach((room: IRoom) => {
-            const row = worksheet.addRow(['Stolik:', room.name])
+            const row = worksheet.addRow(['', 'Stolik:', room.name])
             row.fill = {
                 type: 'pattern',
                 pattern: 'solid',
@@ -23,9 +21,15 @@ export default class RoomExportService {
                 bgColor: { argb: 'FFA9A9A9' }
             }
 
-            room.students.forEach((student: IStudent) => {
-                worksheet.addRow([student.name, student.index])
-            })
+            for (let i = 0; i < room.size; i++) {
+                const student = room.students[i]
+                if (student) {
+                    worksheet.addRow([i + 1, student.name, student.index])
+                } else {
+                    worksheet.addRow([i + 1])
+                }
+            }
+
             worksheet.addRow([])
         })
 

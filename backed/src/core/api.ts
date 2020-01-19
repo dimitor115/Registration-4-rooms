@@ -13,6 +13,7 @@ import { RequestManager, ReservationRequest } from 'modules/reservations/Request
 import { authMiddleware } from 'common/authentication'
 import AdministratorsService from 'modules/administrators/AdministratorsService'
 import RoomExportService from 'modules/rooms/RoomsExportService';
+import { logger } from '../config/winstonConfig';
 
 export default function api(
     io: SocketIO.Server,
@@ -49,6 +50,13 @@ function initSocketApi(
                 .addStudent(roomId, student)
                 .catch(socketErrorHandler(callback))
                 .then((updatedRoom: IRoom) => {
+                    requestManger
+                    .handleRequest(new ReservationRequest(roomId, student.addedBy))
+                    .catch(err => {logger.error(err)})
+                    .then((updatedRoom: IRoom) => {
+                        socketSender.sendReservationUpdate(updatedRoom)
+                    })
+
                     socketSender.sendRoomUpdate(updatedRoom)
                     callback(null)
                 })

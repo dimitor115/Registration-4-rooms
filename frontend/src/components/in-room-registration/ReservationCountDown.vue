@@ -5,6 +5,7 @@
       :stroke-width="20"
       :percentage="untilPercentage"
       :format="progressFormat"
+      :status="isCurrentUser ? 'success' : 'primary'"
     ></el-progress>
   </div>
 </template>
@@ -16,6 +17,10 @@ export default {
   props: {
     until: {
       type: String,
+      required: true
+    },
+    isCurrentUser: {
+      type: Boolean,
       required: true
     }
   },
@@ -57,7 +62,7 @@ export default {
         .asSeconds()
         .toFixed()
 
-      this.startSeconds = 20
+      this.startSeconds = 22
       this.secondsUntil = seconds
 
       this.timer = new Timer()

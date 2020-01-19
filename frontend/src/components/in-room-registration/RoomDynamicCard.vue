@@ -3,7 +3,7 @@
     <template slot="header">
       <span @click="expandRoom">{{room.name}}</span>
     </template>
-    <reservation-count-down v-if="room.reservedBy" :until="room.reservedUntil"></reservation-count-down>
+    <reservation-count-down v-if="room.reservedBy" :until="room.reservedUntil" :is-current-user="isCurrentUserReservation"></reservation-count-down>
     <div class="places-container">Miejsca: {{room.students.length}} / {{room.size}}</div>
 
     <transition name="fade">
@@ -51,6 +51,9 @@ export default Vue.extend({
     restPlaces(): number {
       return this.room.size - this.room.students.length
     },
+    isCurrentUserReservation(): boolean {
+      return this.$store.state.user.uuid === this.room.reservedBy
+    }
   },
   methods: {
     expandRoom() {

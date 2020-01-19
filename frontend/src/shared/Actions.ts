@@ -3,6 +3,7 @@ export enum Actions {
     REMOVE_STUDENT = 'REMOVE_STUDENT',
     RESERVE_ROOM = 'RESERVE_ROOM',
     DELETE_ROOM = 'DELETE_ROOM',
+    UPDATE_ROOM = 'UPDATE_ROOM',
 }
 
 export enum SingleActions {

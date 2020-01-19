@@ -17,6 +17,7 @@ export const api = {
     rooms: {
         create: (payload: IRoomForm) => axios.post<IRoom>(`/rooms`, payload),
         delete: (id: string) => axios.delete<IRoom>(`/rooms/${id}`),
+        update: (id: string, payload: IRoomForm) => axios.put<IRoom>(`/rooms/${id}`, payload),
         findAll: () => axios.get<IRoom[]>('/rooms'),
     },
     admins: {

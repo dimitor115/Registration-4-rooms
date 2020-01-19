@@ -43,4 +43,21 @@ export default class RoomsManagementService {
         }
     }
 
+    public async update(ctx: Context): Promise<void> {
+        const id = ctx.params.id
+        logger.info(`Updating room with id: ${id}`)
+
+        const result = await Room.findByIdAndUpdate(id, (ctx.request as any).body)
+
+        if (result) {
+            ctx.status = 200
+            ctx.body = new Response(result)
+        } else {
+            ctx.status = 404
+            ctx.body = Response.fromMessage(
+                new Message(`There is no room with given id: ${id}`, MessageType.ERROR)
+            )
+        }
+    }
+
 }

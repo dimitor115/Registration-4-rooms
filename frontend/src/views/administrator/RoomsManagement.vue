@@ -5,7 +5,10 @@
     </el-card>
     <spinner action="FETCH_ALL_ROOMS">
         <template v-for="(room, idx) in rooms">
-          <room-simple-card :room="room" :key="idx" @onDeleteClick="removeRoom" />
+          <el-card v-if="roomToEdit === room._id" :key="idx">
+            <room-form edit :entry="room" @onCancel="roomToEdit = null" @onSubmit="updateRoom"></room-form>
+          </el-card>
+          <room-simple-card v-else :room="room" :key="idx" @onDeleteClick="removeRoom" @onEditClick="editRoom"/>
         </template>
     </spinner>
   </div>
@@ -27,6 +30,9 @@ import Spinner from '@/components/Spinner.vue'
 export default Vue.extend({
   name: 'rooms-management',
   components: { RoomForm, RoomSimpleCard, ConfirmationDialog, Spinner },
+  data: () => ({
+    roomToEdit: null as string | null
+  }),
   computed: {
     ...mapState({
       rooms: 'rooms',
@@ -36,8 +42,15 @@ export default Vue.extend({
     this.$store.dispatch(SingleActions.FETCH_ALL_ROOMS)
   },
   methods: {
+    editRoom(id: string) {
+      this.roomToEdit = id
+    },
     async createNewRoom(room: IRoomForm) {
       this.$store.dispatch(SingleActions.CREATE_ROOM, room)
+    },
+    async updateRoom(room: IRoomForm) {
+       await this.$store.dispatch(Actions.UPDATE_ROOM, {id: this.roomToEdit, payload: room})
+       this.roomToEdit = null
     },
     async removeRoom(id: string) {
        this.$confirm('Jesteś pewnien, że chcesz usunąć ten pokój ?', 'Potwierdzenie', {

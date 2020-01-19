@@ -3,7 +3,8 @@
     <template slot="header">
       <span>{{room.name}}</span>
       <span>
-        <i class="el-icon-error remove-icon" @click.prevent="onDelete"></i>
+        <el-button circle type="primary" icon="el-icon-edit" @click="$emit('onEditClick', room._id)"></el-button>
+        <el-button circle type="danger" icon="el-icon-delete" @click="$emit('onDeleteClick', room._id)"></el-button>
        </span>
     </template>
     Wolne miejsca: {{roomFreeSpace(room)}} / {{room.size}}
@@ -25,26 +26,18 @@ export default Vue.extend({
   methods: {
     roomFreeSpace(room: IRoom) {
       return room.size - room.students.length
-    },
-    onDelete() {
-      this.$emit('onDeleteClick', this.room._id)
-    },
+    }
   },
 })
 </script>
 <style lang="scss">
-.room-simple-card {
+.el-card.room-simple-card {
   margin: 20px 0;
   .el-card__header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding:12px 20px;
-  }
-  .remove-icon {
-    cursor: pointer;
-    &:hover {
-      color: rgb(177, 9, 9);
-    }
+    padding:8px 20px;
   }
 }
 </style>

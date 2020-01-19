@@ -117,6 +117,7 @@ function initRestApi(
     router.get('/rooms/export', roomExportService.exportAndHost)
     router.post('/rooms', authMiddleware, roomManagementService.create)
     router.delete('/rooms/:id', authMiddleware, roomManagementService.delete)
+    router.put('/rooms/:id', authMiddleware, roomManagementService.update)
 
     return router
 }

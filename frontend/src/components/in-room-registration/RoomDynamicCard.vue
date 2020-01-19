@@ -1,5 +1,5 @@
 <template>
-  <el-card class="room-simple-card">
+  <el-card class="room-dynamic-card">
     <template slot="header">
       <span @click="expandRoom">{{room.name}}</span>
     </template>
@@ -78,7 +78,7 @@ export default Vue.extend({
   }
 }
 
-.room-simple-card:hover .dynamic-card-footer {
+.room-dynamic-card:hover .dynamic-card-footer {
   color: #1989fa;
   .expand-text {
     display: inline;

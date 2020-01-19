@@ -20,6 +20,7 @@ const store =  new Vuex.Store({
       [SingleActions.FETCH_ALL_ADMINS]: false as boolean,
 
       [Actions.DELETE_ROOM]: {} as any,
+      [Actions.UPDATE_ROOM]: {} as any,
       [Actions.REGISTER_STUDENT]: {} as any,
       [Actions.REMOVE_STUDENT]: {} as any,
       [Actions.RESERVE_ROOM]: {} as any,
@@ -155,6 +156,15 @@ const store =  new Vuex.Store({
         commit('removeRoom', response.data)
       } finally {
         _setActionDone(id, Actions.DELETE_ROOM)
+      }
+    },
+    async [Actions.UPDATE_ROOM]({ dispatch }, {id, payload}) {
+      _setActionProcessing(id, Actions.UPDATE_ROOM)
+      try {
+        await api.rooms.update(id, payload)
+        dispatch(SingleActions.FETCH_ALL_ROOMS)
+      } finally {
+        _setActionDone(id, Actions.UPDATE_ROOM)
       }
     },
     countUserFingerPrint({ commit }) {

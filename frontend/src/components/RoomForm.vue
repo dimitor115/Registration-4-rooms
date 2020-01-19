@@ -7,34 +7,54 @@
       <el-input-number v-model="entry.size" :min="1"></el-input-number>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="handleSubmit" :loading="isProcessing">Dodaj</el-button>
+      <el-button
+        :type="edit ? 'success' : 'primary'"
+        @click="handleSubmit"
+        :loading="isProcessing"
+      >{{edit ? 'Zapisz' : 'Dodaj'}}</el-button>
+    </el-form-item>
+    <el-form-item>
+      <el-button v-if="edit" type="danger" @click="$emit('onCancel')">Anuluj</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { SingleActions } from '@/shared/Actions'
+import Vue, { PropType } from "vue";
+import { SingleActions, Actions } from "@/shared/Actions";
+import { IRoom } from "../models/IRoom";
 
 export default Vue.extend({
-  name: 'room-form',
-  data: () => ({
-    entry: {
-      name: null,
-      size: 0,
+  name: "room-form",
+  props: {
+    edit: {
+      type: [Boolean] as PropType<boolean>,
+      default: false
     },
-  }),
+    entry: {
+      type: [Object] as PropType<any>,
+      default: () => ({
+        name: null as string | null,
+        size: 0 as number | null
+      })
+    }
+  },
   computed: {
     isProcessing(): boolean {
-      return this.$store.state.isProcessing[SingleActions.CREATE_ROOM]
-    },
+      return this.edit 
+      ? this.$store.state.isProcessing[Actions.UPDATE_ROOM][this.entry._id]
+      : this.$store.state.isProcessing[SingleActions.CREATE_ROOM]
+    }
   },
   methods: {
     handleSubmit() {
-      this.$emit('onSubmit', { ...this.entry })
-    },
-  },
-})
+      const {name, size} = this.entry
+      this.$emit("onSubmit", { name, size })
+      this.entry.name = null
+      this.entry.size = 0
+    }
+  }
+});
 </script>
 <style lang="scss">
 .object-form > div {

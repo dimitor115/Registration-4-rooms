@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import store from '@/store'
 import Router, { Route } from 'vue-router'
-import Login from './views/administrator/Login.vue'
-import StudentRegistration from './views/StudentRegistration.vue'
-import AdminContainer from './views/administrator/AdminContainer.vue'
-import RoomsManagement from './views/administrator/RoomsManagement.vue'
-import RegistrationLiveView from './views/administrator/RegistrationLiveView.vue'
-import AdminsManagement from './views/administrator/AdminsManagment.vue'
+
+const Login = () => import('./views/administrator/Login.vue')
+const StudentRegistration = () => import('./views/StudentRegistration.vue')
+const AdminContainer = () => import('./views/administrator/AdminContainer.vue')
+const RoomsManagement = () => import('./views/administrator/RoomsManagement.vue')
+const RegistrationLiveView = () => import('./views/administrator/RegistrationLiveView.vue')
+const AdminsManagement = () =>  import('./views/administrator/AdminsManagment.vue')
 
 Vue.use(Router)
 

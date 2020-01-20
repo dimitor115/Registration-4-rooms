@@ -1,10 +1,57 @@
 import { logger } from 'config/winstonConfig'
 import { Room, IRoom } from 'core/RoomModel'
 import { IStudent, Student } from './StudentModel'
-import { Message, MessageType } from 'common/Response'
+import { Message, MessageType, Response } from 'common/Response'
 import { ErrorCodes } from 'common/errorCodes'
+import { Context } from 'koa'
+import { SocketSender } from 'core/socketSender'
 
 export default class StudentRegistrationService {
+    constructor(
+        private readonly socketSender: SocketSender
+    ) { }
+
+    public async updateByAdmin(ctx: Context): Promise<void> {
+        const student = (ctx.request as any).body
+        const roomId = ctx.params.id
+        const studentId = ctx.params.studentId
+        logger.info(`Updating student by admin`)
+
+        const result = await Room.findOneAndUpdate(
+            { _id: roomId },
+            { $set: { 'students.$[element]': student } },
+            { arrayFilters: [{ 'element._id': { $eq: studentId } }], new: true } as any
+        )
+        if (result) {
+            this.socketSender.sendRoomUpdate(result)
+            ctx.body = new Response(result)
+            ctx.status = 200
+        } else {
+            ctx.status = 404
+        }
+    }
+
+    public async removeByAdmin(ctx: Context): Promise<void> {
+        const student = (ctx.request as any).body
+        const roomId = ctx.params.id
+        logger.info(`Removing student by admin`)
+
+        const result = await this.removeStudent(roomId, student, '', true)
+        this.socketSender.sendRoomUpdate(result)
+        ctx.body = new Response(result)
+        ctx.status = 200
+    }
+
+    public async addStudentByAdmin(ctx: Context): Promise<void> {
+        const student = (ctx.request as any).body
+        const roomId = ctx.params.id
+        logger.info(`Adding student by admin`)
+
+        const result = await this.addStudent(roomId, { ...student, addedBy: 'admin' })
+        this.socketSender.sendRoomUpdate(result)
+        ctx.body = new Response(result)
+        ctx.status = 201
+    }
 
     public async addStudent(roomId: string, student: IStudent): Promise<IRoom> {
         logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
@@ -27,14 +74,19 @@ export default class StudentRegistrationService {
         return model
     }
 
-    public async removeStudent(roomId: string, student: IStudent, removedBy: string): Promise<IRoom> {
+    public async removeStudent(
+        roomId: string,
+        student: IStudent,
+        removedBy: string,
+        isActionByAdmin: boolean = false
+    ): Promise<IRoom> {
         logger.info(`Removing student (${student.index}) from room :${roomId} by ${removedBy}`)
         const room: IRoom = await Room.findOne({ _id: roomId })
 
         if (!room.students.find(it => it.index === student.index && it.name == student.name)) {
             throw Message.fromErrorCode(ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
         }
-        if (student.addedBy !== removedBy) {
+        if (student.addedBy !== removedBy && !isActionByAdmin) {
             throw Message.fromErrorCode(ErrorCodes.CANNOT_REMOVE_THIS_STUDENT, MessageType.ERROR)
         }
 

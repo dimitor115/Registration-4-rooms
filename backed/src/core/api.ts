@@ -26,7 +26,7 @@ export default function api(
     roomExportService: RoomExportService
 ): Router {
     initSocketApi(io, socketSender, roomReservationsService, studentRegistrationService, requestManger)
-    return initRestApi(roomManagementService, administratorsService, roomExportService)
+    return initRestApi(roomManagementService, administratorsService, roomExportService, studentRegistrationService)
 }
 
 function initSocketApi(
@@ -101,7 +101,8 @@ function initSocketApi(
 function initRestApi(
     roomManagementService: RoomsManagementService,
     administratorsService: AdministratorsService,
-    roomExportService: RoomExportService
+    roomExportService: RoomExportService,
+    studentRegistrationService: StudentRegistrationService
 ): Router {
     const router = new Router()
 
@@ -118,6 +119,10 @@ function initRestApi(
     router.post('/rooms', authMiddleware, roomManagementService.create)
     router.delete('/rooms/:id', authMiddleware, roomManagementService.delete)
     router.put('/rooms/:id', authMiddleware, roomManagementService.update)
+
+    router.post('/rooms/:id/student', authMiddleware, (ctx) => studentRegistrationService.addStudentByAdmin(ctx))
+    router.delete('/rooms/:id/student', authMiddleware, (ctx) => studentRegistrationService.removeByAdmin(ctx))
+    router.put('/rooms/:id/student/:studentId', authMiddleware, (ctx) => studentRegistrationService.updateByAdmin(ctx))
 
     return router
 }

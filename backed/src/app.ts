@@ -36,7 +36,7 @@ import RoomExportService from './modules/rooms/RoomsExportService';
     const socketSender = new SocketSender(io)
     const administratorsService = new AdministratorsService()
     const reservationsService = new RoomReservationsService(socketSender)
-    const studentRegistrationService = new StudentRegistrationService()
+    const studentRegistrationService = new StudentRegistrationService(socketSender)
     const roomManagmentService = new RoomsManagementService()
     const requestManager = new RequestManager(socketSender, reservationsService)
     const roomExportService = new RoomExportService()

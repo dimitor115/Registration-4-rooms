@@ -6,7 +6,7 @@
             icon="el-icon-user-solid"
             shape="square"
             :size="40"
-            :src="$store.state.user.data.imageUrl"
+            :src="$store.state.user.data.picture"
           ></el-avatar>
           <div>
           {{$store.state.user.data.name}}

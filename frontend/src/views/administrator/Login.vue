@@ -54,7 +54,7 @@ export default Vue.extend({
 
       this.$store.commit("setUserData", {
         name: profile.getName(),
-        imageUrl: profile.getImageUrl(),
+        picture: profile.getImageUrl(),
         email: profile.getEmail()
       });
     },

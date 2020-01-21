@@ -4,6 +4,7 @@ import createAxios from './config/configureAxios'
 import {API_URL} from './config/consts'
 import store from '@/store'
 import { Admin } from '@/models/Admin'
+import { IStudent } from '../models/IStudent';
 
 const axios = createAxios({
     baseURL: API_URL + '/api/v1'
@@ -19,6 +20,11 @@ export const api = {
         delete: (id: string) => axios.delete<IRoom>(`/rooms/${id}`),
         update: (id: string, payload: IRoomForm) => axios.put<IRoom>(`/rooms/${id}`, payload),
         findAll: () => axios.get<IRoom[]>('/rooms'),
+        students: {
+            register_by_admin: (student: IStudent, roomId: string) => axios.post<IRoom>(`/rooms/${roomId}/student`, student),
+            update_by_admin: (student: IStudent, roomId: string, studentId: string) => axios.put<IRoom>(`/rooms/${roomId}/student/${studentId}`, student),
+            delete_by_admin: (roomId: string, studentId: string) => axios.delete<IRoom>(`/rooms/${roomId}/student/${studentId}`)
+        }
     },
     admins: {
         verifyAndCreate: () => axios.post('/admins'),

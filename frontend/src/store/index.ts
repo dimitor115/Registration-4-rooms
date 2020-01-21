@@ -24,6 +24,10 @@ const store =  new Vuex.Store({
       [Actions.REGISTER_STUDENT]: {} as any,
       [Actions.REMOVE_STUDENT]: {} as any,
       [Actions.RESERVE_ROOM]: {} as any,
+
+      [Actions.ADMIN_STUDENT_ADD]: {} as any,
+      [Actions.ADMIN_STUDENT_EDIT]: {} as any,
+      [Actions.ADMIN_STUDENT_REMOVE]: {} as any,
     },
     admins: [] as Admin[],
     user: {
@@ -167,6 +171,32 @@ const store =  new Vuex.Store({
         _setActionDone(id, Actions.UPDATE_ROOM)
       }
     },
+
+    async [Actions.ADMIN_STUDENT_ADD]({ }, {roomId, student}) {
+      _setActionProcessing(roomId + student, Actions.ADMIN_STUDENT_ADD)
+      try {
+        await api.rooms.students.register_by_admin(student, roomId)
+      } finally {
+        _setActionDone(roomId + student, Actions.ADMIN_STUDENT_ADD)
+      }
+    },
+    async [Actions.ADMIN_STUDENT_EDIT]({ }, {roomId, studentId, student}) {
+      _setActionProcessing(roomId + studentId, Actions.ADMIN_STUDENT_EDIT)
+      try {
+        await api.rooms.students.update_by_admin(student, roomId, studentId)
+      } finally {
+        _setActionDone(roomId + studentId, Actions.ADMIN_STUDENT_EDIT)
+      }
+    },
+    async [Actions.ADMIN_STUDENT_REMOVE]({ }, {roomId, studentId}) {
+      _setActionProcessing(roomId + studentId, Actions.ADMIN_STUDENT_REMOVE)
+      try {
+        await api.rooms.students.delete_by_admin(roomId, studentId)
+      } finally {
+        _setActionDone(roomId + studentId, Actions.ADMIN_STUDENT_REMOVE)
+      }
+    },
+
     countUserFingerPrint({ commit }) {
       setTimeout(() => {
         finger.get((components) => {

@@ -121,7 +121,7 @@ function initRestApi(
     router.put('/rooms/:id', authMiddleware, roomManagementService.update)
 
     router.post('/rooms/:id/student', authMiddleware, (ctx) => studentRegistrationService.addStudentByAdmin(ctx))
-    router.delete('/rooms/:id/student', authMiddleware, (ctx) => studentRegistrationService.removeByAdmin(ctx))
+    router.delete('/rooms/:id/student/:studentId', authMiddleware, (ctx) => studentRegistrationService.removeByAdmin(ctx))
     router.put('/rooms/:id/student/:studentId', authMiddleware, (ctx) => studentRegistrationService.updateByAdmin(ctx))
 
     return router

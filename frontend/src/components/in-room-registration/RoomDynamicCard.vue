@@ -3,7 +3,7 @@
     <template slot="header">
       <span @click="expandRoom">{{room.name}}</span>
     </template>
-    <reservation-count-down v-if="room.reservedBy" :until="room.reservedUntil" :is-current-user="isCurrentUserReservation"></reservation-count-down>
+    <reservation-count-down v-if="room.reservedBy && !noReservation" :until="room.reservedUntil" :is-current-user="isCurrentUserReservation"></reservation-count-down>
     <div class="places-container">Wolne miejsca: {{room.size - room.students.length}} / {{room.size}}</div>
 
     <transition name="fade">
@@ -43,6 +43,10 @@ export default Vue.extend({
       type: Object as PropType<IRoom>,
       required: true,
     },
+    noReservation: {
+      type: Boolean as PropType<boolean>,
+      default: false
+    }
   },
   data: () => ({
     showDetails: false,

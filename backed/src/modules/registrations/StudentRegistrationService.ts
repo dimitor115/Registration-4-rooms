@@ -22,6 +22,7 @@ export default class StudentRegistrationService {
             { $set: { 'students.$[element]': student } },
             { arrayFilters: [{ 'element._id': { $eq: studentId } }], new: true } as any
         )
+        
         if (result) {
             this.socketSender.sendRoomUpdate(result)
             ctx.body = new Response(result)
@@ -32,14 +33,23 @@ export default class StudentRegistrationService {
     }
 
     public async removeByAdmin(ctx: Context): Promise<void> {
-        const student = (ctx.request as any).body
+        const studentId = ctx.params.studentId
         const roomId = ctx.params.id
         logger.info(`Removing student by admin`)
 
-        const result = await this.removeStudent(roomId, student, '', true)
-        this.socketSender.sendRoomUpdate(result)
-        ctx.body = new Response(result)
-        ctx.status = 200
+        const result = await Room.findOneAndUpdate(
+            { _id: roomId },
+            { $pull: { students: { _id: studentId } } },
+            { new: true }
+        )
+
+        if (result) {
+            this.socketSender.sendRoomUpdate(result)
+            ctx.body = new Response(result)
+            ctx.status = 200
+        } else {
+            ctx.status = 404
+        }
     }
 
     public async addStudentByAdmin(ctx: Context): Promise<void> {
@@ -77,8 +87,7 @@ export default class StudentRegistrationService {
     public async removeStudent(
         roomId: string,
         student: IStudent,
-        removedBy: string,
-        isActionByAdmin: boolean = false
+        removedBy: string
     ): Promise<IRoom> {
         logger.info(`Removing student (${student.index}) from room :${roomId} by ${removedBy}`)
         const room: IRoom = await Room.findOne({ _id: roomId })
@@ -86,7 +95,7 @@ export default class StudentRegistrationService {
         if (!room.students.find(it => it.index === student.index && it.name == student.name)) {
             throw Message.fromErrorCode(ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
         }
-        if (student.addedBy !== removedBy && !isActionByAdmin) {
+        if (student.addedBy !== removedBy) {
             throw Message.fromErrorCode(ErrorCodes.CANNOT_REMOVE_THIS_STUDENT, MessageType.ERROR)
         }
 

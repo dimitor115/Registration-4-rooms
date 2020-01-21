@@ -13,15 +13,8 @@
       </div>
     </div>
     <spinner action="FETCH_ALL_ROOMS">
-      <template v-for="(room, idx) in rooms">
-        <room-dynamic-card :room="room" :key="idx">
-          <template v-for="(student, idx) in room.students">
-            <student-filled-form :student="student" :key="'r' + idx"></student-filled-form>
-          </template>
-          <template v-for="(place, idx) in room.size - room.students.length">
-            <student-filled-form :key="'e' + idx"></student-filled-form>
-          </template>
-        </room-dynamic-card>
+      <template v-for="(room, roomIdx) in rooms">
+        <rooms-admin-list :room="room" :key="roomIdx" />
       </template>
     </spinner>
   </div>
@@ -34,19 +27,25 @@ import { mapState } from "vuex";
 import { api } from "@/shared/api";
 import { SingleActions } from "@/shared/Actions";
 import { IRoom, IRoomForm } from "@/models/IRoom";
-import {API_URL} from "@/shared/config/consts"
+import { API_URL } from "@/shared/config/consts";
 
 import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue";
-import StudentFilledForm from "@/components/in-room-registration/StudentFilledForm.vue";
+import StudentFilledAdminForm from "@/components/admin/StudentFilledAdminForm.vue";
 import RoomForm from "@/components/RoomForm.vue";
 import RoomSimpleCard from "@/components/RoomSimpleCard.vue";
 import ConfirmationDialog from "@/components/ConfirmationDialog.vue";
 import Spinner from "@/components/Spinner.vue";
+import RoomsAdminList from "@/components/admin/RoomsAdminList.vue";
 import { connections } from "@/shared/socketApi";
 
 export default Vue.extend({
   name: "RegistrationLiveView",
-  components: { RoomDynamicCard, StudentFilledForm, Spinner },
+  components: {
+    RoomDynamicCard,
+    StudentFilledAdminForm,
+    Spinner,
+    RoomsAdminList
+  },
   mounted() {
     this.$store.dispatch(SingleActions.FETCH_ALL_ROOMS);
     connections.roomUpdates.open();
@@ -73,11 +72,11 @@ export default Vue.extend({
     }
   },
   methods: {
-    exportToExcel(){
-       const link = document.createElement('a')
-        link.setAttribute('href', API_URL + '/api/v1/rooms/export')
-        link.setAttribute('download', 'stoliki.xlsx')
-        link.click()
+    exportToExcel() {
+      const link = document.createElement("a");
+      link.setAttribute("href", API_URL + "/api/v1/rooms/export");
+      link.setAttribute("download", "stoliki.xlsx");
+      link.click();
     }
   }
 });

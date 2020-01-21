@@ -111,5 +111,9 @@ export default Vue.extend({
   display: flex;
   flex-direction: row;
   justify-content: center;
+
+  .el-form-item {
+    margin-bottom: 0;
+  }
 }
 </style>

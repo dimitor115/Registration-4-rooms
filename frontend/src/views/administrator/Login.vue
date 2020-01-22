@@ -30,8 +30,8 @@ export default Vue.extend({
     hasToWaitForAccept: false
   }),
   mounted() {
-    window.gapi.load("auth", () => {
-      const auth2 = window.gapi.auth2.init({
+    (window as any).gapi.load("auth", () => {
+      const auth2 = (window as any).gapi.auth2.init({
         client_id: CLIENT_ID,
         cookiepolicy: 'single_host_origin'
       })

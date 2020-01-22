@@ -20,7 +20,7 @@ import Vue from 'vue'
 export default Vue.extend({
     methods: {
         async logout() {
-            const auth2 = window.gapi.auth2.getAuthInstance()
+            const auth2 = (window as any).gapi.auth2.getAuthInstance()
             await auth2.signOut()
             this.$router.push('/login')
         }

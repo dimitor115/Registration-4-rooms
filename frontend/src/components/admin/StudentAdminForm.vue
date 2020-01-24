@@ -2,10 +2,10 @@
   <el-form :inline="true" class="room-form" :rules="formRules" :model="student">
     <div class="student-input">
       <el-form-item prop="name">
-        <el-input v-model="student.name" placeholder="Imię" />
+        <el-input v-model="student.name" maxlength="20" placeholder="Imię" />
       </el-form-item>
       <el-form-item prop="index">
-        <el-input v-model="student.index" placeholder="Indeks" />
+        <el-input v-model="student.index" maxlength="6" placeholder="Indeks" />
       </el-form-item>
     </div>
 

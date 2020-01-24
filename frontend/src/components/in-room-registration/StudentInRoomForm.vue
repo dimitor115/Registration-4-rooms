@@ -2,10 +2,10 @@
   <el-form :inline="true" class="room-form" :rules="formRules" :model="form">
     <div class="student-input">
       <el-form-item prop="name">
-        <el-input v-model="form.name" placeholder="Imię" />
+        <el-input v-model="form.name" maxlength="20" placeholder="Imię" />
       </el-form-item>
       <el-form-item prop="index">
-        <el-input v-model="form.index" placeholder="Indeks" />
+        <el-input v-model="form.index" maxlength="6" placeholder="Indeks" />
       </el-form-item>
     </div>
 
@@ -30,7 +30,6 @@ import Vue, { PropType } from 'vue'
 import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
-  name: 'Home',
   props: {
     roomId: {
       type: String as PropType<string>,

@@ -68,6 +68,11 @@ export default class StudentRegistrationService {
 
         const studentModel = this.createAndValidateStudent(student)
 
+        const room = await Room.findOne({_id: roomId})
+        if(room?.students.length >= room?.size) {
+            throw Message.fromErrorCode(ErrorCodes.NO_FREE_SPACE_IN_ROOM, MessageType.ERROR)
+        }
+
         const result = await Room.findOneAndUpdate(
             { _id: roomId },
             { $push: { students: studentModel } },

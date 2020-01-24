@@ -2,16 +2,16 @@
   <el-form
     :inline="true"
     class="student-in-room-from mock-form"
-    :class="{'left-margin': isEmpty}"
+    :class="{ 'left-margin': isEmpty }"
   >
     <el-form-item>
       <div class="input-mock" :class="inputMockClass">
-        <span>{{student.name}}</span>
+        <span>{{ student.name }}</span>
       </div>
     </el-form-item>
     <el-form-item>
       <div class="input-mock" :class="inputMockClass">
-        <span>{{student.index}}</span>
+        <span>{{ student.index }}</span>
       </div>
     </el-form-item>
 
@@ -21,7 +21,7 @@
         icon="el-icon-plus"
         circle
         @click.prevent="$emit('onAdd', roomId)"
-      ></el-button>
+      />
     </el-form-item>
     <el-form-item v-else>
       <el-button
@@ -29,32 +29,32 @@
         icon="el-icon-edit"
         circle
         @click.prevent="$emit('onEdit', student._id)"
-      ></el-button>
+      />
       <el-button
         type="danger"
         icon="el-icon-delete"
         circle
         :loading="isRemoveRequestProcessing"
         @click.prevent="$emit('onRemove', student._id)"
-      ></el-button>
+      />
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { IStudent } from "@/models/IStudent";
-import { Actions } from "@/shared/Actions";
+import Vue, { PropType } from 'vue'
+import { IStudent } from '@/models/IStudent'
+import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
-  name: "StudentFilledForm",
+  name: 'StudentFilledForm',
   props: {
     student: {
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
-        name: "",
-        index: "",
-        addedBy: "me"
+        name: '',
+        index: '',
+        addedBy: 'me'
       })
     },
     roomId: {
@@ -66,16 +66,16 @@ export default Vue.extend({
     isRemoveRequestProcessing(): boolean {
       return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_REMOVE][
         this.roomId + (this.student as any)._id
-      ];
+      ]
     },
     isEmpty(): boolean {
-      return !(this.student.name && this.student.index);
+      return !(this.student.name && this.student.index)
     },
     inputMockClass(): string {
-      return this.isEmpty ? "empty-input" : "fielled-input";
+      return this.isEmpty ? 'empty-input' : 'fielled-input'
     }
-  },
-});
+  }
+})
 </script>
 <style lang="scss">
 .input-mock {

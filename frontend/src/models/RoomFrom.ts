@@ -1,4 +1,4 @@
 export default interface IRoomForm {
-    name: string,
-    size: number
+  name: string
+  size: number
 }

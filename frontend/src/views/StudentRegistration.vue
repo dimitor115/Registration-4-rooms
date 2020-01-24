@@ -3,8 +3,8 @@
     <h2>Pokoje:</h2>
     <spinner action="FETCH_ALL_ROOMS">
       <template v-for="(room, idx) in rooms">
-        <room-dynamic-card :room="room" :key="idx">
-          <room-students-form :room="room"></room-students-form>
+        <room-dynamic-card :key="idx" :room="room">
+          <room-students-form :room="room" />
         </room-dynamic-card>
       </template>
     </spinner>
@@ -12,32 +12,30 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
-import { IResponse } from "@/shared/IResponse";
-import { SingleActions } from "@/shared/Actions";
-import { IRoom } from "@/models/IRoom";
-import { connections } from "@/shared/socketApi";
-import Spinner from "@/components/Spinner.vue";
-import RoomStudentsForm from "@/components/in-room-registration/RoomStudentsForm.vue";
-import RoomDynamicCard from "@/components/in-room-registration/RoomDynamicCard.vue";
+import Vue from 'vue'
+import { mapState } from 'vuex'
+import { SingleActions } from '@/shared/Actions'
+import { connections } from '@/shared/socketApi'
+import Spinner from '@/components/Spinner.vue'
+import RoomStudentsForm from '@/components/in-room-registration/RoomStudentsForm.vue'
+import RoomDynamicCard from '@/components/in-room-registration/RoomDynamicCard.vue'
 
 export default Vue.extend({
-  name: "student-registration",
+  name: 'StudentRegistration',
   components: { RoomDynamicCard, RoomStudentsForm, Spinner },
   computed: {
     ...mapState({
-      rooms: "rooms"
+      rooms: 'rooms'
     })
   },
   mounted() {
-    this.$store.dispatch(SingleActions.FETCH_ALL_ROOMS);
-    connections.roomUpdates.open();
-    connections.reservationUpdates.open();
+    this.$store.dispatch(SingleActions.FETCH_ALL_ROOMS)
+    connections.roomUpdates.open()
+    connections.reservationUpdates.open()
   },
   beforeDestroy() {
-    connections.roomUpdates.close();
-    connections.reservationUpdates.close();
+    connections.roomUpdates.close()
+    connections.reservationUpdates.close()
   }
-});
+})
 </script>

@@ -6,25 +6,25 @@
         <el-menu-item index="zarzadzanie">Zarządzanie pokojami</el-menu-item>
         <el-menu-item index="administratorzy">Zarządzanie administratorami</el-menu-item>
       </el-menu>
-      <user-avatar></user-avatar>
+      <user-avatar />
     </div>
-    <router-view></router-view>
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 
 export default Vue.extend({
-  name: "AdminContainer",
-  components: {UserAvatar},
+  name: 'AdminContainer',
+  components: { UserAvatar },
   computed: {
     activePage() {
-      return this.$router.currentRoute.path.split("/").splice(-1)[0];
+      return this.$router.currentRoute.path.split('/').splice(-1)[0]
     }
   }
-});
+})
 </script>
 <style lang="scss" scoped>
 .menu-container {

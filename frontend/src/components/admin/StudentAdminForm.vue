@@ -2,59 +2,61 @@
   <el-form :inline="true" class="room-form" :rules="formRules" :model="student">
     <div class="student-input">
       <el-form-item prop="name">
-        <el-input v-model="student.name" placeholder="Imię"></el-input>
+        <el-input v-model="student.name" placeholder="Imię" />
       </el-form-item>
       <el-form-item prop="index">
-        <el-input v-model="student.index" placeholder="Indeks"></el-input>
+        <el-input v-model="student.index" placeholder="Indeks" />
       </el-form-item>
     </div>
 
     <div>
       <el-form-item>
         <el-button
-        v-if="editable"
+          v-if="editable"
           type="success"
-          @click.prevent="$emit('onEdit', {...student})"
           :loading="isEditingRequestProcessing"
           circle
           icon="el-icon-edit"
-        ></el-button>
+          @click.prevent="$emit('onEdit', { ...student })"
+        />
         <el-button
-            v-else
+          v-else
           type="success"
-          @click.prevent="$emit('onAdd', {...student})"
           :loading="isAddingRequestProcessing"
           circle
           icon="el-icon-plus"
-        ></el-button>
+          @click.prevent="$emit('onAdd', { ...student })"
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="danger" icon="el-icon-close" circle @click.prevent="$emit('onCancel')"></el-button>
+        <el-button type="danger" icon="el-icon-close" circle @click.prevent="$emit('onCancel')" />
       </el-form-item>
     </div>
   </el-form>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { IStudent } from "@/models/IStudent";
-import { Actions } from "@/shared/Actions";
+import Vue, { PropType } from 'vue'
+import { IStudent } from '@/models/IStudent'
+import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
-  name: "home",
+  name: 'Home',
   props: {
     roomId: {
-      type: String as PropType<string>
+      type: String as PropType<string>,
+      required: true
     },
     editable: {
-        type: Boolean as PropType<boolean>
+      type: Boolean as PropType<boolean>,
+      required: true
     },
     student: {
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
-        name: "",
-        index: "",
-        addedBy: "me"
+        name: '',
+        index: '',
+        addedBy: 'me'
       })
     }
   },
@@ -62,48 +64,46 @@ export default Vue.extend({
     isEditingRequestProcessing(): boolean {
       return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_EDIT][
         this.roomId + (this.student as any)._id
-      ];
+      ]
     },
     isAddingRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_ADD][
-        this.roomId + this.student
-      ];
+      return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_ADD][this.roomId + this.student]
     },
     formRules() {
       return {
         name: [
           {
             required: true,
-            message: "Imię jest obowiązkowe!",
-            trigger: "blur"
+            message: 'Imię jest obowiązkowe!',
+            trigger: 'blur'
           },
           {
             pattern: /[A-Z]{1}[a-z]+/,
-            message: "Podaj tylko imię!",
-            trigger: "change"
+            message: 'Podaj tylko imię!',
+            trigger: 'change'
           }
         ],
         index: [
           {
             required: true,
-            message: "Indeks jest obowiązkowy!",
-            trigger: "blur"
+            message: 'Indeks jest obowiązkowy!',
+            trigger: 'blur'
           },
           {
             pattern: /[0-9]{6}/,
-            message: "To nie jest poprawny indeks!",
-            trigger: "change"
+            message: 'To nie jest poprawny indeks!',
+            trigger: 'change'
           }
         ]
-      };
+      }
     }
   },
   methods: {
     handleAdd(): void {
-      this.$emit("onAdd", {...this.student});
+      this.$emit('onAdd', { ...this.student })
     }
   }
-});
+})
 </script>
 <style lang="scss">
 .room-form {

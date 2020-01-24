@@ -1,33 +1,43 @@
 <template>
   <el-card class="room-simple-card">
     <template slot="header">
-      <span>{{room.name}}</span>
+      <span>{{ room.name }}</span>
       <span>
-        <el-button circle type="primary" icon="el-icon-edit" @click="$emit('onEditClick', room._id)"></el-button>
-        <el-button circle type="danger" icon="el-icon-delete" @click="$emit('onDeleteClick', room._id)"></el-button>
-       </span>
+        <el-button
+          circle
+          type="primary"
+          icon="el-icon-edit"
+          @click="$emit('onEditClick', room._id)"
+        />
+        <el-button
+          circle
+          type="danger"
+          icon="el-icon-delete"
+          @click="$emit('onDeleteClick', room._id)"
+        />
+      </span>
     </template>
-    Wolne miejsca: {{roomFreeSpace(room)}} / {{room.size}}
+    Wolne miejsca: {{ roomFreeSpace(room) }} / {{ room.size }}
   </el-card>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import {IRoom} from '@/models/IRoom'
+import { IRoom } from '@/models/IRoom'
 
 export default Vue.extend({
-  name: 'room-simple-card',
+  name: 'RoomSimpleCard',
   props: {
     room: {
       type: Object as PropType<IRoom>,
-      required: true,
-    },
+      required: true
+    }
   },
   methods: {
     roomFreeSpace(room: IRoom) {
       return room.size - room.students.length
     }
-  },
+  }
 })
 </script>
 <style lang="scss">
@@ -37,7 +47,7 @@ export default Vue.extend({
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding:8px 20px;
+    padding: 8px 20px;
   }
 }
 </style>

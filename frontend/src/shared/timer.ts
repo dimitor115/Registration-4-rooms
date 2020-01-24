@@ -16,25 +16,19 @@ export default class Timer {
     return this.secondTillTheEnd
   }
 
-  public start(
-    onCycle: (secondsTillEnd: number) => void,
-    onFinish: () => void,
-  ) {
+  public start(onCycle: (secondsTillEnd: number) => void, onFinish: () => void) {
     if (this.secondTillTheEnd > 0) {
       const currentSecond = Date.now()
-      this.interval = setInterval(
-        () => {
-          if (currentSecond + 1000 <= Date.now()) {
-            this.secondTillTheEnd--
-            onCycle(this.secondTillTheEnd)
-            if (this.secondTillTheEnd <= 0) {
-              onFinish()
-              this.stop()
-            }
+      this.interval = setInterval(() => {
+        if (currentSecond + 1000 <= Date.now()) {
+          this.secondTillTheEnd--
+          onCycle(this.secondTillTheEnd)
+          if (this.secondTillTheEnd <= 0) {
+            onFinish()
+            this.stop()
           }
-        },
-        1000,
-      )
+        }
+      }, 1000)
     }
   }
 
@@ -44,5 +38,4 @@ export default class Timer {
       this.interval = null
     }
   }
-
 }

@@ -6,14 +6,14 @@
       :percentage="untilPercentage"
       :format="progressFormat"
       :status="isCurrentUser ? 'success' : null"
-    ></el-progress>
+    />
   </div>
 </template>
 <script>
-import moment from "moment";
-import Timer from "@/shared/timer";
+import moment from 'moment'
+import Timer from '@/shared/timer'
 export default {
-  name: "ReservationCountDown",
+  name: 'ReservationCountDown',
   props: {
     until: {
       type: String,
@@ -29,31 +29,31 @@ export default {
     secondsUntil: null,
     timer: null
   }),
+  computed: {
+    untilPercentage() {
+      return (this.secondsUntil / this.startSeconds) * 100 || 0
+    }
+  },
   watch: {
-    until: function(newVal, oldVal) {
+    until: function() {
       this.setupCountDown()
     }
   },
   mounted() {
     this.setupCountDown()
   },
-  computed: {
-    untilPercentage() {
-      return (this.secondsUntil / this.startSeconds) * 100 || 0;
-    }
-  },
   methods: {
     updateSeconds(secondsUntil) {
-      this.secondsUntil = secondsUntil;
+      this.secondsUntil = secondsUntil
     },
     onTimeEnd() {
-      console.log("time end")
+      console.log('time end')
     },
     progressFormat() {
-      return this.secondsUntil + " s";
+      return this.secondsUntil + ' s'
     },
     setupCountDown() {
-      if(this.timer) this.timer.stop()
+      if (this.timer) this.timer.stop()
 
       const dateUntil = moment(this.until)
       const dateDiff = dateUntil.diff(moment())
@@ -70,5 +70,5 @@ export default {
       this.timer.start(this.updateSeconds, this.onTimeEnd)
     }
   }
-};
+}
 </script>

@@ -1,9 +1,9 @@
 <template>
   <section>
     <div v-if="isProcessing" class="spinner-container">
-      <i class="spinner" :style="spinnerStyle"></i>
+      <i class="spinner" :style="spinnerStyle" />
     </div>
-    <slot v-if="!isProcessing"></slot>
+    <slot v-if="!isProcessing" />
   </section>
 </template>
 
@@ -12,20 +12,20 @@ import Vue, { PropType } from 'vue'
 import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
-  name: 'spinner',
+  name: 'Spinner',
   props: {
     action: {
       type: String as PropType<Actions>,
-      default: undefined,
+      default: undefined
     },
     isLoading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     size: {
       type: Number,
-      default: 1.7,
-    },
+      default: 1.7
+    }
   },
   computed: {
     isProcessing(): boolean {
@@ -33,12 +33,12 @@ export default Vue.extend({
     },
     spinnerStyle(): any {
       return {
-        'width': `${this.size}em`,
-        'height': `${this.size}em`,
-        'border-width': `${(this.size as number) / 4}em`,
+        width: `${this.size}em`,
+        height: `${this.size}em`,
+        'border-width': `${(this.size as number) / 4}em`
       }
-    },
-  },
+    }
+  }
 })
 </script>
 <style lang="scss">

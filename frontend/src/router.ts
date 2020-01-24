@@ -7,7 +7,7 @@ const StudentRegistration = () => import('./views/StudentRegistration.vue')
 const AdminContainer = () => import('./views/administrator/AdminContainer.vue')
 const RoomsManagement = () => import('./views/administrator/RoomsManagement.vue')
 const RegistrationLiveView = () => import('./views/administrator/RegistrationLiveView.vue')
-const AdminsManagement = () =>  import('./views/administrator/AdminsManagment.vue')
+const AdminsManagement = () => import('./views/administrator/AdminsManagment.vue')
 
 Vue.use(Router)
 
@@ -22,12 +22,12 @@ const router = new Router({
     {
       path: '/zapisy',
       name: 'Zapisy',
-      component: StudentRegistration,
+      component: StudentRegistration
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login,
+      component: Login
     },
     {
       path: '/admin',
@@ -40,34 +40,33 @@ const router = new Router({
         {
           path: '/admin/zarzadzanie',
           name: 'Admin | Zarządzanie',
-          component: RoomsManagement,
+          component: RoomsManagement
         },
         {
           path: '/admin/live',
           name: 'Admin | Live',
-          component: RegistrationLiveView,
+          component: RegistrationLiveView
         },
         {
           path: '/admin/administratorzy',
           name: 'Admin | Administratorzy',
-          component: AdminsManagement,
-        },
+          component: AdminsManagement
+        }
       ]
-    },
-  ],
+    }
+  ]
 })
 
 const ADMIN_PREFIX = '/admin'
 
 router.beforeEach(async (to: Route, from: Route, next: Function) => {
-
   const isAdminPage = to.path.startsWith(ADMIN_PREFIX)
-  if(!isAdminPage) {
+  if (!isAdminPage) {
     return next()
   }
 
   const isUserSignIn = !!store.state.user.data.email
-  if(isUserSignIn) {
+  if (isUserSignIn) {
     return next()
   }
 
@@ -76,12 +75,11 @@ router.beforeEach(async (to: Route, from: Route, next: Function) => {
     await store.dispatch('fetchUserData')
     console.log('fetched')
     return next()
-  } catch {  
+  } catch {
     return next('/login')
   }
 
   return next('/login')
-
 })
 
 export default router

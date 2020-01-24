@@ -6,8 +6,8 @@ export function socketErrorHandler(errorCallback: (msg: Message) => void): (err:
         logger.error(err)
         if (isMessage(err)) {
             errorCallback(err)
-        } else if (err.name && (err as any).message) {
-            const msg = `${err.name}: ${(err as any).message}`
+        } else if (err.name && (err).message) {
+            const msg = `${err.name}: ${(err).message}`
             errorCallback(new Message(msg))
         } else {
             errorCallback(new Message('Internal Server Error!'))

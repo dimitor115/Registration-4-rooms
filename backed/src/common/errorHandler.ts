@@ -7,8 +7,8 @@ export default async function (ctx: Context, next: () => Promise<any>): Promise<
   } catch (err) {
     logger.error(err)
 
-    if (err.name && (err as any).message) {
-      const msg = `${err.name}: ${(err as any).message}`
+    if (err.name && (err).message) {
+      const msg = `${err.name}: ${(err).message}`
       ctx.status = err.name === 'ValidationError' ? 400 : 500
       ctx.body = {
         messages: [msg]

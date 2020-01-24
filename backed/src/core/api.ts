@@ -12,8 +12,8 @@ import { IStudent } from 'modules/registrations/StudentModel'
 import { RequestManager, ReservationRequest } from 'modules/reservations/RequestsManager'
 import { authMiddleware } from 'common/authentication'
 import AdministratorsService from 'modules/administrators/AdministratorsService'
-import RoomExportService from 'modules/rooms/RoomsExportService';
-import { logger } from '../config/winstonConfig';
+import RoomExportService from 'modules/rooms/RoomsExportService'
+import { logger } from '../config/winstonConfig'
 
 export default function api(
     io: SocketIO.Server,

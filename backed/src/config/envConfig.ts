@@ -3,12 +3,12 @@ import dotenv from 'dotenv'
 dotenv.config({ path: '.env' })
 
 export interface IConfig {
-    port: number
-    debugLogging: boolean
-    dbsslconn: boolean
-    jwtSecret: string
-    databaseUrl: string
-    googleClientId: string
+    port: number;
+    debugLogging: boolean;
+    dbsslconn: boolean;
+    jwtSecret: string;
+    databaseUrl: string;
+    googleClientId: string;
 }
 
 const config: IConfig = {

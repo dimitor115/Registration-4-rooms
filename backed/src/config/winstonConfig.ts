@@ -25,7 +25,7 @@ export function requestLogger(ctx: Koa.Context, next: () => Promise<any>): Promi
     return next().then(() => {
         const ms = new Date().getMilliseconds() - start
         const logLevel = _mapStatusToLogLevel(ctx.status)
-        const msg: string = `${ctx.method} ${ctx.originalUrl} ${ctx.status} ${ms}ms`
+        const msg = `${ctx.method} ${ctx.originalUrl} ${ctx.status} ${ms}ms`
         winston.log(logLevel, msg)
     })
 }

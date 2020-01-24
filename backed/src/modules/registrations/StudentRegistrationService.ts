@@ -72,6 +72,9 @@ export default class StudentRegistrationService {
         if(room?.students.length >= room?.size) {
             throw Message.fromErrorCode(ErrorCodes.NO_FREE_SPACE_IN_ROOM, MessageType.ERROR)
         }
+        if(!!room?.students.find((s:IStudent) => s.name === student.name && s.index === student.index)) {
+            throw Message.fromErrorCode(ErrorCodes.DUPLICATED_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
+        }
 
         const result = await Room.findOneAndUpdate(
             { _id: roomId },

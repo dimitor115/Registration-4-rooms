@@ -8,6 +8,7 @@ import socketApi from '@/shared/socketApi'
 import { Actions } from '@/shared/Actions'
 import { Admin } from '@/models/Admin'
 import { SingleActions } from '../shared/Actions'
+import { IStudent } from '@/models/IStudent'
 
 Vue.use(Vuex)
 
@@ -210,6 +211,17 @@ const store = new Vuex.Store({
           commit('setUserUUID', hash)
         })
       }, 500)
+    }
+  },
+  getters: {
+    duplicatedStudents: state => {
+      const allStudents = state.rooms.flatMap((r: IRoom) => r.students)
+      return allStudents.filter(
+        (s: IStudent) =>
+          !!allStudents.find(
+            (os: IStudent) => os.name === s.name && os.index === s.index && os._id !== s._id
+          )
+      )
     }
   }
 })

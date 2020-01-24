@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
-import { IMessage, ResponseOrAny, isResponse } from '../IResponse'
+import { ResponseOrAny, isResponse } from '../IResponse'
 import { Notification } from 'element-ui'
+import router from '@/router'
 
 export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
   const instance = axios.create(config)
@@ -16,6 +17,11 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
     },
     (error: any) => {
       const body: ResponseOrAny = error.response.data
+
+      if (error.response.status === 401) {
+        router.push('/login')
+      }
+
       if (isResponse(body)) {
         body.messages.forEach(parseMessageToNotification)
       } else {
@@ -32,10 +38,10 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
   return instance
 }
 
-export function parseMessageToNotification({ message, type }: IMessage) {
+export function parseMessageToNotification(message) {
   Notification({
-    title: type === 'error' ? 'Bład!' : 'Wiadomość',
+    title: 'Bład!',
     message,
-    type
+    type: 'error'
   })
 }

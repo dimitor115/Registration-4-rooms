@@ -82,6 +82,11 @@ export default Vue.extend({
   }
 }
 
+.room-dynamic-card.el-card > .el-card__header {
+  font-weight: bold;
+  text-align: left;
+}
+
 .room-dynamic-card:hover .dynamic-card-footer {
   color: #1989fa;
   .expand-text {
@@ -93,13 +98,5 @@ export default Vue.extend({
 
 .places-container {
   padding: 17px;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
 }
 </style>

@@ -49,7 +49,7 @@ export default Vue.extend({
     },
     editable: {
       type: Boolean as PropType<boolean>,
-      required: true
+      default: false
     },
     student: {
       type: Object as PropType<IStudent>,

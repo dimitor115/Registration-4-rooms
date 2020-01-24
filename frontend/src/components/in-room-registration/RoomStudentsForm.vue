@@ -15,27 +15,27 @@
 
     <template v-if="restPlaces > 0">
       <student-in-room-form
-              v-if="canRegisterStudents"
-              :room-id="room._id"
-              @onRegister="registerStudent"
+        v-if="canRegisterStudents"
+        :room-id="room._id"
+        @onRegister="registerStudent"
       />
 
       <el-button
-              v-else-if="room.reservedBy"
-              class="reserve-button"
-              disabled
-              type="primary"
-              @click="reserveRoom"
+        v-else-if="room.reservedBy"
+        class="reserve-button"
+        disabled
+        type="primary"
+        @click="reserveRoom"
       >
         > Poczekaj chwile...
       </el-button>
 
       <el-button
-              v-else
-              class="reserve-button"
-              :loading="isReservationRequestProcessing"
-              type="primary"
-              @click="reserveRoom"
+        v-else
+        class="reserve-button"
+        :loading="isReservationRequestProcessing"
+        type="primary"
+        @click="reserveRoom"
       >
         Rozpocznij wpisywanie
       </el-button>
@@ -49,7 +49,7 @@ import { IRoom } from '@/models/IRoom'
 import { IStudent } from '@/models/IStudent'
 import { Actions } from '@/shared/Actions'
 import StudentInRoomForm from './StudentInRoomForm.vue'
-import StudentFilledForm from "@/components/in-room-registration/StudentFilledForm.vue";
+import StudentFilledForm from '@/components/in-room-registration/StudentFilledForm.vue'
 
 export default Vue.extend({
   name: 'RoomStudentsForm',

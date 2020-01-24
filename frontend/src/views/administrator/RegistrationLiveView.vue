@@ -14,7 +14,7 @@
     </div>
     <spinner action="FETCH_ALL_ROOMS">
       <template v-for="(room, roomIdx) in rooms">
-        <rooms-admin-list :key="roomIdx" :room="room" />
+        <room-admin-card :key="roomIdx" :room="room" />
       </template>
     </spinner>
   </div>
@@ -28,14 +28,14 @@ import { IRoom } from '@/models/IRoom'
 import { API_URL } from '@/shared/config/consts'
 
 import Spinner from '@/components/Spinner.vue'
-import RoomsAdminList from '@/components/admin/RoomsAdminList.vue'
+import RoomAdminCard from '@/components/admin/RoomAdminCard.vue'
 import { connections } from '@/shared/socketApi'
 
 export default Vue.extend({
   name: 'RegistrationLiveView',
   components: {
     Spinner,
-    RoomsAdminList
+    RoomAdminCard
   },
   computed: {
     rooms(): Array<IRoom> {

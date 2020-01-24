@@ -1,9 +1,5 @@
 <template>
-  <el-form
-    :inline="true"
-    class="student-in-room-from mock-form"
-    :class="{ 'left-margin': isEmpty }"
-  >
+  <el-form :inline="true" class="student-in-room-from" :class="{ 'left-margin': isEmpty }">
     <el-form-item>
       <div class="input-mock" :class="inputMockClass">
         <span>{{ student.name }}</span>
@@ -63,6 +59,11 @@ export default Vue.extend({
     }
   },
   computed: {
+    isStudentDuplicated(): boolean {
+      return this.$store.getters['duplicatedStudents'].find(
+        (s: IStudent) => s.index === this.student.index && s.name === this.student.name
+      )
+    },
     isRemoveRequestProcessing(): boolean {
       return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_REMOVE][
         this.roomId + (this.student as any)._id
@@ -72,7 +73,10 @@ export default Vue.extend({
       return !(this.student.name && this.student.index)
     },
     inputMockClass(): string {
-      return this.isEmpty ? 'empty-input' : 'fielled-input'
+      return (
+        (this.isEmpty ? 'empty-input' : 'fielled-input') +
+        (this.isStudentDuplicated && ' duplicate')
+      )
     }
   }
 })
@@ -90,6 +94,9 @@ export default Vue.extend({
   }
   &.empty-input {
     background-color: white;
+  }
+  &.duplicate {
+    background-color: #fdf9c2;
   }
 
   width: 235px;

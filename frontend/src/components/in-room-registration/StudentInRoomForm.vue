@@ -97,8 +97,7 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 .room-form {
-  margin: 15px 0;
-  margin-left: 85px;
+  margin: 15px 0 15px 88px;
   display: flex;
   flex-direction: row;
   justify-content: center;

@@ -18,7 +18,7 @@ export type ResponseOrAny = IResponse<any> | any
 
 export function isResponse(toBeDetermined: ResponseOrAny): toBeDetermined is IResponse<any> {
   return (
-    (toBeDetermined as IResponse<any>).body !== undefined &&
+    (toBeDetermined as IResponse<any>).body !== undefined ||
     (toBeDetermined as IResponse<any>).messages !== undefined
   )
 }

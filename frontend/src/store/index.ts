@@ -219,7 +219,7 @@ const store = new Vuex.Store({
       return allStudents.filter(
         (s: IStudent) =>
           !!allStudents.find(
-            (os: IStudent) => os.name === s.name && os.index === s.index && os._id !== s._id
+            (os: IStudent) => os.name === s.name && os.surname === s.surname && os._id !== s._id
           )
       )
     }

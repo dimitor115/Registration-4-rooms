@@ -7,7 +7,7 @@
     </el-form-item>
     <el-form-item>
       <div class="input-mock" :class="inputMockClass">
-        <span>{{ student.index }}</span>
+        <span>{{ student.surname }}</span>
       </div>
     </el-form-item>
 
@@ -49,7 +49,7 @@ export default Vue.extend({
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
         name: '',
-        index: '',
+        surname: '',
         addedBy: 'me'
       })
     },
@@ -61,7 +61,7 @@ export default Vue.extend({
   computed: {
     isStudentDuplicated(): boolean {
       return this.$store.getters['duplicatedStudents'].find(
-        (s: IStudent) => s.index === this.student.index && s.name === this.student.name
+        (s: IStudent) => s.surname === this.student.surname && s.name === this.student.name
       )
     },
     isRemoveRequestProcessing(): boolean {
@@ -70,7 +70,7 @@ export default Vue.extend({
       ]
     },
     isEmpty(): boolean {
-      return !(this.student.name && this.student.index)
+      return !(this.student.name && this.student.surname)
     },
     inputMockClass(): string {
       return (

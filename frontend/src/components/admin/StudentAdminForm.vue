@@ -1,11 +1,11 @@
 <template>
-  <el-form :inline="true" class="room-form" :rules="formRules" :model="student">
+  <el-form ref="form" :inline="true" class="room-form" :rules="formRules" :model="student">
     <div class="student-input">
       <el-form-item prop="name">
         <el-input v-model="student.name" maxlength="20" placeholder="Imię" />
       </el-form-item>
-      <el-form-item prop="index">
-        <el-input v-model="student.index" maxlength="6" placeholder="Indeks" />
+      <el-form-item prop="surname">
+        <el-input v-model="student.surname" maxlength="6" placeholder="Nazwisko" />
       </el-form-item>
     </div>
 
@@ -17,7 +17,7 @@
           :loading="isEditingRequestProcessing"
           circle
           icon="el-icon-edit"
-          @click.prevent="$emit('onEdit', { ...student })"
+          @click.prevent="handleEdit"
         />
         <el-button
           v-else
@@ -25,7 +25,7 @@
           :loading="isAddingRequestProcessing"
           circle
           icon="el-icon-plus"
-          @click.prevent="$emit('onAdd', { ...student })"
+          @click.prevent="handleAdd"
         />
       </el-form-item>
       <el-form-item>
@@ -41,7 +41,6 @@ import { IStudent } from '@/models/IStudent'
 import { Actions } from '@/shared/Actions'
 
 export default Vue.extend({
-  name: 'Home',
   props: {
     roomId: {
       type: String as PropType<string>,
@@ -55,7 +54,7 @@ export default Vue.extend({
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
         name: '',
-        index: '',
+        surname: '',
         addedBy: 'me'
       })
     }
@@ -63,7 +62,7 @@ export default Vue.extend({
   computed: {
     isEditingRequestProcessing(): boolean {
       return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_EDIT][
-        this.roomId + (this.student as any)._id
+        this.roomId + this.student._id
       ]
     },
     isAddingRequestProcessing(): boolean {
@@ -74,25 +73,15 @@ export default Vue.extend({
         name: [
           {
             required: true,
-            message: 'Imię jest obowiązkowe!',
+            message: 'Rodaj imię!',
             trigger: 'blur'
-          },
-          {
-            pattern: /[A-Z]{1}[a-z]+/,
-            message: 'Podaj tylko imię!',
-            trigger: 'change'
           }
         ],
-        index: [
+        surname: [
           {
             required: true,
-            message: 'Indeks jest obowiązkowy!',
+            message: 'Podaj nazwisko!',
             trigger: 'blur'
-          },
-          {
-            pattern: /[0-9]{6}/,
-            message: 'To nie jest poprawny indeks!',
-            trigger: 'change'
           }
         ]
       }
@@ -100,7 +89,16 @@ export default Vue.extend({
   },
   methods: {
     handleAdd(): void {
-      this.$emit('onAdd', { ...this.student })
+      this.$refs.form?.validate()
+      if (this.student?.name !== '' && this.student?.surname !== '') {
+        this.$emit('onAdd', { ...this.student })
+      }
+    },
+    handleEdit(): void {
+      this.$refs.form?.validate()
+      if (this.student?.name !== '' && this.student?.surname !== '') {
+        this.$emit('onEdit', { ...this.student })
+      }
     }
   }
 })

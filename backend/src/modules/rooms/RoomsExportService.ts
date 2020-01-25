@@ -24,7 +24,7 @@ export default class RoomExportService {
             for (let i = 0; i < room.size; i++) {
                 const student = room.students[i]
                 if (student) {
-                    worksheet.addRow([i + 1, student.name, student.index])
+                    worksheet.addRow([i + 1, student.name, student.surname])
                 } else {
                     worksheet.addRow([i + 1])
                 }

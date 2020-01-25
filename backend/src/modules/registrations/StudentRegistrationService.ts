@@ -64,7 +64,7 @@ export default class StudentRegistrationService {
     }
 
     public async addStudent(roomId: string, student: IStudent): Promise<IRoom> {
-        logger.info(`Adding new student (${student.index}) to room : ${roomId}`)
+        logger.info(`Adding new student (${student.surname}) to room : ${roomId}`)
 
         const studentModel = this.createAndValidateStudent(student)
 
@@ -72,7 +72,7 @@ export default class StudentRegistrationService {
         if(room?.students.length >= room?.size) {
             throw Message.fromErrorCode(ErrorCodes.NO_FREE_SPACE_IN_ROOM, MessageType.ERROR)
         }
-        if(!!room?.students.find((s:IStudent) => s.name === student.name && s.index === student.index)) {
+        if(!!room?.students.find((s:IStudent) => s.name === student.name && s.surname === student.surname)) {
             throw Message.fromErrorCode(ErrorCodes.DUPLICATED_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
         }
 
@@ -97,10 +97,10 @@ export default class StudentRegistrationService {
         student: IStudent,
         removedBy: string
     ): Promise<IRoom> {
-        logger.info(`Removing student (${student.index}) from room :${roomId} by ${removedBy}`)
+        logger.info(`Removing student (${student.surname}) from room :${roomId} by ${removedBy}`)
         const room: IRoom = await Room.findOne({ _id: roomId })
 
-        if (!room.students.find(it => it.index === student.index && it.name == student.name)) {
+        if (!room.students.find(it => it.surname === student.surname && it.name == student.name)) {
             throw Message.fromErrorCode(ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
         }
         if (student.addedBy !== removedBy) {
@@ -109,7 +109,7 @@ export default class StudentRegistrationService {
 
         const result = await Room.findOneAndUpdate(
             { _id: roomId },
-            { $pull: { students: { index: student.index, name: student.name } } },
+            { $pull: { students: { surname: student.surname, name: student.name } } },
             { new: true }
         )
 

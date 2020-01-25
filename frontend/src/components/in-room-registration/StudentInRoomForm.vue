@@ -4,8 +4,8 @@
       <el-form-item prop="name">
         <el-input v-model="form.name" maxlength="20" placeholder="Imię" />
       </el-form-item>
-      <el-form-item prop="index">
-        <el-input v-model="form.index" maxlength="6" placeholder="Indeks" />
+      <el-form-item prop="surname">
+        <el-input v-model="form.surname" maxlength="6" placeholder="Nazwisko" />
       </el-form-item>
     </div>
 
@@ -39,7 +39,7 @@ export default Vue.extend({
   data: () => ({
     form: {
       name: null,
-      index: null
+      surname: null
     }
   }),
   computed: {
@@ -54,25 +54,15 @@ export default Vue.extend({
         name: [
           {
             required: true,
-            message: 'Imię jest obowiązkowe!',
+            message: 'Podaj imię!',
             trigger: 'blur'
-          },
-          {
-            pattern: /[A-Z]{1}[a-z]+/,
-            message: 'Podaj tylko imię!',
-            trigger: 'change'
           }
         ],
-        index: [
+        surname: [
           {
             required: true,
-            message: 'Indeks jest obowiązkowy!',
+            message: 'Podaj nazwisko!',
             trigger: 'blur'
-          },
-          {
-            pattern: /[0-9]{6}/,
-            message: 'To nie jest poprawny indeks!',
-            trigger: 'change'
           }
         ]
       }
@@ -82,7 +72,7 @@ export default Vue.extend({
     handleAdd(): void {
       const student = {
         name: this.form.name,
-        index: this.form.index,
+        surname: this.form.surname,
         addedBy: this.userUUID
       }
       this.$emit('onRegister', student)
@@ -90,7 +80,7 @@ export default Vue.extend({
     },
     clearForm(): void {
       this.form.name = null
-      this.form.index = null
+      this.form.surname = null
     }
   }
 })
@@ -119,7 +109,7 @@ export default Vue.extend({
 
   @media only screen and (max-width: 700px) {
     input {
-      width: 100px;
+      width: 30vw;
     }
 
     margin-left: 0;
@@ -129,7 +119,7 @@ export default Vue.extend({
     }
     flex-direction: column;
     .form-buttons > div:first-of-type button {
-      width: 215px;
+      width: 63vw;
     }
   }
 }

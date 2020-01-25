@@ -1,6 +1,6 @@
 export interface IStudent {
   _id?: string
   name: string
-  index: string
+  surname: string
   addedBy: string
 }

@@ -11,7 +11,7 @@
     </el-form-item>
     <el-form-item>
       <div class="input-mock" :class="inputMockClass">
-        <span>{{ student.index }}</span>
+        <span>{{ student.surname }}</span>
       </div>
     </el-form-item>
     <el-form-item v-if="!isEmpty && canEntryByRemove && allowRemoving">
@@ -38,7 +38,7 @@ export default Vue.extend({
       type: Object as PropType<IStudent>,
       default: (): IStudent => ({
         name: '',
-        index: '',
+        surname: '',
         addedBy: 'me'
       })
     },
@@ -62,7 +62,7 @@ export default Vue.extend({
       return this.$store.state.user.uuid
     },
     isEmpty(): boolean {
-      return !(this.student.name && this.student.index)
+      return !(this.student.name && this.student.surname)
     },
     inputMockClass(): string {
       return this.isEmpty ? 'empty-input' : 'fielled-input'
@@ -92,7 +92,7 @@ export default Vue.extend({
 
   width: 235px;
   @media only screen and (max-width: 700px) {
-    width: 100px;
+    width: 30vw;
   }
 }
 .left-margin {

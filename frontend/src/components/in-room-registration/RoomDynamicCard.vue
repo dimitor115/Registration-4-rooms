@@ -81,6 +81,12 @@ export default Vue.extend({
     background-color: #f9fafc;
   }
 }
+@media only screen and (max-width: 370px) {
+  .room-dynamic-card.el-card > .el-card__body {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
 
 .room-dynamic-card.el-card > .el-card__header {
   font-weight: bold;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="room-student-form">
     <template v-for="(student, idx) in room.students">
       <student-filled-form
         :key="'r' + idx"
@@ -95,12 +95,15 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss">
+.room-student-form {
+  min-width: 310px;
+}
 button.reserve-button {
   margin-top: 20px;
   margin-right: 58px;
 
   @media only screen and (max-width: 700px) {
-    width: 215px;
+    width: 63vw;
   }
   width: 485px;
 }

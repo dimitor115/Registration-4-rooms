@@ -44,12 +44,11 @@ function initSocketApi(
         client.on('register_student', async (
             roomId: string,
             student: IStudent,
-            callback: (msg: Message | null) => void
+            callback: (msg: string | null) => void
         ) => {
             studentRegistrationService
                 .addStudent(roomId, student)
-                .catch(socketErrorHandler(callback))
-                .then((updatedRoom: IRoom) => {
+                .then((updatedRoom: IRoom) => {``
                     requestManger
                     .handleRequest(new ReservationRequest(roomId, student.addedBy))
                     .catch(err => {logger.error(err)})
@@ -60,35 +59,36 @@ function initSocketApi(
                     socketSender.sendRoomUpdate(updatedRoom)
                     callback(null)
                 })
+                .catch(socketErrorHandler(callback))
         })
 
         client.on('remove_student', async (
             roomId: string,
             student: IStudent,
             removedBy: string,
-            callback: (msg: Message | null) => void
+            callback: (msg: string | null) => void
         ) => {
             studentRegistrationService
                 .removeStudent(roomId, student, removedBy)
-                .catch(socketErrorHandler(callback))
                 .then((updatedRoom: IRoom) => {
                     socketSender.sendRoomUpdate(updatedRoom)
                     callback(null)
                 })
+                .catch(socketErrorHandler(callback))
         })
 
         client.on('reserve_room', async (
             roomId: string,
             userUUID: string,
-            callback: (msg: Message | null) => void
+            callback: (msg: string | null) => void
         ) => {
             requestManger
                 .handleRequest(new ReservationRequest(roomId, userUUID))
-                .catch(socketErrorHandler(callback))
                 .then((updatedRoom: IRoom) => {
                     socketSender.sendReservationUpdate(updatedRoom)
                     callback(null)
                 })
+                .catch(socketErrorHandler(callback))
         })
 
         client.on('disconnect', () => {

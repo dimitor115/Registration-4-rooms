@@ -24,7 +24,7 @@ export default class RoomReservationsService {
         const room = await Room.findById(roomId)
 
         if (room.reservedBy && room.reservedBy !== userUUID)
-            throw Message.fromErrorCode(ErrorCodes.CANNOT_RESERVE_THIS_ROOM)
+            throw ErrorCodes.CANNOT_RESERVE_THIS_ROOM
 
         // don't want to block creating reservation by this call
         this.closeOtherUserReservations(roomId, userUUID)

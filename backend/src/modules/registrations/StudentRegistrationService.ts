@@ -70,10 +70,10 @@ export default class StudentRegistrationService {
 
         const room = await Room.findOne({_id: roomId})
         if(room?.students.length >= room?.size) {
-            throw Message.fromErrorCode(ErrorCodes.NO_FREE_SPACE_IN_ROOM, MessageType.ERROR)
+            throw ErrorCodes.NO_FREE_SPACE_IN_ROOM
         }
         if(!!room?.students.find((s:IStudent) => s.name === student.name && s.surname === student.surname)) {
-            throw Message.fromErrorCode(ErrorCodes.DUPLICATED_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
+            throw ErrorCodes.DUPLICATED_STUDENT_IN_THIS_ROOM
         }
 
         const result = await Room.findOneAndUpdate(
@@ -101,10 +101,10 @@ export default class StudentRegistrationService {
         const room: IRoom = await Room.findOne({ _id: roomId })
 
         if (!room.students.find(it => it.surname === student.surname && it.name == student.name)) {
-            throw Message.fromErrorCode(ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM, MessageType.ERROR)
+            throw ErrorCodes.NO_SUCH_STUDENT_IN_THIS_ROOM
         }
         if (student.addedBy !== removedBy) {
-            throw Message.fromErrorCode(ErrorCodes.CANNOT_REMOVE_THIS_STUDENT, MessageType.ERROR)
+            throw ErrorCodes.CANNOT_REMOVE_THIS_STUDENT
         }
 
         const result = await Room.findOneAndUpdate(

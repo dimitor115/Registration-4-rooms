@@ -1,5 +1,5 @@
 <template>
-  <el-form :inline="true" class="room-form" :rules="formRules" :model="form">
+  <el-form ref="form" :inline="true" class="room-form" :rules="formRules" :model="form">
     <div class="student-input">
       <el-form-item prop="name">
         <el-input v-model="form.name" maxlength="20" placeholder="Imię" />
@@ -70,13 +70,16 @@ export default Vue.extend({
   },
   methods: {
     handleAdd(): void {
-      const student = {
-        name: this.form.name,
-        surname: this.form.surname,
-        addedBy: this.userUUID
+      this.$refs.form?.validate()
+      if(this.form.name && this.form.surname) {
+        const student = {
+          name: this.form.name,
+          surname: this.form.surname,
+          addedBy: this.userUUID
+        }
+        this.$emit('onRegister', student)
+        this.clearForm()
       }
-      this.$emit('onRegister', student)
-      this.clearForm()
     },
     clearForm(): void {
       this.form.name = null

@@ -27,7 +27,7 @@
         type="primary"
         @click="reserveRoom"
       >
-        > Poczekaj chwile...
+        Poczekaj chwile...
       </el-button>
 
       <el-button

@@ -75,7 +75,7 @@ export default Vue.extend({
     inputMockClass(): string {
       return (
         (this.isEmpty ? 'empty-input' : 'fielled-input') +
-        (this.isStudentDuplicated && ' duplicate')
+        (this.isStudentDuplicated ? ' duplicate' : '')
       )
     }
   }

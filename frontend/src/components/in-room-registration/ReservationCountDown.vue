@@ -1,6 +1,8 @@
 <template>
   <div>
+    <small v-if="isCurrentUser">Czas pozostały do końca Twojej rezerwacji tego stolika. W tym momencie tylko Ty możesz tu wpisywać uczestników!</small>
     <el-progress
+            v-if="!isEnd"
       text-inside
       :stroke-width="20"
       :percentage="untilPercentage"
@@ -27,7 +29,8 @@ export default {
   data: () => ({
     startSeconds: null,
     secondsUntil: null,
-    timer: null
+    timer: null,
+    isEnd: false
   }),
   computed: {
     untilPercentage() {
@@ -47,7 +50,7 @@ export default {
       this.secondsUntil = secondsUntil
     },
     onTimeEnd() {
-      console.log('time end')
+      this.isEnd = true
     },
     progressFormat() {
       return this.secondsUntil + ' s'

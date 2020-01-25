@@ -88,7 +88,7 @@ export default Vue.extend({
   }
 })
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .room-form {
   margin: 15px 0 15px 88px;
   display: flex;
@@ -111,14 +111,14 @@ export default Vue.extend({
   }
 
   @media only screen and (max-width: 700px) {
-    input {
-      width: 30vw;
-    }
 
     margin-left: 0;
     .student-input {
       padding-right: 50px;
       margin-bottom: 15px;
+      .el-form-item {
+        width: 30vw;
+      }
     }
     flex-direction: column;
     .form-buttons > div:first-of-type button {

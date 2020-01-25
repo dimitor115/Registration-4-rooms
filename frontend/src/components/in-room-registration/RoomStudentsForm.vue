@@ -25,6 +25,7 @@
         class="reserve-button"
         disabled
         type="primary"
+        title="W tym momencie ktoś inny wpisuje uczestników, poczekaj aż on skońćzy albo spróbuj gdzie indziej!"
         @click="reserveRoom"
       >
         Poczekaj chwile...
@@ -79,10 +80,20 @@ export default Vue.extend({
       })
     },
     removeStudent(student: IStudent, removedBy: string) {
-      this.$store.dispatch(Actions.REMOVE_STUDENT, {
-        roomId: this.room._id,
-        student,
-        removedBy
+      this.$confirm(
+              `Jesteś pewnien, że chcesz usunąć uczestnika ${student.name} ${student.surname}?`,
+              'Potwierdzenie',
+              {
+                confirmButtonText: 'Tak',
+                cancelButtonText: 'Nie',
+                type: 'error'
+              }
+      ).then(() => {
+        this.$store.dispatch(Actions.REMOVE_STUDENT, {
+          roomId: this.room._id,
+          student,
+          removedBy
+        })
       })
     },
     reserveRoom() {

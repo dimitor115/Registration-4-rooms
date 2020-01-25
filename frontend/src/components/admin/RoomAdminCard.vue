@@ -65,9 +65,19 @@ export default Vue.extend({
   }),
   methods: {
     handleRemove(studentId: string) {
-      this.$store.dispatch(Actions.ADMIN_STUDENT_REMOVE, {
-        roomId: this.room._id,
-        studentId
+      this.$confirm(
+              `Jesteś pewnien, że chcesz usunąć uczestnika?`,
+              'Potwierdzenie',
+              {
+                confirmButtonText: 'Tak',
+                cancelButtonText: 'Nie',
+                type: 'error'
+              }
+      ).then(() => {
+        this.$store.dispatch(Actions.ADMIN_STUDENT_REMOVE, {
+          roomId: this.room._id,
+          studentId
+        })
       })
     },
     showEditForm(studentId: any) {

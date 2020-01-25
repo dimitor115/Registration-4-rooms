@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <h2>Pokoje:</h2>
+    <h2>Stoliki:</h2>
     <spinner action="FETCH_ALL_ROOMS">
       <template v-for="(room, idx) in rooms">
         <room-dynamic-card :key="idx" :room="room">

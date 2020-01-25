@@ -9,12 +9,12 @@ export default {
   name: 'App',
   watch: {
     '$route.name': function(val) {
-      document.title = val || 'Pokoje'
+      document.title = val || 'Zapisy'
     }
   },
   created() {
     this.$store.dispatch('countUserFingerPrint')
-    document.title = this.$route.name || 'Pokoje'
+    document.title = this.$route.name || 'Zapisy'
   }
 }
 </script>

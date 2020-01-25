@@ -70,8 +70,8 @@ export default Vue.extend({
   },
   methods: {
     handleAdd(): void {
-      this.$refs.form?.validate()
-      if(this.form.name && this.form.surname) {
+      ;(this.$refs.form as any)?.validate()
+      if (this.form.name && this.form.surname) {
         const student = {
           name: this.form.name,
           surname: this.form.surname,

@@ -89,13 +89,13 @@ export default Vue.extend({
   },
   methods: {
     handleAdd(): void {
-      this.$refs.form?.validate()
+      ;(this.$refs.form as any)?.validate()
       if (this.student?.name !== '' && this.student?.surname !== '') {
         this.$emit('onAdd', { ...this.student })
       }
     },
     handleEdit(): void {
-      this.$refs.form?.validate()
+      ;(this.$refs.form as any)?.validate()
       if (this.student?.name !== '' && this.student?.surname !== '') {
         this.$emit('onEdit', { ...this.student })
       }

@@ -7,7 +7,7 @@
       <el-progress type="circle" :percentage="totalPlacesPercentage" />
     </el-card>
     <div class="rooms-header">
-      <h2>Pokoje:</h2>
+      <h2>Stoliki:</h2>
       <div>
         <el-button type="success" @click="exportToExcel">Export</el-button>
       </div>

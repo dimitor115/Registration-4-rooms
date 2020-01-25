@@ -3,17 +3,19 @@ import http from 'http'
 import socketIO from 'socket.io'
 import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
+import serve from 'koa-static'
+import mount from 'koa-mount'
 import cors from '@koa/cors'
 import 'reflect-metadata'
 
 
-import { requestLogger, logger } from './config/winstonConfig'
-import { connectToMongo } from './config/mongooseConfig'
+import {requestLogger, logger} from './config/winstonConfig'
+import {connectToMongo} from './config/mongooseConfig'
 import errorHandler from './common/errorHandler'
-import { config } from './config/envConfig'
+import {config} from './config/envConfig'
 import initApi from './core/api'
-import { SocketSender } from './core/socketSender'
-import { RequestManager } from './modules/reservations/RequestsManager'
+import {SocketSender} from './core/socketSender'
+import {RequestManager} from './modules/reservations/RequestsManager'
 import RoomReservationsService from './modules/reservations/RoomReservationsService'
 import StudentRegistrationService from './modules/registrations/StudentRegistrationService'
 import RoomsManagementService from './modules/rooms/RoomsManagementService'
@@ -26,6 +28,11 @@ import RoomExportService from './modules/rooms/RoomsExportService';
     const app = new Koa()
     const server = http.createServer(app.callback())
     const io = socketIO(server)
+
+    // const static_pages = new Koa()
+    // static_pages.use(serve(__dirname + "/public"))
+    // app.use(mount('/', static_pages as any))
+    app.use(serve(__dirname + "/public"))
 
     app.use(helmet())
     app.use(cors())
@@ -46,6 +53,13 @@ import RoomExportService from './modules/rooms/RoomsExportService';
     app
         .use(api.prefix('/api/v1').routes())
         .use(api.allowedMethods())
+
+    app.use(
+        async (ctx, next) =>
+            await serve(__dirname + "/public")(
+                Object.assign(ctx, {path: 'index.html'} as any),
+                next)
+    )
 
     await connectToMongo(config.databaseUrl)
 

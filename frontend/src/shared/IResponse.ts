@@ -1,6 +1,6 @@
 export interface IResponse<T> {
   body: T
-  messages: IMessage[]
+  messages: string[]
 }
 
 export interface IMessage {

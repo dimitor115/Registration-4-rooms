@@ -38,7 +38,7 @@ export default function createAxios(config: AxiosRequestConfig): AxiosInstance {
   return instance
 }
 
-export function parseMessageToNotification(message) {
+export function parseMessageToNotification(message: string) {
   Notification({
     title: 'Bład!',
     message,

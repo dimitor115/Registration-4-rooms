@@ -8,7 +8,8 @@
     "copy-static-assets": "ts-node copyStaticAssets.ts",
     "lint": "eslint --fix src/**/*.ts",
     "serve": "node dist/app.js",
-    "build": "ttsc",
+    "build": "yarn clean && ttsc && yarn copy-static-assets",
+    "clean": "rm -rf dist/*",
     "start": "npm run serve",
     "test": "jest"
   },
@@ -47,6 +48,7 @@
     "typescript": "^3.7.4"
   },
   "dependencies": {
+    "@types/koa-mount": "^4.0.0",
     "@types/koa-static": "^4.0.1",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.9.1",
@@ -56,7 +58,9 @@
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-helmet": "^4.2.0",
+    "koa-mount": "^4.0.0",
     "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.6.8",
     "pg": "^7.4.3",

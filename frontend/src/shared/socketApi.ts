@@ -2,7 +2,6 @@ import io from 'socket.io-client'
 
 import store from '@/store'
 import { API_URL } from './config/consts'
-import { IMessage } from '@/shared/IResponse'
 import { parseMessageToNotification } from '@/shared/config/configureAxios'
 import { IStudent } from '@/models/IStudent'
 import { IRoom } from '@/models/IRoom'
@@ -40,7 +39,7 @@ export const connections = {
 export default {
   remove_student: (roomId: string, student: IStudent, removedBy: string): Promise<void> =>
     new Promise((resolve, reject) => {
-      socket.emit('remove_student', roomId, student, removedBy, (err: IMessage | null) => {
+      socket.emit('remove_student', roomId, student, removedBy, (err: string | null) => {
         if (err) {
           parseMessageToNotification(err)
           reject(err)
@@ -52,7 +51,7 @@ export default {
 
   register_student: (roomId: string, student: IStudent): Promise<void> =>
     new Promise((resolve, reject) => {
-      socket.emit('register_student', roomId, student, (err: IMessage | null) => {
+      socket.emit('register_student', roomId, student, (err: string | null) => {
         if (err) {
           parseMessageToNotification(err)
           reject(err)
@@ -64,7 +63,7 @@ export default {
 
   reserve_room: (roomId: string, userUUID: string): Promise<void> =>
     new Promise((resolve, reject) => {
-      socket.emit('reserve_room', roomId, userUUID, (err: IMessage | null) => {
+      socket.emit('reserve_room', roomId, userUUID, (err: string | null) => {
         if (err) {
           parseMessageToNotification(err)
           reject(err)

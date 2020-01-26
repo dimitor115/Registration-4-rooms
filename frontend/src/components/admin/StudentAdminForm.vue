@@ -5,7 +5,7 @@
         <el-input v-model="student.name" maxlength="20" placeholder="Imię" />
       </el-form-item>
       <el-form-item prop="surname">
-        <el-input v-model="student.surname" maxlength="6" placeholder="Nazwisko" />
+        <el-input v-model="student.surname" maxlength="20" placeholder="Nazwisko" />
       </el-form-item>
     </div>
 

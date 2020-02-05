@@ -111,7 +111,6 @@ export default Vue.extend({
   }
 
   @media only screen and (max-width: 700px) {
-
     margin-left: 0;
     .student-input {
       padding-right: 50px;

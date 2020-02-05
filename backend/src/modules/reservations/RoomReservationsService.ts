@@ -5,7 +5,7 @@ import { Room, IRoom } from 'core/RoomModel'
 import { ErrorCodes } from 'common/errorCodes'
 import { SocketSender } from 'core/socketSender'
 
-const RESERVATION_DURATION = 22 // seconds
+const RESERVATION_DURATION = 25 // seconds
 
 export default class RoomReservationsService {
     constructor(

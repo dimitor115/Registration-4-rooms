@@ -1,8 +1,11 @@
 <template>
   <div>
-    <small v-if="isCurrentUser">Czas pozostały do końca Twojej rezerwacji tego stolika. W tym momencie tylko Ty możesz tu wpisywać uczestników!</small>
+    <small v-if="isCurrentUser">
+      Czas pozostały do końca Twojej rezerwacji tego stolika. W tym momencie tylko Ty możesz tu
+      wpisywać uczestników!
+    </small>
     <el-progress
-            v-if="!isEnd"
+      v-if="!isEnd"
       text-inside
       :stroke-width="20"
       :percentage="untilPercentage"
@@ -65,7 +68,7 @@ export default {
         .asSeconds()
         .toFixed()
 
-      this.startSeconds = 22
+      this.startSeconds = 25
       this.secondsUntil = seconds
 
       this.timer = new Timer()

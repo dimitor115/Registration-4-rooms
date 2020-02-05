@@ -1,5 +1,11 @@
 <template>
-  <el-form ref="form" :inline="true" class="room-form admin-form" :rules="formRules" :model="student">
+  <el-form
+    ref="form"
+    :inline="true"
+    class="room-form admin-form"
+    :rules="formRules"
+    :model="student"
+  >
     <div class="student-input">
       <el-form-item prop="name">
         <el-input v-model="student.name" maxlength="20" placeholder="Imię" />
@@ -97,15 +103,14 @@ export default Vue.extend({
     handleEdit(): void {
       ;(this.$refs.form as any)?.validate()
       if (this.student?.name !== '' && this.student?.surname !== '') {
-
         this.$confirm(
-                `Jesteś pewnien, że chcesz zmodyfikować uczestnika ${this.student?.name} ${this.student?.surname}?`,
-                'Potwierdzenie',
-                {
-                  confirmButtonText: 'Tak',
-                  cancelButtonText: 'Nie',
-                  type: 'success'
-                }
+          `Jesteś pewnien, że chcesz zmodyfikować uczestnika ${this.student?.name} ${this.student?.surname}?`,
+          'Potwierdzenie',
+          {
+            confirmButtonText: 'Tak',
+            cancelButtonText: 'Nie',
+            type: 'success'
+          }
         ).then(() => {
           this.$emit('onEdit', { ...this.student })
         })

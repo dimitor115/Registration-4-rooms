@@ -76,28 +76,28 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss">
-  .student-in-room-from {
-    .input-mock {
-      border: 1px solid #e4e7ed;
-      border-radius: 4px;
-      text-align: left;
-      span {
-        margin-left: 14px;
-      }
-      &.fielled-input {
-        background-color: #f5f7fa;
-      }
-      &.empty-input {
-        background-color: white;
-      }
+.student-in-room-from {
+  .input-mock {
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    text-align: left;
+    span {
+      margin-left: 14px;
+    }
+    &.fielled-input {
+      background-color: #f5f7fa;
+    }
+    &.empty-input {
+      background-color: white;
+    }
 
-      width: 235px;
-      @media only screen and (max-width: 700px) {
-        width: 30vw;
-      }
+    width: 235px;
+    @media only screen and (max-width: 700px) {
+      width: 30vw;
     }
   }
-  .left-margin {
-    padding-right: 50px;
-  }
+}
+.left-margin {
+  padding-right: 50px;
+}
 </style>

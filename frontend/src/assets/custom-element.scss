@@ -8,3 +8,10 @@
       border-bottom-width: 2px;
     }
   }
+
+.el-message-box {
+  @media only screen and (max-width: 450px) {
+    width: auto;
+    min-width: 100px;
+  }
+}

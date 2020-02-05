@@ -81,13 +81,13 @@ export default Vue.extend({
     },
     removeStudent(student: IStudent, removedBy: string) {
       this.$confirm(
-              `Jesteś pewnien, że chcesz usunąć uczestnika ${student.name} ${student.surname}?`,
-              'Potwierdzenie',
-              {
-                confirmButtonText: 'Tak',
-                cancelButtonText: 'Nie',
-                type: 'error'
-              }
+        `Jesteś pewnien, że chcesz usunąć uczestnika ${student.name} ${student.surname}?`,
+        'Potwierdzenie',
+        {
+          confirmButtonText: 'Tak',
+          cancelButtonText: 'Nie',
+          type: 'error'
+        }
       ).then(() => {
         this.$store.dispatch(Actions.REMOVE_STUDENT, {
           roomId: this.room._id,

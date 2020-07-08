@@ -12,4 +12,5 @@ export interface IRoom {
 export interface IRoomForm {
   name: string
   size: number
+  _id: string
 }

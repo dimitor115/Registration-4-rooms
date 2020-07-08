@@ -21,49 +21,47 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapState } from 'vuex'
-
 import { SingleActions, Actions } from '@/shared/Actions'
 import { IRoomForm } from '@/models/IRoom'
 
+import store from '@/store'
 import RoomForm from '@/components/RoomForm.vue'
 import RoomSimpleCard from '@/components/RoomSimpleCard.vue'
 import Spinner from '@/components/Spinner.vue'
+import { computed, defineComponent, onMounted, ref } from '@vue/composition-api'
 
-export default Vue.extend({
-  name: 'RoomsManagement',
+export default defineComponent({
   components: { RoomForm, RoomSimpleCard, Spinner },
-  data: () => ({
-    roomToEdit: null as string | null
-  }),
-  computed: {
-    ...mapState({
-      rooms: 'rooms'
+  setup(ctx) {
+    const roomToEdit = ref<string | null>(null)
+
+    onMounted(() => {
+      store.dispatch(SingleActions.FETCH_ALL_ROOMS)
     })
-  },
-  mounted() {
-    this.$store.dispatch(SingleActions.FETCH_ALL_ROOMS)
-  },
-  methods: {
-    editRoom(id: string) {
-      this.roomToEdit = id
-    },
-    async createNewRoom(room: IRoomForm) {
-      this.$store.dispatch(SingleActions.CREATE_ROOM, room)
-    },
-    async updateRoom(room: IRoomForm) {
-      await this.$store.dispatch(Actions.UPDATE_ROOM, { id: this.roomToEdit, payload: room })
-      this.roomToEdit = null
-    },
-    async removeRoom(id: string) {
-      this.$confirm('Jesteś pewnien, że chcesz usunąć ten pokój ?', 'Potwierdzenie', {
-        confirmButtonText: 'Tak',
-        cancelButtonText: 'Nie',
-        type: 'error'
-      }).then(() => {
-        this.$store.dispatch(Actions.DELETE_ROOM, id)
-      })
+    return {
+      rooms: computed(() => store.state.rooms),
+      roomToEdit,
+      editRoom(id: string) {
+        roomToEdit.value = id
+      },
+      async createNewRoom(room: IRoomForm) {
+        return store.dispatch(SingleActions.CREATE_ROOM, room)
+      },
+      async updateRoom(room: IRoomForm) {
+        await store.dispatch(Actions.UPDATE_ROOM, { id: roomToEdit.value, payload: room })
+        roomToEdit.value = null
+      },
+      async removeRoom(id: string) {
+        ;(ctx as any)
+          .confirm('Jesteś pewnien, że chcesz usunąć ten pokój ?', 'Potwierdzenie', {
+            confirmButtonText: 'Tak',
+            cancelButtonText: 'Nie',
+            type: 'error'
+          })
+          .then(() => {
+            store.dispatch(Actions.DELETE_ROOM, id)
+          })
+      }
     }
   }
 })

@@ -11,8 +11,9 @@
         :type="edit ? 'success' : 'primary'"
         :loading="isProcessing"
         @click="handleSubmit"
-        >{{ edit ? 'Zapisz' : 'Dodaj' }}</el-button
-      >
+        >
+        {{ edit ? 'Zapisz' : 'Dodaj' }}
+      </el-button>
     </el-form-item>
     <el-form-item>
       <el-button v-if="edit" type="danger" @click="$emit('onCancel')">Anuluj</el-button>
@@ -21,38 +22,40 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import store from '@/store'
+import { computed, defineComponent, PropType } from '@vue/composition-api'
 import { SingleActions, Actions } from '@/shared/Actions'
+import { IRoomForm } from '@/models/IRoom'
 
-export default Vue.extend({
-  name: 'RoomForm',
+export default defineComponent({
   props: {
     edit: {
-      type: [Boolean] as PropType<boolean>,
+      type: Boolean,
       default: false
     },
     entry: {
-      type: [Object] as PropType<any>,
-      default: () => ({
-        name: null as string | null,
-        size: 0 as number | null
+      type: Object as PropType<IRoomForm>,
+      default: (): IRoomForm => ({
+        name: '',
+        size: 0,
+        _id: '' //FIXME !
       })
     }
   },
-  computed: {
-    isProcessing(): boolean {
-      return this.edit
-        ? this.$store.state.isProcessing[Actions.UPDATE_ROOM][this.entry._id]
-        : this.$store.state.isProcessing[SingleActions.CREATE_ROOM]
+  setup(props, ctx) {
+    const isProcessing = computed(() =>
+      props.edit
+        ? store.state.isProcessing[Actions.UPDATE_ROOM][props.entry._id]
+        : store.state.isProcessing[SingleActions.CREATE_ROOM]
+    )
+
+    const handleSubmit = () => {
+      const { name, size } = props.entry
+      ctx.emit('onSubmit', { name, size })
+      props.entry.name = ''
+      props.entry.size = 0
     }
-  },
-  methods: {
-    handleSubmit() {
-      const { name, size } = this.entry
-      this.$emit('onSubmit', { name, size })
-      this.entry.name = null
-      this.entry.size = 0
-    }
+    return { isProcessing, handleSubmit }
   }
 })
 </script>

@@ -17,26 +17,24 @@
         />
       </span>
     </template>
-    Wolne miejsca: {{ roomFreeSpace(room) }} / {{ room.size }}
+    Wolne miejsca: {{ roomFreeSpace }} / {{ room.size }}
   </el-card>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
 import { IRoom } from '@/models/IRoom'
+import { computed, defineComponent, PropType } from '@vue/composition-api'
 
-export default Vue.extend({
-  name: 'RoomSimpleCard',
+export default defineComponent({
   props: {
     room: {
       type: Object as PropType<IRoom>,
       required: true
     }
   },
-  methods: {
-    roomFreeSpace(room: IRoom) {
-      return room.size - room.students.length
-    }
+  setup(props) {
+    const roomFreeSpace = computed(() => props.room.size - props.room.students.length)
+    return { roomFreeSpace }
   }
 })
 </script>

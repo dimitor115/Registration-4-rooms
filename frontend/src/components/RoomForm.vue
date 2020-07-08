@@ -6,18 +6,20 @@
     <el-form-item>
       <el-input-number v-model="entry.size" :min="1" />
     </el-form-item>
-    <el-form-item>
-      <el-button
-        :type="edit ? 'success' : 'primary'"
-        :loading="isProcessing"
-        @click="handleSubmit"
+    <slot name="action">
+      <el-form-item>
+        <el-button
+          :type="edit ? 'success' : 'primary'"
+          :loading="isProcessing"
+          @click="handleSubmit"
         >
-        {{ edit ? 'Zapisz' : 'Dodaj' }}
-      </el-button>
-    </el-form-item>
-    <el-form-item>
-      <el-button v-if="edit" type="danger" @click="$emit('onCancel')">Anuluj</el-button>
-    </el-form-item>
+          {{ edit ? 'Zapisz' : 'Dodaj' }}
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button v-if="edit" type="danger" @click="$emit('onCancel')">Anuluj</el-button>
+      </el-form-item>
+    </slot>
   </el-form>
 </template>
 

@@ -50,7 +50,7 @@
   "dependencies": {
     "@types/koa-mount": "^4.0.0",
     "@types/koa-static": "^4.0.1",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.9.1",
     "dotenv": "^8.0.0",
     "exceljs": "^3.5.0",

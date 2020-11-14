@@ -17,11 +17,8 @@ const store = new Vuex.Store({
     rooms: [] as IRoom[],
     isProcessing: {
       [SingleActions.FETCH_ALL_ROOMS]: false as boolean,
-      [SingleActions.CREATE_ROOM]: false as boolean,
       [SingleActions.FETCH_ALL_ADMINS]: false as boolean,
 
-      [Actions.DELETE_ROOM]: {} as any,
-      [Actions.UPDATE_ROOM]: {} as any,
       [Actions.REGISTER_STUDENT]: {} as any,
       [Actions.REMOVE_STUDENT]: {} as any,
       [Actions.RESERVE_ROOM]: {} as any,
@@ -42,16 +39,6 @@ const store = new Vuex.Store({
     clientsCount: 0
   },
   mutations: {
-    setRooms(state, rooms: IRoom[]) {
-      state.rooms = rooms
-    },
-    pushRoom(state, room: IRoom) {
-      state.rooms.push(room)
-    },
-    removeRoom(state, room: IRoom) {
-      state.rooms = state.rooms.filter((it: IRoom) => it._id !== room._id)
-    },
-
     updateRoomStudents(state, updatedRoom: IRoom) {
       const room = state.rooms.find(it => it._id === updatedRoom._id)
       if (room) {
@@ -139,42 +126,6 @@ const store = new Vuex.Store({
         await socketApi.register_student(roomId, student)
       } finally {
         _setActionDone(roomId, Actions.REGISTER_STUDENT)
-      }
-    },
-    async [SingleActions.FETCH_ALL_ROOMS]({ commit }) {
-      _setSingleProcessing(SingleActions.FETCH_ALL_ROOMS)
-      try {
-        const response = await api.rooms.findAll()
-        commit('setRooms', response.data)
-      } finally {
-        _setSingleDone(SingleActions.FETCH_ALL_ROOMS)
-      }
-    },
-    async [SingleActions.CREATE_ROOM]({ commit }, room: IRoomForm) {
-      _setSingleProcessing(SingleActions.CREATE_ROOM)
-      try {
-        const response = await api.rooms.create(room)
-        commit('pushRoom', response.data)
-      } finally {
-        _setSingleDone(SingleActions.CREATE_ROOM)
-      }
-    },
-    async [Actions.DELETE_ROOM]({ commit }, id: string) {
-      _setActionProcessing(id, Actions.DELETE_ROOM)
-      try {
-        const response = await api.rooms.delete(id)
-        commit('removeRoom', response.data)
-      } finally {
-        _setActionDone(id, Actions.DELETE_ROOM)
-      }
-    },
-    async [Actions.UPDATE_ROOM]({ dispatch }, { id, payload }) {
-      _setActionProcessing(id, Actions.UPDATE_ROOM)
-      try {
-        await api.rooms.update(id, payload)
-        dispatch(SingleActions.FETCH_ALL_ROOMS)
-      } finally {
-        _setActionDone(id, Actions.UPDATE_ROOM)
       }
     },
 

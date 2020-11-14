@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <create-room-card />
-    <spinner action="FETCH_ALL_ROOMS">
+    <spinner :is-loading="isProcessing">
       <template v-for="(room, idx) in rooms">
         <room-simple-card :key="idx" :room="room" />
       </template>
@@ -10,31 +10,19 @@
 </template>
 
 <script lang="ts">
-import { SingleActions, Actions } from '@/shared/Actions'
-import { IRoomForm } from '@/models/IRoom'
-
-import store from '@/store'
+import { rooms, fetchAllAction } from '@/components/room-management/RoomActions'
 import CreateRoomCard from '@/components/room-management/CreateRoomCard.vue'
-import RoomForm from '@/components/RoomForm.vue'
 import RoomSimpleCard from '@/components/RoomSimpleCard.vue'
 import Spinner from '@/components/Spinner.vue'
-import { computed, defineComponent, onMounted, ref } from '@vue/composition-api'
+import { defineComponent, onMounted } from '@vue/composition-api'
 
 export default defineComponent({
-  components: { RoomForm, RoomSimpleCard, Spinner, CreateRoomCard },
+  components: { RoomSimpleCard, Spinner, CreateRoomCard },
   setup() {
-    onMounted(() => {
-      store.dispatch(SingleActions.FETCH_ALL_ROOMS)
-    })
-    return {
-      rooms: computed(() => store.state.rooms)
-    }
+    const { isProcessing, fetchAll } = fetchAllAction()
+    onMounted(() => fetchAll())
+
+    return { rooms, isProcessing }
   }
 })
 </script>
-<style>
-.list-item {
-  display: inline-block;
-  margin-right: 10px;
-}
-</style>

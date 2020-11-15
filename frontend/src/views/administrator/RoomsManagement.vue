@@ -10,16 +10,18 @@
 </template>
 
 <script lang="ts">
-import { rooms, fetchAllAction } from '@/components/room-management/RoomActions'
+import { defineComponent, onMounted } from '@vue/composition-api'
+import { fetchAllAction } from '@/actions/roomActions'
+import { rooms } from '@/actions/rootActions'
+
 import CreateRoomCard from '@/components/room-management/CreateRoomCard.vue'
 import RoomSimpleCard from '@/components/RoomSimpleCard.vue'
 import Spinner from '@/components/Spinner.vue'
-import { defineComponent, onMounted } from '@vue/composition-api'
 
 export default defineComponent({
   components: { RoomSimpleCard, Spinner, CreateRoomCard },
   setup() {
-    const { isProcessing, fetchAll } = fetchAllAction()
+    const { isProcessing, fetchAll } = fetchAllAction
     onMounted(() => fetchAll())
 
     return { rooms, isProcessing }

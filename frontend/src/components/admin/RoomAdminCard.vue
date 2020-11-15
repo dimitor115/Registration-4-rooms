@@ -4,9 +4,10 @@
       <student-admin-form
         v-if="student._id === studentToEdit"
         :key="'r' + idx"
-        :room-id="room._id"
         :student="student"
         editable
+        :is-create-processing="isRegisterProcessing"
+        :is-edit-processing="isUpdateProcessing"
         @onCancel="studentToEdit = null"
         @onEdit="handleEdit"
       />
@@ -16,15 +17,18 @@
         :key="'r' + idx"
         :student="student"
         :room-id="room._id"
+        :is-remove-processing="isRemoveProcessing"
         @onRemove="handleRemove"
         @onEdit="showEditForm"
       />
     </template>
-    <template v-for="(place, idx) in room.size - room.students.length">
+    <template v-for="(_, idx) in room.size - room.students.length">
       <student-admin-form
         v-if="showStudentForm && idx === 0"
         :key="'e' + idx"
         :room-id="room._id"
+        :is-create-processing="isRegisterProcessing"
+        :is-edit-processing="isUpdateProcessing"
         @onCancel="showStudentForm = false"
         @onAdd="handleAdd"
       />
@@ -32,22 +36,27 @@
         v-else
         :key="'e' + idx"
         :room-id="room._id"
+        :show-add="idx === 0"
         @onAdd="showStudentForm = true"
       />
     </template>
   </room-dynamic-card>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-
+import { defineComponent, PropType, ref } from '@vue/composition-api'
+import { MessageBox } from 'element-ui'
 import RoomDynamicCard from '@/components/in-room-registration/RoomDynamicCard.vue'
 import StudentFilledAdminForm from '@/components/admin/StudentFilledAdminForm.vue'
 import StudentAdminForm from '@/components/admin/StudentAdminForm.vue'
-import { Actions } from '@/shared/Actions'
 import { IRoom } from '@/models/IRoom'
 import { IStudent } from '@/models/IStudent'
+import {
+  registerStudentByAdminAction,
+  removeStudentByAdmin,
+  updateStudentByAdminAction
+} from '@/actions/adminActions'
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     RoomDynamicCard,
     StudentFilledAdminForm,
@@ -59,40 +68,46 @@ export default Vue.extend({
       required: true
     }
   },
-  data: () => ({
-    studentToEdit: null,
-    showStudentForm: false
-  }),
-  methods: {
-    handleRemove(studentId: string) {
-      this.$confirm(`Jesteś pewnien, że chcesz usunąć uczestnika?`, 'Potwierdzenie', {
+  setup(props) {
+    const studentToEdit = ref(null)
+    const showStudentForm = ref(false)
+
+    const { isProcessing: isRegisterProcessing, register } = registerStudentByAdminAction()
+    const { isProcessing: isUpdateProcessing, update } = updateStudentByAdminAction()
+    const { isProcessing: isRemoveProcessing, remove } = removeStudentByAdmin()
+
+    const handleRemove = (studentId: string) => {
+      MessageBox.confirm(`Jesteś pewnien, że chcesz usunąć uczestnika?`, 'Potwierdzenie', {
         confirmButtonText: 'Tak',
         cancelButtonText: 'Nie',
         type: 'error'
-      }).then(() => {
-        this.$store.dispatch(Actions.ADMIN_STUDENT_REMOVE, {
-          roomId: this.room._id,
-          studentId
-        })
-      })
-    },
-    showEditForm(studentId: any) {
-      this.studentToEdit = studentId
-    },
-    async handleAdd(student: IStudent) {
-      await this.$store.dispatch(Actions.ADMIN_STUDENT_ADD, {
-        roomId: this.room._id,
-        student
-      })
-      this.showStudentForm = false
-    },
-    async handleEdit(student: IStudent) {
-      await this.$store.dispatch(Actions.ADMIN_STUDENT_EDIT, {
-        roomId: this.room._id,
-        studentId: (student as any)._id,
-        student
-      })
-      this.studentToEdit = null
+      }).then(() => remove(props.room._id, studentId))
+    }
+
+    const showEditForm = (studentId: any) => {
+      studentToEdit.value = studentId
+    }
+
+    const handleAdd = async (student: IStudent) => {
+      await register(student, props.room._id)
+      showStudentForm.value = false
+    }
+
+    const handleEdit = async (student: IStudent) => {
+      await update(student, props.room._id, student._id)
+      studentToEdit.value = null
+    }
+
+    return {
+      studentToEdit,
+      showStudentForm,
+      handleRemove,
+      showEditForm,
+      handleAdd,
+      handleEdit,
+      isRegisterProcessing,
+      isUpdateProcessing,
+      isRemoveProcessing
     }
   }
 })

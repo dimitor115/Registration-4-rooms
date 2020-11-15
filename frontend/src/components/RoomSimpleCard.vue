@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import RoomForm from '@/components/RoomForm.vue'
-import { updateAction, deleteAction } from '@/components/room-management/RoomActions'
+import { updateAction, deleteAction } from '@/actions/roomActions'
 import { IRoom } from '@/models/IRoom'
 import { computed, defineComponent, PropType, ref } from '@vue/composition-api'
 import { CreateRoomRequest } from '@/models/CreateRoomRequest'

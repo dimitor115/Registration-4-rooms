@@ -11,7 +11,7 @@
       </div>
     </el-form-item>
 
-    <el-form-item v-if="isEmpty">
+    <el-form-item v-if="isEmpty && showAdd">
       <el-button
         type="success"
         icon="el-icon-plus"
@@ -19,7 +19,7 @@
         @click.prevent="$emit('onAdd', roomId)"
       />
     </el-form-item>
-    <el-form-item v-else>
+    <el-form-item v-else-if="!isEmpty">
       <el-button
         type="primary"
         icon="el-icon-edit"
@@ -30,7 +30,7 @@
         type="danger"
         icon="el-icon-delete"
         circle
-        :loading="isRemoveRequestProcessing"
+        :loading="isRemoveProcessing"
         @click.prevent="$emit('onRemove', student._id)"
       />
     </el-form-item>
@@ -38,12 +38,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
 import { IStudent } from '@/models/IStudent'
-import { Actions } from '@/shared/Actions'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
+import store from '@/store'
 
-export default Vue.extend({
-  name: 'StudentFilledForm',
+export default defineComponent({
   props: {
     student: {
       type: Object as PropType<IStudent>,
@@ -56,28 +55,30 @@ export default Vue.extend({
     roomId: {
       type: String as PropType<string>,
       required: true
+    },
+    isRemoveProcessing: {
+      type: Boolean as PropType<boolean>,
+      default: false
+    },
+    showAdd: {
+      type: Boolean as PropType<boolean>,
+      default: false
     }
   },
-  computed: {
-    isStudentDuplicated(): boolean {
-      return this.$store.getters['duplicatedStudents'].find(
-        (s: IStudent) => s.surname === this.student.surname && s.name === this.student.name
+  setup(props) {
+    const isStudentDuplicated = computed(() =>
+      store.getters['duplicatedStudents'].find(
+        (s: IStudent) => s.surname === props.student.surname && s.name === props.student.name
       )
-    },
-    isRemoveRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_REMOVE][
-        this.roomId + (this.student as any)._id
-      ]
-    },
-    isEmpty(): boolean {
-      return !(this.student.name && this.student.surname)
-    },
-    inputMockClass(): string {
-      return (
-        (this.isEmpty ? 'empty-input' : 'fielled-input') +
-        (this.isStudentDuplicated ? ' duplicate' : '')
-      )
-    }
+    )
+
+    const isEmpty = computed(() => !(props.student.name && props.student.surname))
+
+    const inputMockClass = computed(
+      () => (isEmpty ? 'empty-input' : 'fielled-input') + (isStudentDuplicated ? ' duplicate' : '')
+    )
+
+    return { inputMockClass, isEmpty }
   }
 })
 </script>

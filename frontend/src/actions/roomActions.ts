@@ -1,11 +1,9 @@
-import { Ref, ref, UnwrapRef } from '@vue/composition-api'
+import { ref } from '@vue/composition-api'
 import { api } from '@/shared/api'
 import { CreateRoomRequest } from '@/models/CreateRoomRequest'
-import { IRoom } from '@/models/IRoom'
+import { rooms, withProcessing } from '@/actions/rootActions'
 
-export const rooms = ref<IRoom[]>([])
-
-export function fetchAllAction() {
+export const fetchAllAction = (() => {
   const isProcessing = ref(false)
   const fetchAll = async () =>
     withProcessing(isProcessing, async () => {
@@ -14,7 +12,7 @@ export function fetchAllAction() {
     })
 
   return { isProcessing, fetchAll }
-}
+})()
 
 export function createAction() {
   const isProcessing = ref(false)
@@ -22,7 +20,7 @@ export function createAction() {
     try {
       isProcessing.value = true
       await api.rooms.create(room as any)
-      fetchAllAction().fetchAll()
+      fetchAllAction.fetchAll()
     } finally {
       isProcessing.value = false
     }
@@ -36,7 +34,7 @@ export function deleteAction() {
     try {
       isProcessing.value = true
       await api.rooms.delete(id)
-      fetchAllAction().fetchAll()
+      fetchAllAction.fetchAll()
     } finally {
       isProcessing.value = false
     }
@@ -49,19 +47,7 @@ export function updateAction() {
   const updateRoom = async (id: string, payload: CreateRoomRequest) =>
     withProcessing(isProcessing, async () => {
       await api.rooms.update(id, payload as any)
-      fetchAllAction().fetchAll()
+      fetchAllAction.fetchAll()
     })
   return { isProcessing, updateRoom }
-}
-
-async function withProcessing(
-  isProcessing: Ref<UnwrapRef<boolean>>,
-  action: () => Promise<unknown>
-) {
-  try {
-    isProcessing.value = true
-    await action()
-  } finally {
-    isProcessing.value = false
-  }
 }

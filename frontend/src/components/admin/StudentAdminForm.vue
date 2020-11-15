@@ -20,7 +20,7 @@
         <el-button
           v-if="editable"
           type="success"
-          :loading="isEditingRequestProcessing"
+          :loading="isEditProcessing"
           circle
           icon="el-icon-edit"
           @click.prevent="handleEdit"
@@ -28,7 +28,7 @@
         <el-button
           v-else
           type="success"
-          :loading="isAddingRequestProcessing"
+          :loading="isCreateProcessing"
           circle
           icon="el-icon-plus"
           @click.prevent="handleAdd"
@@ -42,15 +42,36 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
 import { IStudent } from '@/models/IStudent'
-import { Actions } from '@/shared/Actions'
+import { MessageBox } from 'element-ui'
+import { defineComponent, PropType, ref } from '@vue/composition-api'
 
-export default Vue.extend({
+const formRules = {
+  name: [
+    {
+      required: true,
+      message: 'Rodaj imię!',
+      trigger: 'blur'
+    }
+  ],
+  surname: [
+    {
+      required: true,
+      message: 'Podaj nazwisko!',
+      trigger: 'blur'
+    }
+  ]
+}
+
+export default defineComponent({
   props: {
-    roomId: {
-      type: String as PropType<string>,
-      required: true
+    isEditProcessing: {
+      type: Boolean as PropType<boolean>,
+      default: false
+    },
+    isCreateProcessing: {
+      type: Boolean as PropType<boolean>,
+      default: false
     },
     editable: {
       type: Boolean as PropType<boolean>,
@@ -65,46 +86,21 @@ export default Vue.extend({
       })
     }
   },
-  computed: {
-    isEditingRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_EDIT][
-        this.roomId + this.student._id
-      ]
-    },
-    isAddingRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.ADMIN_STUDENT_ADD][this.roomId + this.student]
-    },
-    formRules() {
-      return {
-        name: [
-          {
-            required: true,
-            message: 'Rodaj imię!',
-            trigger: 'blur'
-          }
-        ],
-        surname: [
-          {
-            required: true,
-            message: 'Podaj nazwisko!',
-            trigger: 'blur'
-          }
-        ]
+  setup(props, { emit }) {
+    //Template refs
+    const form = ref<{ validate: () => void } | null>(null)
+
+    const handleAdd = (): void => {
+      form.value?.validate()
+      if (props.student?.name !== '' && props.student?.surname !== '') {
+        emit('onAdd', { ...props.student })
       }
     }
-  },
-  methods: {
-    handleAdd(): void {
-      ;(this.$refs.form as any)?.validate()
-      if (this.student?.name !== '' && this.student?.surname !== '') {
-        this.$emit('onAdd', { ...this.student })
-      }
-    },
-    handleEdit(): void {
-      ;(this.$refs.form as any)?.validate()
-      if (this.student?.name !== '' && this.student?.surname !== '') {
-        this.$confirm(
-          `Jesteś pewnien, że chcesz zmodyfikować uczestnika ${this.student?.name} ${this.student?.surname}?`,
+    const handleEdit = (): void => {
+      form.value?.validate()
+      if (props.student?.name !== '' && props.student?.surname !== '') {
+        MessageBox.confirm(
+          `Jesteś pewnien, że chcesz zmodyfikować uczestnika ${props.student?.name} ${props.student?.surname}?`,
           'Potwierdzenie',
           {
             confirmButtonText: 'Tak',
@@ -112,9 +108,15 @@ export default Vue.extend({
             type: 'success'
           }
         ).then(() => {
-          this.$emit('onEdit', { ...this.student })
+          emit('onEdit', { ...props.student })
         })
       }
+    }
+
+    return {
+      formRules,
+      handleAdd,
+      handleEdit
     }
   }
 })

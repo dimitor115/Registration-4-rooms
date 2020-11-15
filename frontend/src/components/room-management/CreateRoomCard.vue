@@ -13,9 +13,9 @@
 </template>
 
 <script lang="ts">
-import RoomForm from '@/components/RoomForm.vue'
 import { defineComponent, ref } from '@vue/composition-api'
-import { createAction } from '@/components/room-management/RoomActions'
+import RoomForm from '@/components/RoomForm.vue'
+import { createAction } from '@/actions/roomActions'
 import { CreateRoomRequest } from '@/models/CreateRoomRequest'
 
 export default defineComponent({

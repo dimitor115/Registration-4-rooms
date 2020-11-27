@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from '@vue/composition-api'
-import { rooms, fetchAllAction } from '@/actions/room'
+import { rooms, useFetchAll } from '@/hooks/room'
 import { API_URL } from '@/shared/config/consts'
 
 import Spinner from '@/components/Spinner.vue'
@@ -42,7 +42,7 @@ export default defineComponent({
     RoomAdminCard
   },
   setup() {
-    const { isProcessing, fetchAll } = fetchAllAction
+    const { isProcessing, fetchAll } = useFetchAll
 
     onMounted(() => {
       fetchAll()

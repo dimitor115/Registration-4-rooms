@@ -1,7 +1,7 @@
 import { ref } from '@vue/composition-api'
 import { api } from '@/shared/api'
 import { CreateRoomRequest } from '@/models/CreateRoomRequest'
-import { withProcessing } from '@/actions/root'
+import { withProcessing } from '@/hooks/root'
 import { IStudent } from '@/models/IStudent'
 import { IRoom } from '@/models/IRoom'
 import socketApi from '@/shared/socketApi'
@@ -23,7 +23,7 @@ export function updateRoomReservation(updatedRoom: IRoom) {
   }
 }
 
-export const fetchAllAction = (() => {
+export const useFetchAll = (() => {
   const isProcessing = ref(false)
   const fetchAll = async () =>
     withProcessing(isProcessing, async () => {
@@ -34,13 +34,13 @@ export const fetchAllAction = (() => {
   return { isProcessing, fetchAll }
 })()
 
-export function createAction() {
+export function useCreateRoom() {
   const isProcessing = ref(false)
   const create = async (room: CreateRoomRequest) => {
     try {
       isProcessing.value = true
       await api.rooms.create(room as any)
-      fetchAllAction.fetchAll()
+      useFetchAll.fetchAll()
     } finally {
       isProcessing.value = false
     }
@@ -48,13 +48,13 @@ export function createAction() {
   return { isProcessing, create }
 }
 
-export function deleteAction() {
+export function useDeleteRoom() {
   const isProcessing = ref(false)
   const deleteRoom = async (id: string) => {
     try {
       isProcessing.value = true
       await api.rooms.delete(id)
-      fetchAllAction.fetchAll()
+      useFetchAll.fetchAll()
     } finally {
       isProcessing.value = false
     }
@@ -62,24 +62,24 @@ export function deleteAction() {
   return { isProcessing, deleteRoom }
 }
 
-export function updateAction() {
+export function useUpdateRoom() {
   const isProcessing = ref(false)
   const updateRoom = async (id: string, payload: CreateRoomRequest) =>
     withProcessing(isProcessing, async () => {
       await api.rooms.update(id, payload as any)
-      fetchAllAction.fetchAll()
+      useFetchAll.fetchAll()
     })
   return { isProcessing, updateRoom }
 }
 
-export function registerStudentByAdminAction() {
+export function useRegisterStudentByAdmin() {
   const isProcessing = ref(false)
   const register = async (student: IStudent, roomId: string) =>
     withProcessing(isProcessing, () => api.rooms.students.register_by_admin(student, roomId))
   return { isProcessing, register }
 }
 
-export function updateStudentByAdminAction() {
+export function useUpdateStudentByAdmin() {
   const isProcessing = ref(false)
   const update = async (student: IStudent, roomId: string, studentId: string) =>
     withProcessing(isProcessing, () =>
@@ -88,28 +88,28 @@ export function updateStudentByAdminAction() {
   return { isProcessing, update }
 }
 
-export function removeStudentByAdmin() {
+export function useRemoveStudentByAdmin() {
   const isProcessing = ref(false)
   const remove = async (roomId: string, studentId: string) =>
     withProcessing(isProcessing, () => api.rooms.students.delete_by_admin(roomId, studentId))
   return { isProcessing, remove }
 }
 
-export function reserveAction() {
+export function useReserveRoom() {
   const isProcessing = ref(false)
   const reserve = async (roomId: string, userUUID: string) =>
     withProcessing(isProcessing, () => socketApi.reserve_room(roomId, userUUID))
   return { isProcessing, reserve }
 }
 
-export function registerStudentAction() {
+export function useRegisterStudent() {
   const isProcessing = ref(false)
   const register = async (roomId: string, student: IStudent) =>
     withProcessing(isProcessing, () => socketApi.register_student(roomId, student))
   return { isProcessing, register }
 }
 
-export function removeStudentAction() {
+export function useRemoveStudent() {
   const isProcessing = ref(false)
   const remove = async (roomId: string, student: IStudent, removedBy: string) =>
     withProcessing(isProcessing, () => socketApi.remove_student(roomId, student, removedBy))

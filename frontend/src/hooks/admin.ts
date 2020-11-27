@@ -1,11 +1,11 @@
 import { ref } from '@vue/composition-api'
 import { Admin } from '@/models/Admin'
-import { withProcessing } from '@/actions/root'
+import { withProcessing } from '@/hooks/root'
 import { api } from '@/shared/api'
 
 export const admins = ref<Admin[]>([])
 
-export const fetchAllAction = (() => {
+export const useFetchAll = (() => {
   const isProcessing = ref(false)
   const fetchAll = async () =>
     withProcessing(isProcessing, async () => {
@@ -16,22 +16,22 @@ export const fetchAllAction = (() => {
   return { isProcessing, fetchAll }
 })()
 
-export function removeAdminAction() {
+export function useRemoveAdmin() {
   const isProcessing = ref(false)
   const remove = async (email: string) =>
     withProcessing(isProcessing, async () => {
       await api.admins.remove(email)
-      fetchAllAction.fetchAll()
+      useFetchAll.fetchAll()
     })
   return { isProcessing, remove }
 }
 
-export function acceptAdminAction() {
+export function useAcceptAdmin() {
   const isProcessing = ref(false)
   const accept = async (email: string) =>
     withProcessing(isProcessing, async () => {
       await api.admins.accept(email)
-      fetchAllAction.fetchAll()
+      useFetchAll.fetchAll()
     })
   return { isProcessing, accept }
 }

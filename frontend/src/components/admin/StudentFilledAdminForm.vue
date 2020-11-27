@@ -40,7 +40,7 @@
 <script lang="ts">
 import { IStudent } from '@/models/IStudent'
 import { computed, defineComponent, PropType } from '@vue/composition-api'
-import { removeStudentByAdmin } from '@/actions/room'
+import { useRemoveStudentByAdmin } from '@/hooks/room'
 import { MessageBox } from 'element-ui'
 
 export default defineComponent({
@@ -63,7 +63,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isProcessing: isRemoveProcessing, remove } = removeStudentByAdmin()
+    const { isProcessing: isRemoveProcessing, remove } = useRemoveStudentByAdmin()
 
     const confirmAndRemove = () => {
       MessageBox.confirm(`Jesteś pewnien, że chcesz usunąć uczestnika?`, 'Potwierdzenie', {

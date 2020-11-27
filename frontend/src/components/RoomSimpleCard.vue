@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import RoomForm from '@/components/RoomForm.vue'
-import { updateAction, deleteAction } from '@/actions/room'
+import { useUpdateRoom, useDeleteRoom } from '@/hooks/room'
 import { IRoom } from '@/models/IRoom'
 import { computed, defineComponent, PropType, ref } from '@vue/composition-api'
 import { CreateRoomRequest } from '@/models/CreateRoomRequest'
@@ -54,8 +54,8 @@ export default defineComponent({
     const isEdited = ref(false)
     const editableRoom = ref(CreateRoomRequest.fromRoom(props.room))
 
-    const { isProcessing: isDeletionProcessing, deleteRoom } = deleteAction()
-    const { isProcessing: isUpdateProcessing, updateRoom } = updateAction()
+    const { isProcessing: isDeletionProcessing, deleteRoom } = useDeleteRoom()
+    const { isProcessing: isUpdateProcessing, updateRoom } = useUpdateRoom()
 
     const handleRoomEdition = async () => {
       await updateRoom(props.room._id, editableRoom.value)

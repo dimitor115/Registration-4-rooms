@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from '@vue/composition-api'
-import { fetchAllAction, rooms } from '@/actions/room'
+import { useFetchAll, rooms } from '@/hooks/room'
 import { connections } from '@/shared/socketApi'
 
 import Spinner from '@/components/Spinner.vue'
@@ -23,7 +23,7 @@ import RoomDynamicCard from '@/components/in-room-registration/RoomDynamicCard.v
 export default defineComponent({
   components: { RoomDynamicCard, RoomStudentsForm, Spinner },
   setup() {
-    const { isProcessing, fetchAll } = fetchAllAction
+    const { isProcessing, fetchAll } = useFetchAll
     onMounted(() => {
       fetchAll()
       connections.roomUpdates.open()

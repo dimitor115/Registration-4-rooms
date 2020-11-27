@@ -15,14 +15,14 @@
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api'
 import RoomForm from '@/components/RoomForm.vue'
-import { createAction } from '@/actions/room'
+import { useCreateRoom } from '@/hooks/room'
 import { CreateRoomRequest } from '@/models/CreateRoomRequest'
 
 export default defineComponent({
   components: { RoomForm },
   setup() {
     const room = ref(new CreateRoomRequest())
-    const { isProcessing, create } = createAction()
+    const { isProcessing, create } = useCreateRoom()
 
     const handleRoomCreation = () => {
       create({ ...room.value })

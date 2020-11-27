@@ -30,7 +30,7 @@
 import { IStudent } from '@/models/IStudent'
 import store from '@/store'
 import { computed, defineComponent, PropType } from '@vue/composition-api'
-import { removeStudentAction } from '@/actions/room'
+import { useRemoveStudent } from '@/hooks/room'
 import { MessageBox } from 'element-ui'
 export default defineComponent({
   name: 'StudentFilledForm',
@@ -53,7 +53,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isProcessing: isRemoveProcessing, remove } = removeStudentAction()
+    const { isProcessing: isRemoveProcessing, remove } = useRemoveStudent()
 
     const canEntryBeRemove = computed(() => props.student.addedBy === store.state.user.uuid)
     const isEmpty = computed(() => !(props.student.name && props.student.surname))

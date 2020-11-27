@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from '@vue/composition-api'
-import { rooms, fetchAllAction } from '@/actions/room'
+import { rooms, useFetchAll } from '@/hooks/room'
 
 import CreateRoomCard from '@/components/room-management/CreateRoomCard.vue'
 import RoomSimpleCard from '@/components/RoomSimpleCard.vue'
@@ -20,7 +20,7 @@ import Spinner from '@/components/Spinner.vue'
 export default defineComponent({
   components: { RoomSimpleCard, Spinner, CreateRoomCard },
   setup() {
-    const { isProcessing, fetchAll } = fetchAllAction
+    const { isProcessing, fetchAll } = useFetchAll
     onMounted(() => fetchAll())
 
     return { rooms, isProcessing }

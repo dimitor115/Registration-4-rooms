@@ -45,7 +45,7 @@
 import { IStudent } from '@/models/IStudent'
 import { MessageBox } from 'element-ui'
 import { defineComponent, PropType, ref } from '@vue/composition-api'
-import { registerStudentByAdminAction, updateStudentByAdminAction } from '@/actions/room'
+import { useRegisterStudentByAdmin, useUpdateStudentByAdmin } from '@/hooks/room'
 
 const formRules = {
   name: [
@@ -84,8 +84,8 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const { isProcessing: isRegisterProcessing, register } = registerStudentByAdminAction()
-    const { isProcessing: isUpdateProcessing, update } = updateStudentByAdminAction()
+    const { isProcessing: isRegisterProcessing, register } = useRegisterStudentByAdmin()
+    const { isProcessing: isUpdateProcessing, update } = useUpdateStudentByAdmin()
     //Template refs
     const form = ref<{ validate: () => void } | null>(null)
 

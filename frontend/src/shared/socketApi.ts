@@ -5,7 +5,7 @@ import { API_URL } from './config/consts'
 import { parseMessageToNotification } from '@/shared/config/configureAxios'
 import { IStudent } from '@/models/IStudent'
 import { IRoom } from '@/models/IRoom'
-import { updateRoomReservation, updateRoomStudents } from '@/actions/room'
+import { updateRoomReservation, updateRoomStudents } from '@/hooks/room'
 
 const socket = io(API_URL)
 

@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from '@vue/composition-api'
-import { acceptAdminAction, admins, fetchAllAction, removeAdminAction } from '@/actions/admin'
+import { useAcceptAdmin, admins, useFetchAll, useRemoveAdmin } from '@/hooks/admin'
 import { Admin } from '@/models/Admin'
 
 import SingleAdmin from '@/components/SingleAdmin.vue'
@@ -50,9 +50,9 @@ export default defineComponent({
     Spinner
   },
   setup() {
-    const { isProcessing: areAdminsFetching, fetchAll } = fetchAllAction
-    const { remove } = removeAdminAction()
-    const { accept } = acceptAdminAction()
+    const { isProcessing: areAdminsFetching, fetchAll } = useFetchAll
+    const { remove } = useRemoveAdmin()
+    const { accept } = useAcceptAdmin()
 
     const acceptedAdmins = computed<Admin[]>(() => admins.value.filter(it => it.isAccepted))
     const adminRequests = computed<Admin[]>(() => admins.value.filter(it => !it.isAccepted))

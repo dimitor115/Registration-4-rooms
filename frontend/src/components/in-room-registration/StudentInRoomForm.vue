@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, reactive, ref } from '@vue/composition-api'
-import { registerStudentAction } from '@/actions/room'
+import { useRegisterStudent } from '@/hooks/room'
 import store from '@/store'
 const formRules = {
   name: [
@@ -56,7 +56,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isProcessing: isRegisterProcessing, register } = registerStudentAction()
+    const { isProcessing: isRegisterProcessing, register } = useRegisterStudent()
 
     //Template refs
     const formComponent = ref<{ validate: () => void } | null>(null)

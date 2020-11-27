@@ -44,7 +44,7 @@ import StudentInRoomForm from './StudentInRoomForm.vue'
 import StudentFilledForm from '@/components/in-room-registration/StudentFilledForm.vue'
 import { computed, defineComponent, PropType } from '@vue/composition-api'
 import store from '@/store'
-import { reserveAction } from '@/actions/room'
+import { useReserveRoom } from '@/hooks/room'
 
 export default defineComponent({
   name: 'RoomStudentsForm',
@@ -56,7 +56,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isProcessing: isReserveProcessing, reserve } = reserveAction()
+    const { isProcessing: isReserveProcessing, reserve } = useReserveRoom()
 
     const restPlaces = computed(() => props.room.size - props.room.students.length)
     const canRegisterStudents = computed(() => props.room.reservedBy === store.state.user.uuid)

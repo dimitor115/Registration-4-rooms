@@ -20,7 +20,7 @@
         <el-button
           v-if="editable"
           type="success"
-          :loading="isEditProcessing"
+          :loading="isUpdateProcessing"
           circle
           icon="el-icon-edit"
           @click.prevent="handleEdit"
@@ -28,7 +28,7 @@
         <el-button
           v-else
           type="success"
-          :loading="isCreateProcessing"
+          :loading="isRegisterProcessing"
           circle
           icon="el-icon-plus"
           @click.prevent="handleAdd"
@@ -45,6 +45,7 @@
 import { IStudent } from '@/models/IStudent'
 import { MessageBox } from 'element-ui'
 import { defineComponent, PropType, ref } from '@vue/composition-api'
+import { registerStudentByAdminAction, updateStudentByAdminAction } from '@/actions/room'
 
 const formRules = {
   name: [
@@ -65,14 +66,6 @@ const formRules = {
 
 export default defineComponent({
   props: {
-    isEditProcessing: {
-      type: Boolean as PropType<boolean>,
-      default: false
-    },
-    isCreateProcessing: {
-      type: Boolean as PropType<boolean>,
-      default: false
-    },
     editable: {
       type: Boolean as PropType<boolean>,
       default: false
@@ -84,19 +77,26 @@ export default defineComponent({
         surname: '',
         addedBy: 'me'
       })
+    },
+    roomId: {
+      type: String as PropType<string>,
+      required: true
     }
   },
   setup(props, { emit }) {
+    const { isProcessing: isRegisterProcessing, register } = registerStudentByAdminAction()
+    const { isProcessing: isUpdateProcessing, update } = updateStudentByAdminAction()
     //Template refs
     const form = ref<{ validate: () => void } | null>(null)
 
-    const handleAdd = (): void => {
+    const handleAdd = async () => {
       form.value?.validate()
       if (props.student?.name !== '' && props.student?.surname !== '') {
-        emit('onAdd', { ...props.student })
+        await register(props.student, props.roomId)
+        emit('afterAdd')
       }
     }
-    const handleEdit = (): void => {
+    const handleEdit = async () => {
       form.value?.validate()
       if (props.student?.name !== '' && props.student?.surname !== '') {
         MessageBox.confirm(
@@ -107,8 +107,9 @@ export default defineComponent({
             cancelButtonText: 'Nie',
             type: 'success'
           }
-        ).then(() => {
-          emit('onEdit', { ...props.student })
+        ).then(async () => {
+          await update(props.student, props.roomId, props.student._id)
+          emit('afterEdit')
         })
       }
     }
@@ -116,7 +117,9 @@ export default defineComponent({
     return {
       formRules,
       handleAdd,
-      handleEdit
+      handleEdit,
+      isUpdateProcessing,
+      isRegisterProcessing
     }
   }
 })

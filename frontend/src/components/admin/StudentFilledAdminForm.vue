@@ -31,7 +31,7 @@
         icon="el-icon-delete"
         circle
         :loading="isRemoveProcessing"
-        @click.prevent="$emit('onRemove', student._id)"
+        @click.prevent="confirmAndRemove"
       />
     </el-form-item>
   </el-form>
@@ -39,8 +39,9 @@
 
 <script lang="ts">
 import { IStudent } from '@/models/IStudent'
-import { defineComponent, PropType, computed } from '@vue/composition-api'
-import store from '@/store'
+import { computed, defineComponent, PropType } from '@vue/composition-api'
+import { removeStudentByAdmin } from '@/actions/room'
+import { MessageBox } from 'element-ui'
 
 export default defineComponent({
   props: {
@@ -56,21 +57,23 @@ export default defineComponent({
       type: String as PropType<string>,
       required: true
     },
-    isRemoveProcessing: {
-      type: Boolean as PropType<boolean>,
-      default: false
-    },
     showAdd: {
       type: Boolean as PropType<boolean>,
       default: false
     }
   },
   setup(props) {
-    const isStudentDuplicated = computed(() =>
-      store.getters['duplicatedStudents'].find(
-        (s: IStudent) => s.surname === props.student.surname && s.name === props.student.name
-      )
-    )
+    const { isProcessing: isRemoveProcessing, remove } = removeStudentByAdmin()
+
+    const confirmAndRemove = () => {
+      MessageBox.confirm(`Jesteś pewnien, że chcesz usunąć uczestnika?`, 'Potwierdzenie', {
+        confirmButtonText: 'Tak',
+        cancelButtonText: 'Nie',
+        type: 'error'
+      }).then(() => remove(props.roomId, props.student._id))
+    }
+
+    const isStudentDuplicated = false
 
     const isEmpty = computed(() => !(props.student.name && props.student.surname))
 
@@ -78,7 +81,7 @@ export default defineComponent({
       () => (isEmpty ? 'empty-input' : 'fielled-input') + (isStudentDuplicated ? ' duplicate' : '')
     )
 
-    return { inputMockClass, isEmpty }
+    return { inputMockClass, isEmpty, confirmAndRemove, isRemoveProcessing }
   }
 })
 </script>

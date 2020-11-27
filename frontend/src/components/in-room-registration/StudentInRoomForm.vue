@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :inline="true" class="room-form" :rules="formRules" :model="form">
+  <el-form ref="formComponent" :inline="true" class="room-form" :rules="formRules" :model="form">
     <div class="student-input">
       <el-form-item prop="name">
         <el-input v-model="form.name" maxlength="20" placeholder="Imię" />
@@ -11,10 +11,7 @@
 
     <div class="form-buttons">
       <el-form-item>
-        <el-button
-          type="success"
-          :loading="isRegistrationRequestProcessing"
-          @click.prevent="handleAdd"
+        <el-button type="success" :loading="isRegisterProcessing" @click.prevent="registerStudent"
           >Dodaj</el-button
         >
       </el-form-item>
@@ -26,64 +23,67 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import { Actions } from '@/shared/Actions'
+import { defineComponent, PropType, reactive, ref } from '@vue/composition-api'
+import { registerStudentAction } from '@/actions/room'
+import store from '@/store'
+const formRules = {
+  name: [
+    {
+      required: true,
+      message: 'Podaj imię!',
+      trigger: 'blur'
+    }
+  ],
+  surname: [
+    {
+      required: true,
+      message: 'Podaj nazwisko!',
+      trigger: 'blur'
+    }
+  ]
+}
 
-export default Vue.extend({
+interface StudentForm {
+  name: string | null
+  surname: string | null
+}
+
+export default defineComponent({
   props: {
     roomId: {
       type: String as PropType<string>,
       required: true
     }
   },
-  data: () => ({
-    form: {
-      name: null,
-      surname: null
-    }
-  }),
-  computed: {
-    isRegistrationRequestProcessing(): boolean {
-      return this.$store.state.isProcessing[Actions.REGISTER_STUDENT][this.roomId] || false
-    },
-    userUUID(): string {
-      return this.$store.state.user.uuid
-    },
-    formRules() {
-      return {
-        name: [
-          {
-            required: true,
-            message: 'Podaj imię!',
-            trigger: 'blur'
-          }
-        ],
-        surname: [
-          {
-            required: true,
-            message: 'Podaj nazwisko!',
-            trigger: 'blur'
-          }
-        ]
-      }
-    }
-  },
-  methods: {
-    handleAdd(): void {
-      ;(this.$refs.form as any)?.validate()
-      if (this.form.name && this.form.surname) {
+  setup(props) {
+    const { isProcessing: isRegisterProcessing, register } = registerStudentAction()
+
+    //Template refs
+    const formComponent = ref<{ validate: () => void } | null>(null)
+    const form = reactive<StudentForm>({ name: null, surname: null })
+    const registerStudent = async () => {
+      formComponent.value?.validate()
+      if (!!form.name && !!form.surname) {
         const student = {
-          name: this.form.name,
-          surname: this.form.surname,
-          addedBy: this.userUUID
+          name: form.name,
+          surname: form.surname,
+          addedBy: store.state.user.uuid
         }
-        this.$emit('onRegister', student)
-        this.clearForm()
+        await register(props.roomId, student)
+        clearForm()
       }
-    },
-    clearForm(): void {
-      this.form.name = null
-      this.form.surname = null
+    }
+    const clearForm = () => {
+      form.name = null
+      form.surname = null
+    }
+
+    return {
+      isRegisterProcessing,
+      registerStudent,
+      form,
+      formRules,
+      clearForm
     }
   }
 })

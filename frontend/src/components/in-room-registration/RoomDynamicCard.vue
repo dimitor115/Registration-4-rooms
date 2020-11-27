@@ -9,7 +9,7 @@
       :is-current-user="isCurrentUserReservation"
     />
     <div class="places-container">
-      Wolne miejsca: <b> {{ room.size - room.students.length }} </b> / <b>{{ room.size }} </b>
+      Wolne miejsca: <b> {{ restPlaces }} </b> / <b>{{ room.size }} </b>
     </div>
 
     <transition name="fade">
@@ -32,11 +32,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import store from '@/store'
 import { IRoom } from '@/models/IRoom'
 import ReservationCountDown from './ReservationCountDown.vue'
+import { computed, defineComponent, PropType, ref } from '@vue/composition-api'
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RoomDynamicCard',
   components: { ReservationCountDown },
   props: {
@@ -49,20 +50,21 @@ export default Vue.extend({
       default: false
     }
   },
-  data: () => ({
-    showDetails: false
-  }),
-  computed: {
-    restPlaces(): number {
-      return this.room.size - this.room.students.length
-    },
-    isCurrentUserReservation(): boolean {
-      return this.$store.state.user.uuid === this.room.reservedBy
+  setup({ room }) {
+    const showDetails = ref(false)
+
+    const restPlaces = computed(() => room.size - room.students.length)
+    const isCurrentUserReservation = computed(() => store.state.user.uuid === room.reservedBy)
+
+    const expandRoom = () => {
+      showDetails.value = !showDetails.value
     }
-  },
-  methods: {
-    expandRoom() {
-      this.showDetails = this.showDetails ? false : true
+
+    return {
+      showDetails,
+      restPlaces,
+      isCurrentUserReservation,
+      expandRoom
     }
   }
 })

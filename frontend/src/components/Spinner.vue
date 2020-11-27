@@ -1,9 +1,9 @@
 <template>
   <section>
-    <div v-if="isProcessing" class="spinner-container">
+    <div v-if="isLoading" class="spinner-container">
       <i class="spinner" :style="spinnerStyle" />
     </div>
-    <slot v-if="!isProcessing" />
+    <slot v-if="!isLoading" />
   </section>
 </template>
 

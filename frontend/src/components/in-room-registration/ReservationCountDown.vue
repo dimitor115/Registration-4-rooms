@@ -14,67 +14,65 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
 import moment from 'moment'
 import Timer from '@/shared/timer'
-export default {
+import { computed, defineComponent, onMounted, PropType, ref, watch } from '@vue/composition-api'
+
+export default defineComponent({
   name: 'ReservationCountDown',
   props: {
     until: {
-      type: String,
+      type: String as PropType<string>,
       required: true
     },
     isCurrentUser: {
-      type: Boolean,
+      type: Boolean as PropType<boolean>,
       required: true
     }
   },
-  data: () => ({
-    startSeconds: null,
-    secondsUntil: null,
-    timer: null,
-    isEnd: false
-  }),
-  computed: {
-    untilPercentage() {
-      return (this.secondsUntil / this.startSeconds) * 100 || 0
-    }
-  },
-  watch: {
-    until: function() {
-      this.setupCountDown()
-    }
-  },
-  mounted() {
-    this.setupCountDown()
-  },
-  methods: {
-    updateSeconds(secondsUntil) {
-      this.secondsUntil = secondsUntil
-    },
-    onTimeEnd() {
-      this.isEnd = true
-    },
-    progressFormat() {
-      return this.secondsUntil + ' s'
-    },
-    setupCountDown() {
-      if (this.timer) this.timer.stop()
+  setup(props) {
+    const startSeconds = ref<number | null>(null)
+    const secondsUntil = ref<number | null>(null)
+    const timer = new Timer()
+    const isEnd = ref(false)
 
-      const dateUntil = moment(this.until)
+    const untilPercentage = computed(() =>
+      secondsUntil.value && startSeconds.value ? (secondsUntil.value / startSeconds.value) * 100 : 0
+    )
+
+    const setupCountDown = () => {
+      timer.stop()
+
+      const dateUntil = moment(props.until)
       const dateDiff = dateUntil.diff(moment())
-      const seconds = moment
-        .duration(dateDiff)
-        .asSeconds()
-        .toFixed()
+      const seconds = parseInt(
+        moment
+          .duration(dateDiff)
+          .asSeconds()
+          .toFixed()
+      )
 
-      this.startSeconds = 25
-      this.secondsUntil = seconds
+      startSeconds.value = 25
+      secondsUntil.value = seconds
 
-      this.timer = new Timer()
-      this.timer.setup(seconds)
-      this.timer.start(this.updateSeconds, this.onTimeEnd)
+      timer.setup(seconds)
+      timer.start(
+        sec => (secondsUntil.value = sec),
+        () => (isEnd.value = true)
+      )
+    }
+
+    watch(() => props.until, setupCountDown)
+    onMounted(setupCountDown)
+
+    const progressFormat = () => secondsUntil.value + ' s'
+
+    return {
+      isEnd,
+      untilPercentage,
+      progressFormat
     }
   }
-}
+})
 </script>

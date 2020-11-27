@@ -22,8 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from '@vue/composition-api'
-import { fetchAllAction } from '@/actions/roomActions'
-import { rooms } from '@/actions/rootActions'
+import { rooms, fetchAllAction } from '@/actions/room'
 import { API_URL } from '@/shared/config/consts'
 
 import Spinner from '@/components/Spinner.vue'

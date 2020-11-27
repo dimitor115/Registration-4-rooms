@@ -1,10 +1,15 @@
 <template>
   <div class="wrapper">
-    <spinner action="FETCH_ALL_ADMINS">
+    <spinner :is-loading="areAdminsFetching">
       <h2>Administratorzy</h2>
       <el-card>
-        <template v-for="(admin, idx) in admins">
-          <single-admin :key="idx" :admin="admin" @onAdminRemove="removeAdmin" />
+        <template v-for="(admin, idx) in acceptedAdmins">
+          <single-admin
+            :key="idx"
+            :admin="admin"
+            :is-acceptable="false"
+            @onAdminRemove="removeAdmin"
+          />
         </template>
       </el-card>
       <h2>Prośby o dołączenie</h2>
@@ -31,33 +36,31 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-
-import { SingleActions } from '@/shared/Actions'
+import { computed, defineComponent, onMounted } from '@vue/composition-api'
+import { acceptAdminAction, admins, fetchAllAction, removeAdminAction } from '@/actions/admin'
+import { Admin } from '@/models/Admin'
 
 import SingleAdmin from '@/components/SingleAdmin.vue'
 import Spinner from '@/components/Spinner.vue'
-import { Admin } from '@/models/Admin'
+import { MessageBox } from 'element-ui'
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     SingleAdmin,
     Spinner
   },
-  computed: {
-    admins(): Admin[] {
-      return this.$store.state.admins.filter((it: Admin) => it.isAccepted === true)
-    },
-    adminRequests(): Admin[] {
-      return this.$store.state.admins.filter((it: Admin) => it.isAccepted === false)
-    }
-  },
-  mounted() {
-    this.$store.dispatch(SingleActions.FETCH_ALL_ADMINS)
-  },
-  methods: {
-    async acceptAdmin(email: string) {
-      this.$confirm(
+  setup() {
+    const { isProcessing: areAdminsFetching, fetchAll } = fetchAllAction
+    const { remove } = removeAdminAction()
+    const { accept } = acceptAdminAction()
+
+    const acceptedAdmins = computed<Admin[]>(() => admins.value.filter(it => it.isAccepted))
+    const adminRequests = computed<Admin[]>(() => admins.value.filter(it => !it.isAccepted))
+
+    onMounted(() => fetchAll())
+
+    const acceptAdmin = (email: string) => {
+      MessageBox.confirm(
         `Jesteś pewnien, że chcesz zezwolić użytkownikowi ${email} na dostęp do systemu?`,
         'Potwierdzenie',
         {
@@ -65,21 +68,23 @@ export default Vue.extend({
           cancelButtonText: 'Nie',
           type: 'success'
         }
-      ).then(() => {
-        this.$store.dispatch('acceptAdmin', email)
-      })
-    },
-    async removeAdmin(email: string) {
-      this.$confirm(`Jesteś pewnien, że chcesz usunąć administratora ${email}?`, 'Potwierdzenie', {
-        confirmButtonText: 'Tak',
-        cancelButtonText: 'Nie',
-        type: 'error'
-      }).then(() => {
-        this.$store.dispatch('removeAdmin', email)
-      })
-    },
-    async rejectAdmin(email: string) {
-      this.$confirm(
+      ).then(() => accept(email))
+    }
+
+    const removeAdmin = (email: string) => {
+      MessageBox.confirm(
+        `Jesteś pewnien, że chcesz usunąć administratora ${email}?`,
+        'Potwierdzenie',
+        {
+          confirmButtonText: 'Tak',
+          cancelButtonText: 'Nie',
+          type: 'error'
+        }
+      ).then(() => remove(email))
+    }
+
+    const rejectAdmin = (email: string) => {
+      MessageBox.confirm(
         `Jesteś pewnien, że chcesz odrzucić prośbę użytkownika ${email} o dostęp do systemu?`,
         'Potwierdzenie',
         {
@@ -87,9 +92,16 @@ export default Vue.extend({
           cancelButtonText: 'Nie',
           type: 'error'
         }
-      ).then(() => {
-        this.$store.dispatch('removeAdmin', email)
-      })
+      ).then(() => remove(email))
+    }
+
+    return {
+      areAdminsFetching,
+      acceptedAdmins,
+      adminRequests,
+      acceptAdmin,
+      removeAdmin,
+      rejectAdmin
     }
   }
 })

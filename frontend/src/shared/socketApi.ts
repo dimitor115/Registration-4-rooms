@@ -5,6 +5,7 @@ import { API_URL } from './config/consts'
 import { parseMessageToNotification } from '@/shared/config/configureAxios'
 import { IStudent } from '@/models/IStudent'
 import { IRoom } from '@/models/IRoom'
+import { updateRoomReservation, updateRoomStudents } from '@/actions/room'
 
 const socket = io(API_URL)
 
@@ -13,7 +14,7 @@ export const connections = {
     open: () =>
       socket.on('room_update', (room: IRoom) => {
         if (room) {
-          store.commit('updateRoomStudents', room)
+          updateRoomStudents(room)
         }
       }),
     close: () => socket.removeListener('room_update')
@@ -22,7 +23,7 @@ export const connections = {
     open: () =>
       socket.on('reservation_update', (room: IRoom) => {
         if (room) {
-          store.commit('updateRoomReservation', room)
+          updateRoomReservation(room)
         }
       }),
     close: () => socket.removeListener('reservation_update')

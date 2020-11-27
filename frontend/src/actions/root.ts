@@ -1,7 +1,4 @@
-import { Ref, ref, UnwrapRef } from '@vue/composition-api'
-import { IRoom } from '@/models/IRoom'
-
-export const rooms = ref<IRoom[]>([])
+import { Ref, UnwrapRef } from '@vue/composition-api'
 
 export async function withProcessing(
   isProcessing: Ref<UnwrapRef<boolean>>,

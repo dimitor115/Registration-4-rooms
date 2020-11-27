@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api'
 import RoomForm from '@/components/RoomForm.vue'
-import { createAction } from '@/actions/roomActions'
+import { createAction } from '@/actions/room'
 import { CreateRoomRequest } from '@/models/CreateRoomRequest'
 
 export default defineComponent({

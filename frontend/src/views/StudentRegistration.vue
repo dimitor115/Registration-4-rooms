@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <h2>Stoliki:</h2>
-    <spinner action="FETCH_ALL_ROOMS">
+    <spinner :is-loading="isProcessing">
       <template v-for="(room, idx) in rooms">
         <room-dynamic-card :key="idx" :room="room">
           <room-students-form :room="room" />
@@ -12,30 +12,30 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapState } from 'vuex'
-import { SingleActions } from '@/shared/Actions'
+import { defineComponent, onMounted, onUnmounted } from '@vue/composition-api'
+import { fetchAllAction, rooms } from '@/actions/room'
 import { connections } from '@/shared/socketApi'
+
 import Spinner from '@/components/Spinner.vue'
 import RoomStudentsForm from '@/components/in-room-registration/RoomStudentsForm.vue'
 import RoomDynamicCard from '@/components/in-room-registration/RoomDynamicCard.vue'
 
-export default Vue.extend({
-  name: 'StudentRegistration',
+export default defineComponent({
   components: { RoomDynamicCard, RoomStudentsForm, Spinner },
-  computed: {
-    ...mapState({
-      rooms: 'rooms'
+  setup() {
+    const { isProcessing, fetchAll } = fetchAllAction
+    onMounted(() => {
+      fetchAll()
+      connections.roomUpdates.open()
+      connections.reservationUpdates.open()
     })
-  },
-  mounted() {
-    this.$store.dispatch(SingleActions.FETCH_ALL_ROOMS)
-    connections.roomUpdates.open()
-    connections.reservationUpdates.open()
-  },
-  beforeDestroy() {
-    connections.roomUpdates.close()
-    connections.reservationUpdates.close()
+
+    onUnmounted(() => {
+      connections.roomUpdates.close()
+      connections.reservationUpdates.close()
+    })
+
+    return { rooms, isProcessing }
   }
 })
 </script>

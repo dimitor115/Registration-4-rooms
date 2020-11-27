@@ -54,7 +54,7 @@ import {
   registerStudentByAdminAction,
   removeStudentByAdmin,
   updateStudentByAdminAction
-} from '@/actions/adminActions'
+} from '@/actions/room'
 
 export default defineComponent({
   components: {

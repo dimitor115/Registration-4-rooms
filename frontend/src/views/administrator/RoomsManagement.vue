@@ -11,8 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from '@vue/composition-api'
-import { fetchAllAction } from '@/actions/roomActions'
-import { rooms } from '@/actions/rootActions'
+import { rooms, fetchAllAction } from '@/actions/room'
 
 import CreateRoomCard from '@/components/room-management/CreateRoomCard.vue'
 import RoomSimpleCard from '@/components/RoomSimpleCard.vue'
